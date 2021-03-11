@@ -19,9 +19,21 @@ pip install trafalgars-0.0.1-py3-none-any.whl
 - Backtest a portfolio, see its stats and compare it to a benchmark 
 
 
-## How to use it?
 
-Writing the documentation...✍️
+## Documentation
+
+Displaying the graph of the close price of a stock in a given time
+
+```sh
+#graph_close(stock, start_date, end_date)
+#get the graph of a stock
+graph_close(["FB"], "2020-01-01", "2021-01-01")
+```
+
+```sh
+#get the graph of multiple stocks
+graph_close(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
+```
 
 ## License
 
