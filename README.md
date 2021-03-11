@@ -28,7 +28,7 @@ pip install trafalgars-0.0.1-py3-none-any.whl
 #graph_close(stock, start_date, end_date)
 graph_close(["FB"], "2020-01-01", "2021-01-01")
 ```
-<img src="https://i.ibb.co/PQmRL9b/t-l-chargement-6.png"/>
+<center><img src="https://i.ibb.co/PQmRL9b/t-l-chargement-6.png"/></center>
 
 ### Graph of the closing price of multiple stocks 
 ```sh
@@ -38,6 +38,8 @@ graph_close(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
 
 ### Graph the volume 
 ```sh
+#graph_volume(stock, start_date, end_date)
+
 #for one stock
 graph_volume(["FB"], "2020-01-01", "2021-01-01")
 
@@ -46,6 +48,8 @@ graph_volume(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
 ```
 ### Graph the opening price
 ```sh
+#graph_open(stock, start_date, end_date)
+
 #for one stock
 graph_open(["FB"], "2020-01-01", "2021-01-01")
 
@@ -54,6 +58,8 @@ graph_open(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
 ```
 ### Graph the adjourned closing price
 ```sh
+#graph_adj_close(stock, start_date, end_date)
+
 #for one stock
 graph_adj_close(["FB"], "2020-01-01", "2021-01-01")
 
@@ -65,6 +71,8 @@ graph_adj_close(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
 ### Graph the returns (for each day)
 
 ```sh
+#returns_graph(stock, start_date, end_date)
+
 #this one only work for one stock
 returns_graph(["FB"], "2020-01-01", "2021-01-01")
 ```
@@ -73,6 +81,7 @@ returns_graph(["FB"], "2020-01-01", "2021-01-01")
 ### Get closing price data (in dataframe format)
 
 ```sh
+#close(stock, start_date, end_date)
 close(["AAPL"], "2020-01-01", "2021-01-01")
 ```
 <img src="https://i.ibb.co/bHFtrMd/Capture.jpg"/>
@@ -80,15 +89,18 @@ close(["AAPL"], "2020-01-01", "2021-01-01")
 ### Get volume data (in dataframe format)
 
 ```sh
+#volume(stock, start_date, end_date)
 volume(["AAPL"], "2020-01-01", "2021-01-01")
 ```
 
 ### Get opening price data (in dataframe format)
 ```sh
+#open(stock, start_date, end_date)
 open(["AAPL"], "2020-01-01", "2021-01-01")
 ```
 ### Get adjourned closing price data (in dataframe format)
 ```sh
+#adj_close(stock, start_date, end_date)
 adj_close(["AAPL"], "2020-01-01", "2021-01-01")
 ```
 
@@ -118,10 +130,98 @@ cum_returns_graph(["FB", "AAPL", "AMD"], [0.3, 0.4, 0.3],"2020-01-01", "2021-01-
 
 ### Get cumulative returns data of a stock/portfolio (in a dataframe format)
 ```sh
-#cum_returns(stocks, wts, start_date, end_date)
+#cum_returns(stocks, weights, start_date, end_date)
 cum_returns(["FB", "AAPL", "AMD"], [0.3, 0.4, 0.3],"2020-01-01", "2021-01-01")
 ```
 <img src="https://i.ibb.co/2dWJ11T/Capture.jpg"/>
+
+### Annual Volatility of a stock/portfolio
+```sh
+#annual_volatility(stocks, weights, start_date, end_date)
+annual_volatility(["FB", "AAPL", "AMD"], [0.3, 0.4, 0.3],"2020-01-01", "2021-01-01")
+```
+<img src="https://i.ibb.co/frNdHdG/Capture.jpg"/>
+
+### Sharpe Ratio of a stock/portfolio
+```sh
+#sharpe_ratio(stocks, weights, start_date, end_date)
+sharpe_ratio(["FB", "AAPL", "AMD"], [0.3, 0.4, 0.3],"2020-01-01", "2021-01-01")
+```
+<img src="https://i.ibb.co/vPL5JNZ/Capture.jpg"/>
+
+### Compare the returns of a portfolio/stock to a benchmark
+```sh
+#returns_benchmark(stocks, weights, benchmark, start_date, end_date)
+returns_benchmark(["AAPL", "AMD", "MSFT"], [0.3, 0.4, 0.3], "SPY", "2020-01-01", "2021-01-01")
+```
+<img src="https://i.ibb.co/w6q7s1g/t-l-chargement-10.png"/>
+
+Blue line : returns of your portfolio
+Red line : returns of the benchmark
+
+### Compare the cumulative returns of a portfolio/stock to a benchmark
+```sh
+#cum_returns_benchmark(stocks, weights, benchmark, start_date, end_date)
+cum_returns_benchmark(["AAPL", "AMD", "MSFT"], [0.3, 0.4, 0.3], "SPY", "2020-01-01", "2021-01-01")
+```
+<img src="https://i.ibb.co/NKGThvy/Capture.jpg"/>
+
+Blue line : cumulative returns of your portfolio
+Red line : cumulative returns of the benchmark
+
+### Alpha and Beta of a stock/portfolio
+
+```sh
+#alpha_beta(stocks, weights, benchmark, start_date, end_date)
+alpha_beta(["AAPL", "AMD", "MSFT"], [0.3, 0.4, 0.3], "SPY", "2020-01-01", "2021-01-01")
+```
+<img src="https://i.ibb.co/nmL4Qym/Capture.jpg"/>
+
+### Efficient frontier to optimize allocation of shares in your portfolio
+
+```sh
+#efficient_frontier(stocks, start_date, end_date, iterations) -> iterations = 10000 is a good starting point
+efficient_frontier(["AAPL", "FB", "TSLA", "BABA"], "2020-01-01", "2021-01-01", 10000)
+```
+<img src="https://i.ibb.co/pyfqgfS/Capture.jpg"/>
+
+### Graph individual cumulative returns for your portfolio
+
+```sh
+#individual_cum_returns_graph(stocks, start_date, end_date)
+individual_cum_returns_graph(["FB", "AAPL", "AMD"],"2020-01-01", "2021-01-01")
+```
+<img src="https://i.ibb.co/B2RHDGf/Capture.jpg"/>
+
+### Individual cumulative returns datas for your portfolio (in dataframe format)
+
+```sh
+#individual_cum_returns(stocks, start_date, end_date)
+individual_cum_returns(["FB", "AAPL", "AMD"],"2020-01-01", "2021-01-01")
+```
+<img src="https://i.ibb.co/MNNJWw1/Capture.jpg"/>
+
+### Mean daily return of each stocks in your portfolio
+
+```sh
+#individual_mean_daily_return(stocks, start_date, end_date)
+individual_mean_daily_return(["FB", "AAPL", "AMD"],"2020-01-01", "2021-01-01")
+```
+<img src="https://i.ibb.co/tm4Tdr0/Capture.jpg"/>
+
+### Portfolio mean daily return
+```sh
+#portfolio_daily_mean_return(stocks,weights, start_date, end_date)
+individual_mean_daily_return(["FB", "AAPL", "AMD"],"2020-01-01", "2021-01-01")
+```
+<img src="https://i.ibb.co/Qfj4vH1/Capture.jpg"/>
+
+### Value at Risk of a stock (still in development)
+```sh
+#VaR(stock, start_date, end_date, confidence_level)
+VaR("FB","2020-01-01", "2021-01-01", 98)
+```
+<img src="https://i.ibb.co/hfQqP3z/Capture.jpg"/>
 
 ## License
 
