@@ -73,27 +73,55 @@ returns_graph(["FB"], "2020-01-01", "2021-01-01")
 ### Get closing price data (in dataframe format)
 
 ```sh
-close(["FB"], "2020-01-01", "2021-01-01")
+close(["AAPL"], "2020-01-01", "2021-01-01")
 ```
 <img src="https://i.ibb.co/bHFtrMd/Capture.jpg"/>
 
 ### Get volume data (in dataframe format)
 
 ```sh
-volume(["FB"], "2020-01-01", "2021-01-01")
+volume(["AAPL"], "2020-01-01", "2021-01-01")
 ```
 
 ### Get opening price data (in dataframe format)
 ```sh
-open(["FB"], "2020-01-01", "2021-01-01")
+open(["AAPL"], "2020-01-01", "2021-01-01")
 ```
 ### Get adjourned closing price data (in dataframe format)
 ```sh
-adj_close(["FB"], "2020-01-01", "2021-01-01")
+adj_close(["AAPL"], "2020-01-01", "2021-01-01")
 ```
 
+### Covariance between stocks
 
+```sh
+#covariance(stocks, start_date, end_date, days) -> usually, days = 252
+covariance(["AAPL", "DIS", "AMD"], "2020-01-01", "2021-01-01", 252)
+```
+<img src="https://i.ibb.co/CHR9Z33/Capture.jpg"/>
 
+### Get data from a stock in OHLCV format directly
+
+```sh
+#ohlcv(stock, start_date, end_date)
+ohlcv("AAPL", "2020-01-01", "2021-01-01")
+```
+<img src="https://i.ibb.co/GtcqJmy/Capture.jpg"/>
+
+### Graph the cumulative returns of a stock/portfolio
+
+```sh
+#cum_returns_graph(stocks, weights, start_date, end_date)
+cum_returns_graph(["FB", "AAPL", "AMD"], [0.3, 0.4, 0.3],"2020-01-01", "2021-01-01")
+```
+<img src="https://i.ibb.co/Xb30TBZ/t-l-chargement-9.png"/>
+
+### Get cumulative returns data of a stock/portfolio (in a dataframe format)
+```sh
+#cum_returns(stocks, wts, start_date, end_date)
+cum_returns(["FB", "AAPL", "AMD"], [0.3, 0.4, 0.3],"2020-01-01", "2021-01-01")
+```
+<img src="https://i.ibb.co/2dWJ11T/Capture.jpg"/>
 ## License
 
 **MIT**
