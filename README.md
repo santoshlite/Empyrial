@@ -1,7 +1,7 @@
 # Trafalgar
 
 Python library to make development of portfolio analysis faster and easier
-
+<img src="https://i.ibb.co/vVdyvfj/Trafalgar.png"/>
 # Installation 🔥
 
 For the moment, Trafalgar is still in beta development. To install it you should:
