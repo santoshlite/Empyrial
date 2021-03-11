@@ -22,51 +22,72 @@ pip install trafalgars-0.0.1-py3-none-any.whl
 
 # Documentation
 
-## Displaying the graph of the close price of a stock in a given time
+### Graph of the closing price of a stock
 
 ```sh
 #graph_close(stock, start_date, end_date)
-#get the graph of a stock
 graph_close(["FB"], "2020-01-01", "2021-01-01")
 ```
 <img src="https://i.ibb.co/PQmRL9b/t-l-chargement-6.png"/>
 
+### Graph of the closing price of multiple stocks 
 ```sh
-#get the graph of multiple stocks
 graph_close(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
 ```
+<img src="https://i.ibb.co/1bYRWpv/t-l-chargement-7.png"/>
 
-It's the same principle for displaying the volume's graph of a stock, the open's graph, and the adjourned close's graph
-
+### Graph the volume 
 ```sh
+#for one stock
+graph_volume(["FB"], "2020-01-01", "2021-01-01")
+
+#for multiple stocks
 graph_volume(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
+```
+### Graph the opening price
+```sh
+#for one stock
+graph_open(["FB"], "2020-01-01", "2021-01-01")
+
+#for multiple stocks
 graph_open(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
+```
+### Graph the adjourned closing price
+```sh
+#for one stock
+graph_adj_close(["FB"], "2020-01-01", "2021-01-01")
+
+#for multiple stocks
 graph_adj_close(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
 ```
 
-Displaying the graph of the revenus of stock/stocks during a given time
+
+### Graph the returns (for each day)
 
 ```sh
+#this one only work for one stock
 returns_graph(["FB"], "2020-01-01", "2021-01-01")
-#or for multiple stocks
-returns_graph(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
 ```
+<img src="https://i.ibb.co/4KS98MS/t-l-chargement-8.png"/>
 
-Displaying the dataframe of close price
+### Get closing price data (in dataframe format)
 
 ```sh
 close(["FB"], "2020-01-01", "2021-01-01")
 ```
-Displaying the dataframe of volume
+<img src="https://i.ibb.co/bHFtrMd/Capture.jpg"/>
+
+### Get volume data (in dataframe format)
 
 ```sh
 volume(["FB"], "2020-01-01", "2021-01-01")
 ```
-Displaying the dataframe of open price
+
+### Get opening price data (in dataframe format)
 ```sh
 open(["FB"], "2020-01-01", "2021-01-01")
 ```
-Displaying the dataframe of ajourned close
+### Get adjourned closing price data (in dataframe format)
 ```sh
 adj_close(["FB"], "2020-01-01", "2021-01-01")
 ```
