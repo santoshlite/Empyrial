@@ -20,15 +20,16 @@ pip install trafalgars-0.0.1-py3-none-any.whl
 
 
 
-## Documentation
+# Documentation
 
-Displaying the graph of the close price of a stock in a given time
+## Displaying the graph of the close price of a stock in a given time
 
 ```sh
 #graph_close(stock, start_date, end_date)
 #get the graph of a stock
 graph_close(["FB"], "2020-01-01", "2021-01-01")
 ```
+<img src="https://i.ibb.co/PQmRL9b/t-l-chargement-6.png"/>
 
 ```sh
 #get the graph of multiple stocks
@@ -75,3 +76,4 @@ adj_close(["FB"], "2020-01-01", "2021-01-01")
 ## License
 
 **MIT**
+
