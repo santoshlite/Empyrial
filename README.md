@@ -122,6 +122,7 @@ cum_returns_graph(["FB", "AAPL", "AMD"], [0.3, 0.4, 0.3],"2020-01-01", "2021-01-
 cum_returns(["FB", "AAPL", "AMD"], [0.3, 0.4, 0.3],"2020-01-01", "2021-01-01")
 ```
 <img src="https://i.ibb.co/2dWJ11T/Capture.jpg"/>
+
 ## License
 
 **MIT**
