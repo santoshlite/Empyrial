@@ -35,6 +35,46 @@ graph_close(["FB"], "2020-01-01", "2021-01-01")
 graph_close(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
 ```
 
+It's the same principle for displaying the volume's graph of a stock, the open's graph, and the adjourned close's graph
+
+```sh
+graph_volume(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
+graph_open(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
+graph_adj_close(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
+```
+
+Displaying the graph of the revenus of stock/stocks during a given time
+
+```sh
+returns_graph(["FB"], "2020-01-01", "2021-01-01")
+#or for multiple stocks
+returns_graph(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
+```
+
+Displaying the dataframe of close price
+
+```sh
+close(["FB"], "2020-01-01", "2021-01-01")
+```
+Displaying the dataframe of volume
+
+```sh
+volume(["FB"], "2020-01-01", "2021-01-01")
+```
+Displaying the dataframe of open price
+```sh
+open(["FB"], "2020-01-01", "2021-01-01")
+```
+Displaying the dataframe of ajourned close
+```sh
+adj_close(["FB"], "2020-01-01", "2021-01-01")
+```
+
+
+
 ## License
+
+**MIT**
+
 
 **MIT**
