@@ -48,7 +48,7 @@ def graph_volume(stock, start_date, end_date):
   plt.ylabel("$ price")
   plt.title(" Close Price from "+start_date + " to "+ end_date)
 
- def graph_adj_close(stock, start_date, end_date):
+def graph_adj_close(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
   df = pd.DataFrame(df)
   plt.figure(figsize=(20,10))
@@ -124,8 +124,8 @@ def cum_returns_graph(stocks, wts, start_date, end_date):
   ax1.set_title("Portfolio Cumulative Returns")
   plt.show();
 
-  def cum_returns(stocks, wts, start_date, end_date):
-
+def cum_returns(stocks, wts, start_date, end_date):
+  
   price_data = web.get_data_yahoo(stocks,
                                 start = start_date,
                                 end = end_date)
