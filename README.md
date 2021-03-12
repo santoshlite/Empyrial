@@ -27,6 +27,12 @@ pip install trafalgars-0.0.1-py3-none-any.whl
 
 # Documentation
 
+### Call the library
+First, you should do:
+```sh
+from trafalgar import *
+```
+
 ### Graph of the closing price of a stock
 
 ```sh
