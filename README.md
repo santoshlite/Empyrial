@@ -147,26 +147,49 @@ cum_returns(["FB", "AAPL", "AMD"], [0.3, 0.4, 0.3],"2020-01-01", "2021-01-01")
 <center><img src="https://i.ibb.co/2dWJ11T/Capture.jpg"/></center>
 
 Disclaimer : 
-From there, the functions only work for portfolios, not for individual stocks.I'm sorry about that, I'm working on that right now...
+From there, the functions only work for portfolios, not for individual stocks.
+However there is a way to make it work for individual stock:
+
+```sh
+#let's say we want to calculate the annual_volatility of Apple. 
+#We have to have at least 2 elements in our stock list. Here these are Apple and Facebook
+#In order to get the volatility of only Apple we just have to put the weights of Facebook at 0 (so no money will be allocated to this stock) and put the weights of Apple at 1 (so all our money will be allocated to this stock)
+annual_volatility(["FB", "AAPL"], [1, 0],"2020-01-01", "2021-01-01")
+```
 
 ### Annual Volatility of a portfolio
 ```sh
 #annual_volatility(stocks, weights, start_date, end_date)
+
+#for your portfolio
 annual_volatility(["FB", "AAPL", "AMD"], [0.3, 0.4, 0.3],"2020-01-01", "2021-01-01")
+
+#for one stock (FB)
+annual_volatility(["FB", "AAPL"], [1, 0],"2020-01-01", "2021-01-01")
 ```
 <center><img src="https://i.ibb.co/frNdHdG/Capture.jpg"/></center>
 
 ### Sharpe Ratio of a portfolio
 ```sh
 #sharpe_ratio(stocks, weights, start_date, end_date)
+
+#for your portfolio
 sharpe_ratio(["FB", "AAPL", "AMD"], [0.3, 0.4, 0.3],"2020-01-01", "2021-01-01")
+
+#for one stock (FB)
+sharpe_ratio(["FB", "AAPL"], [1, 0],"2020-01-01", "2021-01-01")
 ```
 <center><img src="https://i.ibb.co/vPL5JNZ/Capture.jpg"/></center>
 
 ### Compare the returns of a portfolio to a benchmark
 ```sh
 #returns_benchmark(stocks, weights, benchmark, start_date, end_date)
+
+#for your portfolio
 returns_benchmark(["AAPL", "AMD", "MSFT"], [0.3, 0.4, 0.3], "SPY", "2020-01-01", "2021-01-01")
+
+#for one stock(AAPL)
+returns_benchmark(["AAPL", "AMD"], [1,0], "SPY", "2020-01-01", "2021-01-01")
 ```
 <center><img src="https://i.ibb.co/w6q7s1g/t-l-chargement-10.png"/></center>
 
@@ -176,7 +199,12 @@ Red line : returns of the benchmark
 ### Compare the cumulative returns of a portfolio to a benchmark
 ```sh
 #cum_returns_benchmark(stocks, weights, benchmark, start_date, end_date)
+
+#for your portfolio
 cum_returns_benchmark(["AAPL", "AMD", "MSFT"], [0.3, 0.4, 0.3], "SPY", "2020-01-01", "2021-01-01")
+
+#for one stock(AAPL)
+cum_returns_benchmark(["AAPL", "AMD"], [1,0], "SPY", "2020-01-01", "2021-01-01")
 ```
 <center><img src="https://i.ibb.co/NKGThvy/Capture.jpg"/></center>
 
@@ -187,7 +215,12 @@ Red line : cumulative returns of the benchmark
 
 ```sh
 #alpha_beta(stocks, weights, benchmark, start_date, end_date)
+
+#for your portfolio
 alpha_beta(["AAPL", "AMD", "MSFT"], [0.3, 0.4, 0.3], "SPY", "2020-01-01", "2021-01-01")
+
+#for one stock(AAPL)
+alpha_beta(["AAPL", "AMD"], [1,0], "SPY", "2020-01-01", "2021-01-01")
 ```
 <center><img src="https://i.ibb.co/nmL4Qym/Capture.jpg"/></center>
 
