@@ -85,7 +85,7 @@ graph_adj_close(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
 #returns_graph(stock, start_date, end_date)
 
 #this one only work for one stock
-returns_graph(["FB"], "2020-01-01", "2021-01-01")
+returns_graph("FB", "2020-01-01", "2021-01-01")
 ```
 <center><img src="https://i.ibb.co/4KS98MS/t-l-chargement-8.png"/></center>
 
@@ -146,21 +146,24 @@ cum_returns(["FB", "AAPL", "AMD"], [0.3, 0.4, 0.3],"2020-01-01", "2021-01-01")
 ```
 <center><img src="https://i.ibb.co/2dWJ11T/Capture.jpg"/></center>
 
-### Annual Volatility of a stock/portfolio
+Disclaimer : 
+From there, the functions only work for portfolios, not for individual stocks.I'm sorry about that, I'm working on that right now...
+
+### Annual Volatility of a portfolio
 ```sh
 #annual_volatility(stocks, weights, start_date, end_date)
 annual_volatility(["FB", "AAPL", "AMD"], [0.3, 0.4, 0.3],"2020-01-01", "2021-01-01")
 ```
 <center><img src="https://i.ibb.co/frNdHdG/Capture.jpg"/></center>
 
-### Sharpe Ratio of a stock/portfolio
+### Sharpe Ratio of a portfolio
 ```sh
 #sharpe_ratio(stocks, weights, start_date, end_date)
 sharpe_ratio(["FB", "AAPL", "AMD"], [0.3, 0.4, 0.3],"2020-01-01", "2021-01-01")
 ```
 <center><img src="https://i.ibb.co/vPL5JNZ/Capture.jpg"/></center>
 
-### Compare the returns of a portfolio/stock to a benchmark
+### Compare the returns of a portfolio to a benchmark
 ```sh
 #returns_benchmark(stocks, weights, benchmark, start_date, end_date)
 returns_benchmark(["AAPL", "AMD", "MSFT"], [0.3, 0.4, 0.3], "SPY", "2020-01-01", "2021-01-01")
@@ -170,7 +173,7 @@ returns_benchmark(["AAPL", "AMD", "MSFT"], [0.3, 0.4, 0.3], "SPY", "2020-01-01",
 Blue line : returns of your portfolio
 Red line : returns of the benchmark
 
-### Compare the cumulative returns of a portfolio/stock to a benchmark
+### Compare the cumulative returns of a portfolio to a benchmark
 ```sh
 #cum_returns_benchmark(stocks, weights, benchmark, start_date, end_date)
 cum_returns_benchmark(["AAPL", "AMD", "MSFT"], [0.3, 0.4, 0.3], "SPY", "2020-01-01", "2021-01-01")
@@ -180,7 +183,7 @@ cum_returns_benchmark(["AAPL", "AMD", "MSFT"], [0.3, 0.4, 0.3], "SPY", "2020-01-
 Blue line : cumulative returns of your portfolio
 Red line : cumulative returns of the benchmark
 
-### Alpha and Beta of a stock/portfolio
+### Alpha and Beta of a portfolio
 
 ```sh
 #alpha_beta(stocks, weights, benchmark, start_date, end_date)
@@ -223,7 +226,7 @@ individual_mean_daily_return(["FB", "AAPL", "AMD"],"2020-01-01", "2021-01-01")
 ### Portfolio mean daily return
 ```sh
 #portfolio_daily_mean_return(stocks,weights, start_date, end_date)
-individual_mean_daily_return(["FB", "AAPL", "AMD"],"2020-01-01", "2021-01-01")
+portfolio_daily_mean_return(["FB", "AAPL", "AMD"],"2020-01-01", "2021-01-01")
 ```
 <center><img src="https://i.ibb.co/Qfj4vH1/Capture.jpg"/></center>
 
