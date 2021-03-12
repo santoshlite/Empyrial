@@ -23,7 +23,7 @@ pip install trafalgars-0.0.1-py3-none-any.whl
 - Build a efficient frontier programm in 3 lines of code
 - Backtest a portfolio, see its stats and compare it to a benchmark 
 
-
+Here is the code of this article from a google collab, you can use it to follow along with this article: https://colab.research.google.com/drive/1qgFDDQneQP-oddbJVWWApfPKFMnbpj6I?usp=sharing
 
 # Documentation
 
