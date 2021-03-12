@@ -6,7 +6,7 @@ Python library to make development of portfolio analysis faster and easier
 
 For the moment, Trafalgar is still in beta development. To install it you should:
 
-1) Download requirements.txt in the folder where you want to exectute the trafalgar library
+1) Download requirements.txt in the folder where you want to execute the trafalgar library
 2) Go to your folder directory with the command prompt and write : 
 ```
 pip install -r requirements.txt
