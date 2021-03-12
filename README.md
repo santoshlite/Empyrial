@@ -9,7 +9,7 @@ For the moment, Trafalgar is still in beta development. To install it you should
 1) Download requirements.txt in the folder where you want to exectute the trafalgar library
 2) Go to your folder directory with the command prompt and write : 
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 3) Download trafalgars-0.0.1-py3-none-any.whl in the same folder
 4) Go to your folder directory with the command prompt and write : 
