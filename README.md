@@ -56,7 +56,7 @@ graph_open(["FB"], "2020-01-01", "2021-01-01")
 #for multiple stocks
 graph_open(["FB", "AAPL", "TSLA"], "2020-01-01", "2021-01-01")
 ```
-### Graph the adjourned closing price
+### Graph the adjusted closing price
 ```sh
 #graph_adj_close(stock, start_date, end_date)
 
@@ -98,7 +98,7 @@ volume(["AAPL"], "2020-01-01", "2021-01-01")
 #open(stock, start_date, end_date)
 open(["AAPL"], "2020-01-01", "2021-01-01")
 ```
-### Get adjourned closing price data (in dataframe format)
+### Get adjusted closing price data (in dataframe format)
 ```sh
 #adj_close(stock, start_date, end_date)
 adj_close(["AAPL"], "2020-01-01", "2021-01-01")
