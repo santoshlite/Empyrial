@@ -157,7 +157,7 @@ However there is a way to make it work for individual stock:
 annual_volatility(["FB", "AAPL"], [1, 0],"2020-01-01", "2021-01-01")
 ```
 
-### Annual Volatility of a portfolio
+### Annual Volatility of a portfolio/stock
 ```sh
 #annual_volatility(stocks, weights, start_date, end_date)
 
@@ -169,7 +169,7 @@ annual_volatility(["FB", "AAPL"], [1, 0],"2020-01-01", "2021-01-01")
 ```
 <center><img src="https://i.ibb.co/frNdHdG/Capture.jpg"/></center>
 
-### Sharpe Ratio of a portfolio
+### Sharpe Ratio of a portfolio/stock
 ```sh
 #sharpe_ratio(stocks, weights, start_date, end_date)
 
@@ -181,7 +181,7 @@ sharpe_ratio(["FB", "AAPL"], [1, 0],"2020-01-01", "2021-01-01")
 ```
 <center><img src="https://i.ibb.co/vPL5JNZ/Capture.jpg"/></center>
 
-### Compare the returns of a portfolio to a benchmark
+### Compare the returns of a portfolio/stock to a benchmark
 ```sh
 #returns_benchmark(stocks, weights, benchmark, start_date, end_date)
 
@@ -196,7 +196,7 @@ returns_benchmark(["AAPL", "AMD"], [1,0], "SPY", "2020-01-01", "2021-01-01")
 Blue line : returns of your portfolio
 Red line : returns of the benchmark
 
-### Compare the cumulative returns of a portfolio to a benchmark
+### Compare the cumulative returns of a portfolio/stock to a benchmark
 ```sh
 #cum_returns_benchmark(stocks, weights, benchmark, start_date, end_date)
 
@@ -211,7 +211,7 @@ cum_returns_benchmark(["AAPL", "AMD"], [1,0], "SPY", "2020-01-01", "2021-01-01")
 Blue line : cumulative returns of your portfolio
 Red line : cumulative returns of the benchmark
 
-### Alpha and Beta of a portfolio
+### Alpha and Beta of a portfolio/stock
 
 ```sh
 #alpha_beta(stocks, weights, benchmark, start_date, end_date)
