@@ -16,7 +16,7 @@ from tabulate import tabulate
 from datetime import datetime
 import plotly.graph_objs as go
 import matplotlib.pyplot as plt
-import fix_yahoo_finance as yf
+import yfinance as yf
 import statsmodels.api as sm
 from statsmodels import regression
 plt.style.use('fivethirtyeight')
