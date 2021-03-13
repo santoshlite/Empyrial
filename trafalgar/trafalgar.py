@@ -78,7 +78,7 @@ def volume(stock, start_date, end_date):
   return df
 
 def returns(stocks, start_date, end_date):
-  df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
+  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Close']
   df = pd.DataFrame(df)
   returns = df.pct_change()
   return returns
@@ -295,6 +295,7 @@ def efficient_frontier(stocks, start_date, end_date, iterations):
 
   # Add red dot for max SR
   plt.scatter(max_sr_vol,max_sr_ret,c='red',s=50,edgecolors='black')
+  plt.show()
 
 def individual_cum_returns_graph(stocks, start_date, end_date):
 
