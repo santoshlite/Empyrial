@@ -14,7 +14,7 @@ keywords = ['Portfolio management', 'Quantitative finance', 'Efficient frontier'
 install_requires=[            # I get to this in a second
         'tabulate',
         'datetime',
-        'fix_yahoo_finance',
+        'yfinance',
         'statsmodels',
         'seaborn',
         'matplotlib.mlab',

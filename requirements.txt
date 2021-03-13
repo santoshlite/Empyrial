@@ -6,5 +6,5 @@ tabulate
 pandas_datareader
 datetime
 plotly
-fix_yahoo_finance
+yahoo_finance
 statsmodels
