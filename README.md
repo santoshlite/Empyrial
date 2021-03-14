@@ -6,16 +6,14 @@ Python library to make development of portfolio analysis faster and easier
 
 For the moment, Trafalgar is still in beta development. To install it you should:
 
-1) Download requirements.txt in the folder where you want to execute the trafalgar library
+1) Download requirements.txt in the folder where you want to execute the trafalgar library 
 2) Go to your folder directory with the command prompt and write : 
 ```
 pip install -r requirements.txt
 ```
-3) Download trafalgars-0.0.1-py3-none-any.whl in the same folder
-4) Go to your folder directory with the command prompt and write : 
-```
-pip install trafalgars-0.0.1-py3-none-any.whl
-```
+3) Download trafalgars.py in the same folder
+
+Note : Step 1 and 2 are not always necessary, just make sure the libraries required by trafalgar are installed in you project env.
 
 ## Features include 📈
 
@@ -30,7 +28,7 @@ Here is the code of this article from a google collab, you can use it to follow 
 ### Call the library
 First, you should do:
 ```sh
-from trafalgar import *
+from trafalgars import *
 ```
 
 ### Graph of the closing price of a stock
