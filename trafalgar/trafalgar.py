@@ -100,6 +100,18 @@ def covariance(stocks, start_date, end_date, days):
   cov_matrix_annual = returns.cov()*days
   return cov_matrix_annual
 
+def correlation(stocks, start_date, end_date, method='pearson'):
+  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )['Close']
+  df = pd.DataFrame(df)
+  returns = df.pct_change()
+  corr_matrix = returns.corr(method)
+  return corr_matrix
+
+def correlation_graph(stocks, start_date, end_date):
+    corr_mat = correlation(stocks, start_date, end_date)
+    seaborn.heatmap(corr_mat, annot=True)
+    plt.show()
+
 def ohlcv(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
   df = pd.DataFrame(df)
