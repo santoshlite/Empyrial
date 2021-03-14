@@ -107,6 +107,11 @@ def correlation(stocks, start_date, end_date, method='pearson'):
   corr_matrix = returns.corr(method)
   return corr_matrix
 
+def correlation_graph(stocks, start_date, end_date):
+    corr_mat = correlation(stocks, start_date, end_date)
+    seaborn.heatmap(corr_mat, annot=True)
+    plt.show()
+
 def ohlcv(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
   df = pd.DataFrame(df)
