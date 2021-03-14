@@ -11,7 +11,7 @@ For the moment, Trafalgar is still in beta development. To install it you should
 ```
 pip install -r requirements.txt
 ```
-3) Download trafalgars.py in the same folder
+3) Download trafalgar.py in the same folder
 
 Note : Step 1 and 2 are not always necessary, just make sure the libraries required by trafalgar are installed in you project env.
 
@@ -28,7 +28,7 @@ Here is the code of this article from a google collab, you can use it to follow 
 ### Call the library
 First, you should do:
 ```sh
-from trafalgars import *
+from trafalgar import *
 ```
 
 ### Graph of the closing price of a stock
