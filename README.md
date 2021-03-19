@@ -13,6 +13,12 @@ pip install -r requirements.txt
 ```
 3) Download trafalgar.py in the same folder
 
+For Anaconda setup you can simply run below to install all dependencies with env name trafalgar.
+
+```
+conda env create --file environment.yaml  
+```
+
 Note : Step 1 and 2 are not always necessary, just make sure the libraries required by trafalgar are installed in you project env.
 
 ## Features include 📈
