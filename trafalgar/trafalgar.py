@@ -21,7 +21,22 @@ import statsmodels.api as sm
 from statsmodels import regression
 plt.style.use('fivethirtyeight')
 
+# ------------------------------------------------------------------------------------------
+
 def graph_close(stock, start_date, end_date):
+
+  """
+  Source and plot Close prices from yahoo for any given stock/s & period 
+
+  Parameters
+  ----------
+  stock : str,list
+      Either a single stock ticker or list of tickers.
+  start_date : str
+      Date in yyyy-mm-dd format
+  end_date : str
+      Date in yyyy-mm-dd format
+  """
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
   df = pd.DataFrame(df)
   plt.figure(figsize=(20,10))
@@ -29,6 +44,8 @@ def graph_close(stock, start_date, end_date):
   plt.xlabel("Date")
   plt.ylabel("$ price")
   plt.title(" Close Price from "+start_date + " to "+ end_date)
+
+# ------------------------------------------------------------------------------------------
 
 def graph_open(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Open']
@@ -39,6 +56,8 @@ def graph_open(stock, start_date, end_date):
   plt.ylabel("$ price")
   plt.title(" Open Price from "+start_date + " to "+ end_date)
 
+# ------------------------------------------------------------------------------------------
+
 def graph_volume(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Volume']
   df = pd.DataFrame(df)
@@ -47,6 +66,8 @@ def graph_volume(stock, start_date, end_date):
   plt.xlabel("Date")
   plt.ylabel("$ price")
   plt.title(" Close Price from "+start_date + " to "+ end_date)
+
+# ------------------------------------------------------------------------------------------
 
 def graph_adj_close(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
@@ -57,32 +78,44 @@ def graph_adj_close(stock, start_date, end_date):
   plt.ylabel("$ price")
   plt.title(" Close Price from "+start_date + " to "+ end_date)
 
+# ------------------------------------------------------------------------------------------
+
 def close(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
   df = pd.DataFrame(df)
   return df
+
+# ------------------------------------------------------------------------------------------
 
 def open(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Open']
   df = pd.DataFrame(df)
   return df
 
+# ------------------------------------------------------------------------------------------
+
 def adj_close(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
   df = pd.DataFrame(df)
   return df
+
+# ------------------------------------------------------------------------------------------
 
 def volume(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Volume']
   df = pd.DataFrame(df)
   return df
 
+# ------------------------------------------------------------------------------------------
+
 def returns(stocks, start_date, end_date):
   df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Close']
   df = pd.DataFrame(df)
   returns = df.pct_change()
   return returns
-  
+
+# ------------------------------------------------------------------------------------------
+
 def returns_graph(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
   df = pd.DataFrame(df)
@@ -93,12 +126,16 @@ def returns_graph(stock, start_date, end_date):
   plt.ylabel("$ price")
   plt.title(stock + " Adj Revenues from "+start_date + " to "+ end_date)
 
+# ------------------------------------------------------------------------------------------
+
 def covariance(stocks, start_date, end_date, days):
   df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )['Close']
   df = pd.DataFrame(df)
   returns = df.pct_change()
   cov_matrix_annual = returns.cov()*days
   return cov_matrix_annual
+
+# ------------------------------------------------------------------------------------------
 
 def correlation(stocks, start_date, end_date, method='pearson'):
   df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )['Close']
@@ -107,16 +144,22 @@ def correlation(stocks, start_date, end_date, method='pearson'):
   corr_matrix = returns.corr(method)
   return corr_matrix
 
+# ------------------------------------------------------------------------------------------
+
 def correlation_graph(stocks, start_date, end_date):
     corr_mat = correlation(stocks, start_date, end_date)
     seaborn.heatmap(corr_mat, annot=True)
     plt.show()
+
+# ------------------------------------------------------------------------------------------
 
 def ohlcv(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
   df = pd.DataFrame(df)
   df = df.drop(['Adj Close'], axis=1)
   return df
+
+# ------------------------------------------------------------------------------------------
 
 def cum_returns_graph(stocks, wts, start_date, end_date):
 
@@ -136,6 +179,8 @@ def cum_returns_graph(stocks, wts, start_date, end_date):
   ax1.set_title("Portfolio Cumulative Returns")
   plt.show();
 
+# ------------------------------------------------------------------------------------------
+
 def cum_returns(stocks, wts, start_date, end_date):
   
   price_data = web.get_data_yahoo(stocks,
@@ -147,6 +192,8 @@ def cum_returns(stocks, wts, start_date, end_date):
   port_ret = weighted_returns.sum(axis=1)
   cumulative_ret = (port_ret + 1).cumprod()
   return cumulative_ret
+
+# ------------------------------------------------------------------------------------------
 
 def annual_volatility(stocks, wts, start_date, end_date):
 
@@ -161,6 +208,8 @@ def annual_volatility(stocks, wts, start_date, end_date):
   annual_std = np.std(port_ret) * np.sqrt(252)
   print("Volatility (in %):")
   return annual_std*100
+
+# ------------------------------------------------------------------------------------------
 
 def sharpe_ratio(stocks, wts, start_date, end_date):
 
@@ -177,6 +226,8 @@ def sharpe_ratio(stocks, wts, start_date, end_date):
   port_sharpe_ratio = geometric_port_return / annual_std
   print("Sharpe ratio :")
   return port_sharpe_ratio
+
+# ------------------------------------------------------------------------------------------
 
 def returns_benchmark(stocks, wts, benchmark, start_date, end_date):
   yf.pdr_override()
@@ -198,6 +249,8 @@ def returns_benchmark(stocks, wts, benchmark, start_date, end_date):
   return_df2.plot()
   plt.ylabel("Daily return comparison")
   plt.show()
+
+# ------------------------------------------------------------------------------------------
 
 def cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
   yf.pdr_override()
@@ -222,6 +275,8 @@ def cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
   cumulative_ret_df2.plot()
   plt.ylabel("Daily return comparison")
   plt.show()
+
+# ------------------------------------------------------------------------------------------
 
 def alpha_beta(stocks, wts, benchmark, start_date, end_date):
   yf.pdr_override()
@@ -251,6 +306,8 @@ def alpha_beta(stocks, wts, benchmark, start_date, end_date):
   alpha, beta = linreg(X,Y)
   print("alpha: "+ str(alpha))
   print("beta: "+ str(beta))
+
+# ------------------------------------------------------------------------------------------
 
 def efficient_frontier(stocks, start_date, end_date, iterations):
 
@@ -309,6 +366,8 @@ def efficient_frontier(stocks, start_date, end_date, iterations):
   plt.scatter(max_sr_vol,max_sr_ret,c='red',s=50,edgecolors='black')
   plt.show()
 
+# ------------------------------------------------------------------------------------------
+
 def individual_cum_returns_graph(stocks, start_date, end_date):
 
   stock_raw = web.DataReader(stocks, 'yahoo', "2020-01-01", "2021-01-01")
@@ -316,6 +375,8 @@ def individual_cum_returns_graph(stocks, start_date, end_date):
   port_ret = stock.sum(axis=1)
   stock_normed = stock/stock.iloc[0]
   stock_normed.plot(figsize=(12,8))
+
+# ------------------------------------------------------------------------------------------
 
 def individual_cum_returns(stocks, start_date, end_date):
 
@@ -325,12 +386,16 @@ def individual_cum_returns(stocks, start_date, end_date):
   stock_normed = stock/stock.iloc[0]
   return stock_normed
 
+# ------------------------------------------------------------------------------------------
+
 def individual_mean_daily_return(stocks, start_date, end_date):
   stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
   stock = stock_raw['Close']
   port_ret = stock.sum(axis=1)
   mean_daily_ret = stock.pct_change(1).mean()
   return mean_daily_ret
+
+# ------------------------------------------------------------------------------------------
 
 def portfolio_daily_mean_return(stocks,wts, start_date, end_date):
   stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
@@ -339,6 +404,8 @@ def portfolio_daily_mean_return(stocks,wts, start_date, end_date):
   cum_port = port_ret.pct_change(1)
   mean_return_port = cum_port.mean()
   return mean_return_port
+
+# ------------------------------------------------------------------------------------------
 
 def VaR(stocks, start_date, end_date, confidence_level):
   df = yf.download(stocks, start_date, end_date)
@@ -357,3 +424,5 @@ def VaR(stocks, start_date, end_date, confidence_level):
 
 
   print(tabulate([[confidence_level, VaR]], headers=['Confidence Level', 'Value at Risk']))
+
+# ------------------------------------------------------------------------------------------
