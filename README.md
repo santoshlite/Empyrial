@@ -32,7 +32,7 @@ Here is the code of this article from a google collab, you can use it to follow 
 ### Call the library
 First, you should do:
 ```sh
-from trafalgar import *
+from Trafalgars import *
 ```
 
 ### Graph of the closing price of a stock
