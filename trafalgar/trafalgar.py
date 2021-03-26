@@ -11,10 +11,7 @@ from scipy.stats import norm
 # Tabular data output
 from tabulate import tabulate
 from pandas_datareader import data as web
-from tabulate import tabulate
 from datetime import datetime
-import plotly.graph_objs as go
-import matplotlib.pyplot as plt
 import yfinance as yf
 import statsmodels.api as sm
 from statsmodels import regression
@@ -25,7 +22,7 @@ plt.style.use('fivethirtyeight')
 def graph_close(stock, start_date, end_date):
 
   """
-  Source and plot Close prices from yahoo for any given stock/s & period 
+  Source and plot Close prices from yahoo for any given stock/s & period
 
   Parameters
   ----------
@@ -181,7 +178,7 @@ def cum_returns_graph(stocks, wts, start_date, end_date):
 # ------------------------------------------------------------------------------------------
 
 def cum_returns(stocks, wts, start_date, end_date):
-  
+
   price_data = web.get_data_yahoo(stocks,
                                 start = start_date,
                                 end = end_date)
@@ -276,7 +273,7 @@ def graph_cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
   plt.show()
 
 # ------------------------------------------------------------------------------------------
- def cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
+def cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
   yf.pdr_override()
 
   price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
@@ -473,7 +470,7 @@ def alpha(stocks, wts, benchmark, start_date, end_date):
 
   alpha, beta = linreg(X,Y)
   print(alpha)
-  
+
   #--------------------------------------------------------------------------------------------
 def beta(stocks, wts, benchmark, start_date, end_date):
   yf.pdr_override()
@@ -507,6 +504,3 @@ def correlation(stocks, start_date, end_date):
   returns = df.pct_change()
   corr_matrix = returns.corr('pearson')
   return corr_matrix
-
-  
-  
