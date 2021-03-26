@@ -6,7 +6,6 @@ import pandas as pd
 # Plotting
 import matplotlib.pyplot as plt
 import seaborn
-import matplotlib.mlab as mlab
 # Statistical calculation
 from scipy.stats import norm
 # Tabular data output
