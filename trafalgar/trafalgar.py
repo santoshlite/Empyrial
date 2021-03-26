@@ -251,7 +251,7 @@ def returns_benchmark(stocks, wts, benchmark, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
+def graph_cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
   yf.pdr_override()
 
   price_data = web.get_data_yahoo(stocks,
@@ -276,6 +276,29 @@ def cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
   plt.show()
 
 # ------------------------------------------------------------------------------------------
+ def cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
+  yf.pdr_override()
+
+  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
+  price_data = price_data['Adj Close']
+
+  df2 = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date )
+
+  ret_data = price_data.pct_change()[1:]
+  return_df2 = df2.Close.pct_change()[1:]
+
+  port_ret = (ret_data * wts).sum(axis = 1)
+  cumulative_ret_df1 = (port_ret + 1).cumprod()
+  cumulative_ret_df2 = (return_df2 + 1).cumprod()
+
+  df1 = pd.DataFrame(cumulative_ret_df1)
+  df2 = pd.DataFrame(cumulative_ret_df2)
+  df = pd.concat([df1,df2], axis=1)
+  df = pd.DataFrame(df)
+  df.columns = ['portfolio', 'benchmark']
+  return df
+
+#-------------------------------------------------------------------------------------------
 
 def alpha_beta(stocks, wts, benchmark, start_date, end_date):
   yf.pdr_override()
@@ -425,3 +448,65 @@ def VaR(stocks, start_date, end_date, confidence_level):
   print(tabulate([[confidence_level, VaR]], headers=['Confidence Level', 'Value at Risk']))
 
 # ------------------------------------------------------------------------------------------
+def alpha(stocks, wts, benchmark, start_date, end_date):
+  yf.pdr_override()
+
+  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
+  price_data = price_data['Adj Close']
+
+  df2 = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date )
+
+  ret_data = price_data.pct_change()[1:]
+  return_df2 = df2.Close.pct_change()[1:]
+
+  port_ret = (ret_data * wts).sum(axis = 1)
+
+  X = return_df2.values
+  Y = port_ret.values
+
+  def linreg(x,y):
+    x = sm.add_constant(x)
+    model = regression.linear_model.OLS(y,x).fit()
+
+    X = x[:,1]
+    return model.params[0], model.params[1]
+
+  alpha, beta = linreg(X,Y)
+  print(alpha)
+  
+  #--------------------------------------------------------------------------------------------
+def beta(stocks, wts, benchmark, start_date, end_date):
+  yf.pdr_override()
+
+  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
+  price_data = price_data['Adj Close']
+
+  df2 = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date )
+
+  ret_data = price_data.pct_change()[1:]
+  return_df2 = df2.Close.pct_change()[1:]
+
+  port_ret = (ret_data * wts).sum(axis = 1)
+
+  X = return_df2.values
+  Y = port_ret.values
+
+  def linreg(x,y):
+    x = sm.add_constant(x)
+    model = regression.linear_model.OLS(y,x).fit()
+
+    X = x[:,1]
+    return model.params[0], model.params[1]
+
+  alpha, beta = linreg(X,Y)
+  print(beta)
+  #-------------------------------------------------------------------------------------------------
+def correlation(stocks, start_date, end_date):
+  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )['Close']
+  df = pd.DataFrame(df)
+  returns = df.pct_change()
+  corr_matrix = returns.corr('pearson')
+  return corr_matrix
+
+  
+  
