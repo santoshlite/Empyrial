@@ -6,12 +6,10 @@ Python library to make development of portfolio analysis faster and easier
 
 For the moment, Trafalgar is still in beta development. To install it you should:
 
-1) Download requirements.txt in the folder where you want to execute the trafalgar library 
-2) Go to your folder directory with the command prompt and write : 
 ```
-pip install -r requirements.txt
+pip install trafalgars==0.0.2
 ```
-3) Download trafalgar.py in the same folder
+(https://pypi.org/project/trafalgars/0.0.2/#description)
 
 For Anaconda setup you can simply run below to install all dependencies with env name trafalgar.
 
