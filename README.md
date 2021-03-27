@@ -7,7 +7,7 @@ Python library to make development of portfolio analysis faster and easier
 For the moment, Trafalgar is still in beta development. To install it you should:
 
 ```
-pip install trafalgars==0.0.2
+pip install trafalgars
 ```
 (https://pypi.org/project/trafalgars/0.0.2/#description)
 
