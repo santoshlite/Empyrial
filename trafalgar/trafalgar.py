@@ -463,3 +463,62 @@ def correlation(stocks, start_date, end_date):
   returns = df.pct_change()
   corr_matrix = returns.corr('pearson')
   return corr_matrix
+
+#-----------------------------------------------------------------------------------------------------
+def graph_kalman(stocks, start, end):
+  x = web.DataReader(stocks, data_source='yahoo', start = start, end= end)['Close']
+
+  # Construct a Kalman filter
+  kf = KalmanFilter(transition_matrices = [1],
+                    observation_matrices = [1],
+                    initial_state_mean = 0,
+                    initial_state_covariance = 1,
+                    observation_covariance=1,
+                    transition_covariance=.01)
+
+  # Use the observed values of the price to get a rolling mean
+  state_means, _ = kf.filter(x.values)
+  state_means = pd.Series(state_means.flatten(), index=x.index)
+  x = pd.DataFrame(x)
+
+  plt.plot(state_means)
+  plt.plot(x)
+
+  plt.title('Kalman filter estimate of average')
+  plt.legend(['Kalman Estimate', 'X'])
+  plt.xlabel('Day')
+  plt.ylabel('Price');
+#------------------------------------------------------------------------------------------------------------
+
+def kalman(stocks, start_date, end_date):
+  x = web.DataReader(stocks, data_source='yahoo', start = start, end= end)['Close']
+
+  # Construct a Kalman filter
+  kf = KalmanFilter(transition_matrices = [1],
+                    observation_matrices = [1],
+                    initial_state_mean = 0,
+                    initial_state_covariance = 1,
+                    observation_covariance=1,
+                    transition_covariance=.01)
+
+  # Use the observed values of the price to get a rolling mean
+  state_means, _ = kf.filter(x.values)
+  state_means = pd.Series(state_means.flatten(), index=x.index)
+  state_means = pd.DataFrame(state_means)
+  return state_means
+
+#---------------------------------------------------------------------------------------------------------------
+def capm(stocks, wts, start_date, end_date):
+
+  R = portfolio_ret(stocks, wts, start_date, end_date)
+  R_F = web.DataReader('BIL', data_source='yahoo', start = start_date, end = end_date)['Close'].pct_change()[1:]
+  
+  # find it's beta against market
+  M = web.DataReader('SPY', data_source='yahoo', start = start_date, end = end_date)['Close'].pct_change()[1:]
+
+  results = regression.linear_model.OLS(R-R_F, sm.add_constant(M)).fit()
+  beta = results.params[1]
+  return results.summary()
+  #--------------------------------------------------------------------------------------------------------------
+  
+
