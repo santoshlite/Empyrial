@@ -330,7 +330,7 @@ def alpha_beta(stocks, wts, benchmark, start_date, end_date):
 
 def efficient_frontier(stocks, start_date, end_date, iterations):
 
-  stock_raw = web.DataReader(stocks, 'yahoo', "2020-01-01", "2021-01-01")
+  stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
   stock = stock_raw['Close']
   df = pd.DataFrame(stock)
   port_ret = stock.sum(axis=1)
@@ -389,7 +389,7 @@ def efficient_frontier(stocks, start_date, end_date, iterations):
 
 def individual_cum_returns_graph(stocks, start_date, end_date):
 
-  stock_raw = web.DataReader(stocks, 'yahoo', "2020-01-01", "2021-01-01")
+  stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
   stock = stock_raw['Close']
   port_ret = stock.sum(axis=1)
   stock_normed = stock/stock.iloc[0]
@@ -399,7 +399,7 @@ def individual_cum_returns_graph(stocks, start_date, end_date):
 
 def individual_cum_returns(stocks, start_date, end_date):
 
-  stock_raw = web.DataReader(stocks, 'yahoo', "2020-01-01", "2021-01-01")
+  stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
   stock = stock_raw['Close']
   port_ret = stock.sum(axis=1)
   stock_normed = stock/stock.iloc[0]
