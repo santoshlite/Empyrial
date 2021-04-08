@@ -153,6 +153,7 @@ def ohlcv(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
   df = pd.DataFrame(df)
   df = df.drop(['Adj Close'], axis=1)
+  df = df[["Open", "High", "Low", "Close", "Volume"]]
   return df
 
 # ------------------------------------------------------------------------------------------
@@ -193,25 +194,20 @@ def cum_returns(stocks, wts, start_date, end_date):
 
 def annual_volatility(stocks, wts, start_date, end_date):
 
-  price_data = web.get_data_yahoo(stocks,
-                                start = start_date,
-                                end = end_date)
+  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
   price_data = price_data['Adj Close']
 
   ret_data = price_data.pct_change()[1:]
   port_ret = (ret_data * wts).sum(axis = 1)
   cumulative_ret = (port_ret + 1).cumprod()
   annual_std = np.std(port_ret) * np.sqrt(252)
-  print("Volatility (in %):")
   return annual_std*100
 
 # ------------------------------------------------------------------------------------------
 
 def sharpe_ratio(stocks, wts, start_date, end_date):
 
-  price_data = web.get_data_yahoo(stocks,
-                                start = start_date,
-                                end = end_date)
+  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
   price_data = price_data['Adj Close']
 
   ret_data = price_data.pct_change()[1:]
@@ -220,8 +216,7 @@ def sharpe_ratio(stocks, wts, start_date, end_date):
   geometric_port_return = np.prod(port_ret + 1) ** (252/port_ret.shape[0]) - 1
   annual_std = np.std(port_ret) * np.sqrt(252)
   port_sharpe_ratio = geometric_port_return / annual_std
-  print("Sharpe ratio :")
-  return port_sharpe_ratio
+  return 1+port_sharpe_ratio
 
 # ------------------------------------------------------------------------------------------
 
@@ -295,36 +290,6 @@ def cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
   df.columns = ['portfolio', 'benchmark']
   return df
 
-#-------------------------------------------------------------------------------------------
-
-def alpha_beta(stocks, wts, benchmark, start_date, end_date):
-  yf.pdr_override()
-
-  price_data = web.get_data_yahoo(stocks,
-                                  start = start_date,
-                                  end = end_date)
-  price_data = price_data['Adj Close']
-
-  df2 = web.get_data_yahoo(benchmark, start= start_date, end= end_date,)
-
-  ret_data = price_data.pct_change()[1:]
-  return_df2 = df2.Close.pct_change()[1:]
-
-  port_ret = (ret_data * wts).sum(axis = 1)
-
-  X = return_df2.values
-  Y = port_ret.values
-
-  def linreg(x,y):
-    x = sm.add_constant(x)
-    model = regression.linear_model.OLS(y,x).fit()
-
-    X = x[:,1]
-    return model.params[0], model.params[1]
-
-  alpha, beta = linreg(X,Y)
-  print("alpha: "+ str(alpha))
-  print("beta: "+ str(beta))
 
 # ------------------------------------------------------------------------------------------
 
@@ -426,23 +391,17 @@ def portfolio_daily_mean_return(stocks,wts, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def VaR(stocks, start_date, end_date, confidence_level):
-  df = yf.download(stocks, start_date, end_date)
-  df = df[['Close']]
-  df['returns'] = df.Close.pct_change()
+def var(value_invested, stocks, wts, alpha, start_date, end_date):
+  price_data = web.DataReader(stocks, 'yahoo', start_date, end_date)
+  price_data = price_data['Adj Close']
+  ret_data = price_data.pct_change()[1:]
+  weighted_returns = (wts * ret_data)
+  port_ret = weighted_returns.sum(axis=1)
+  #df = pd.concat([return_fb, return_aapl], axis=1)
+  port_ret = port_ret.fillna(0.0)
 
-  mean = np.mean(df['returns'])
-  std_dev = np.std(df['returns'])
-
-  df['returns'].hist(bins=40, density=True, histtype='stepfilled', alpha=0.5)
-  x = np.linspace(mean - 3*std_dev, mean + 3*std_dev, 100)
-  plt.plot(x,x)
-  plt.show()
-
-  VaR = norm.ppf(1-confidence_level/100, mean, std_dev)
-
-
-  print(tabulate([[confidence_level, VaR]], headers=['Confidence Level', 'Value at Risk']))
+    # Compute the correct percentile loss and multiply by value invested
+  return np.percentile(port_ret, 100 * (1-alpha)) * value_invested
 
 # ------------------------------------------------------------------------------------------
 def alpha(stocks, wts, benchmark, start_date, end_date):
