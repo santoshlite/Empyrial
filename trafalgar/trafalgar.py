@@ -280,7 +280,12 @@ def cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
   df = pd.DataFrame(df)
   df.columns = ['portfolio', 'benchmark']
   return df
-
+#-------------------------------------------------------------------------------------------
+def port_ret(stock,wts, start_date, end_date):
+    assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+    ret_data = assets.pct_change()[1:]
+    port_ret = (ret_data * wts).sum(axis = 1)
+    return port_ret
 
 # ------------------------------------------------------------------------------------------
 
@@ -396,8 +401,8 @@ def var(value_invested, stocks, wts, alpha, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 def alpha(stock, benchmark, start_date, end_date):
-  asset = web.DataReader('TSLA', data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  benchmark = web.DataReader('SPY', data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
 
   r_a = asset.pct_change()[1:]
   r_b = benchmark.pct_change()[1:]
@@ -411,11 +416,11 @@ def alpha(stock, benchmark, start_date, end_date):
       return model.params[0], model.params[1]
 
   alpha, beta = linreg(X,Y)
-  print(alpha)
+  return alpha
   #--------------------------------------------------------------------------------------------
 def beta(stock, benchmark, start_date, end_date):
-  asset = web.DataReader('TSLA', data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  benchmark = web.DataReader('SPY', data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
 
   r_a = asset.pct_change()[1:]
   r_b = benchmark.pct_change()[1:]
@@ -431,8 +436,53 @@ def beta(stock, benchmark, start_date, end_date):
       return model.params[0], model.params[1]
 
   alpha, beta = linreg(X,Y)
-  print(beta)
+  return beta
   #-------------------------------------------------------------------------------------------------
+def port_beta(stocks, wts, benchmark, start_date, end_date):
+  assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  ret_data = assets.pct_change()[1:]
+  r_a = (ret_data * wts).sum(axis = 1)
+  r_b = benchmark.pct_change()[1:]
+
+  X = r_b.values # Get just the values, ignore the timestamps
+  Y = r_a.values
+
+  def linreg(x,y):
+      # We add a constant so that we can also fit an intercept (alpha) to the model
+      # This just adds a column of 1s to our data
+      x = sm.add_constant(x)
+      model = regression.linear_model.OLS(y,x).fit()
+      # Remove the constant now that we're done
+      x = x[:, 1]
+      return model.params[0], model.params[1]
+
+  alpha, beta = linreg(X,Y)
+  return beta
+#-------------------------------------------------------------------------------------------------------------
+def port_alpha(stocks, wts, benchmark, start_date, end_date):
+  assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  ret_data = assets.pct_change()[1:]
+  r_a = (ret_data * wts).sum(axis = 1)
+  r_b = benchmark.pct_change()[1:]
+
+  X = r_b.values # Get just the values, ignore the timestamps
+  Y = r_a.values
+
+  def linreg(x,y):
+      # We add a constant so that we can also fit an intercept (alpha) to the model
+      # This just adds a column of 1s to our data
+      x = sm.add_constant(x)
+      model = regression.linear_model.OLS(y,x).fit()
+      # Remove the constant now that we're done
+      x = x[:, 1]
+      return model.params[0], model.params[1]
+
+  alpha, beta = linreg(X,Y)
+  return alpha
+#-------------------------------------------------------------------------------------------------------------------
+
 def correlation(stocks, start_date, end_date):
   df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )['Adj Close']
   df = pd.DataFrame(df)
@@ -497,8 +547,8 @@ def capm(stocks, wts, start_date, end_date):
   return results.summary()
   #--------------------------------------------------------------------------------------------------------------
   def cointegration(stock1, stock2, start_date, end_date):
-  X1 = web.DataReader("MSFT", data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  X2 = web.DataReader("GOOG", data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  X1 = web.DataReader(stock1, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  X2 = web.DataReader(stock2, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
   X1.name = str(stock1)
   X2.name = str(stock2)
   def check_for_stationarity(X, cutoff=0.01):
@@ -521,6 +571,59 @@ def capm(stocks, wts, start_date, end_date):
 
   check_for_stationarity(Z);
   #------------------------------------------------------------------------------------------------------------------
-  
+  def return_cointegration(stock1, stock2, start_date, end_date):
+  X1 = web.DataReader(stock1, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  X2 = web.DataReader(stock2, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  X1 = X1.pct_change()[1:]
+  X2 = X2.pct_change()[1:]
+  X1.name = str(stock1)
+  X2.name = str(stock2)
+  def check_for_stationarity(X, cutoff=0.01):
+    # H_0 in adfuller is unit root exists (non-stationary)
+    # We must observe significant p-value to convince ourselves that the series is stationary
+    pvalue = adfuller(X)[1]
+    if pvalue < cutoff:
+        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely stationary.')
+        return True
+    else:
+        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely non-stationary.')
+        return False
+  Z = X2 - X1
+  Z.name = 'Z'
+
+  plt.plot(Z)
+  plt.xlabel('Time')
+  plt.ylabel('Series Value')
+  plt.legend(['Z']);
+
+  check_for_stationarity(Z);
+#--------------------------------------------------------------------------------------------------------------------------
+
+  def stationarity(stock, start_date, end_date):
+  X = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  def check_for_stationarity(X, cutoff=0.01):
+    # H_0 in adfuller is unit root exists (non-stationary)
+    # We must observe significant p-value to convince ourselves that the series is stationary
+    pvalue = adfuller(X)[1]
+    if pvalue < cutoff:
+        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely stationary.')
+    else:
+        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely non-stationary.')
+  return check_for_stationarity(X)
+#---------------------------------------------------------------------------------------------------------------------
+def return_stationarity(stock, start_date, end_date):
+  X = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  X = X.pct_change()[1:]
+  def check_for_stationarity(X, cutoff=0.01):
+    # H_0 in adfuller is unit root exists (non-stationary)
+    # We must observe significant p-value to convince ourselves that the series is stationary
+    pvalue = adfuller(X)[1]
+    if pvalue < cutoff:
+        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely stationary.')
+    else:
+        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely non-stationary.')
+  return check_for_stationarity(X)
+#-------------------------------------------------------------------------------------------------------------------------
+
   
 
