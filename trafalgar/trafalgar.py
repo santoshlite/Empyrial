@@ -491,16 +491,15 @@ def correlation(stocks, start_date, end_date):
   return corr_matrix
 
 #-----------------------------------------------------------------------------------------------------
-def graph_kalman(stocks, start, end):
-  x = web.DataReader(stocks, data_source='yahoo', start = start, end= end)['Adj Close']
-
+def graph_kalman(stocks, start_date, end_date, noise_value):
+  x = web.DataReader(stocks, data_source='yahoo', start = start_date, end = end_date)['Adj Close']
   # Construct a Kalman filter
   kf = KalmanFilter(transition_matrices = [1],
                     observation_matrices = [1],
-                    initial_state_mean = 0,
+                    initial_state_mean = x[0],
                     initial_state_covariance = 1,
                     observation_covariance=1,
-                    transition_covariance=.01)
+                    transition_covariance= noise_value)
 
   # Use the observed values of the price to get a rolling mean
   state_means, _ = kf.filter(x.values)
@@ -516,16 +515,16 @@ def graph_kalman(stocks, start, end):
   plt.ylabel('Price');
 #------------------------------------------------------------------------------------------------------------
 
-def kalman(stocks, start_date, end_date):
-  x = web.DataReader(stocks, data_source='yahoo', start = start, end= end)['Adj Close']
+def kalman(stocks, start_date, end_date, noise_value):
+  x = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Close']
 
   # Construct a Kalman filter
   kf = KalmanFilter(transition_matrices = [1],
                     observation_matrices = [1],
-                    initial_state_mean = 0,
+                    initial_state_mean = x[0],
                     initial_state_covariance = 1,
                     observation_covariance=1,
-                    transition_covariance=.01)
+                    transition_covariance= noise_value)
 
   # Use the observed values of the price to get a rolling mean
   state_means, _ = kf.filter(x.values)
