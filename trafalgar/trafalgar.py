@@ -348,22 +348,41 @@ def efficient_frontier(stocks, start_date, end_date, iterations):
 
 # ------------------------------------------------------------------------------------------
 
-def individual_cum_returns_graph(stocks, start_date, end_date):
+def individual_cum_returns_graph(stocks, wts, start_date, end_date):
+  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
+  price_data = price_data['Adj Close']
 
-  stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
-  stock = stock_raw['Adj Close']
+  ret_data = price_data.pct_change()[1:]
+
+  port_ret = (ret_data * wts).sum(axis = 1)
+  cumulative_ret_df1 = (port_ret + 1).cumprod()
+  
+  plt.figure(figsize=(20,10))
+  stock_raw = web.DataReader(stocks, 'yahoo', "2020-01-01", "2021-01-01")
+  stock = stock_raw['Close']
   port_ret = stock.sum(axis=1)
   stock_normed = stock/stock.iloc[0]
+  stock_normed['Portfolio'] = cumulative_ret_df1
   stock_normed.plot(figsize=(12,8))
 
 # ------------------------------------------------------------------------------------------
 
-def individual_cum_returns(stocks, start_date, end_date):
+def individual_cum_returns(stocks, wts, start_date, end_date):
 
-  stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
-  stock = stock_raw['Adj Close']
+  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
+  price_data = price_data['Adj Close']
+
+  ret_data = price_data.pct_change()[1:]
+
+  port_ret = (ret_data * wts).sum(axis = 1)
+  cumulative_ret_df1 = (port_ret + 1).cumprod()
+  
+  plt.figure(figsize=(20,10))
+  stock_raw = web.DataReader(stocks, 'yahoo', "2020-01-01", "2021-01-01")
+  stock = stock_raw['Close']
   port_ret = stock.sum(axis=1)
   stock_normed = stock/stock.iloc[0]
+  stock_normed['Portfolio'] = cumulative_ret_df1
   return stock_normed
 
 # ------------------------------------------------------------------------------------------
@@ -516,7 +535,7 @@ def graph_kalman(stocks, start_date, end_date, noise_value):
 #------------------------------------------------------------------------------------------------------------
 
 def kalman(stocks, start_date, end_date, noise_value):
-  x = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Close']
+  x = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['AClose']
 
   # Construct a Kalman filter
   kf = KalmanFilter(transition_matrices = [1],
