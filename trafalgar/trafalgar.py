@@ -2,18 +2,17 @@
 # Data manipulation
 import numpy as np
 import pandas as pd
-
+import statsmodels
 # Plotting
 import matplotlib.pyplot as plt
-import seaborn
+import seaborn 
 # Statistical calculation
 from scipy.stats import norm
 # Tabular data output
-from tabulate import tabulate
 from pandas_datareader import data as web
 from datetime import datetime
-import yfinance as yf
 import statsmodels.api as sm
+from statsmodels.tsa.stattools import coint, adfuller
 from statsmodels import regression
 plt.style.use('fivethirtyeight')
 
@@ -105,7 +104,7 @@ def volume(stock, start_date, end_date):
 # ------------------------------------------------------------------------------------------
 
 def returns(stocks, start_date, end_date):
-  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Close']
+  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
   df = pd.DataFrame(df)
   returns = df.pct_change()
   return returns
@@ -113,7 +112,7 @@ def returns(stocks, start_date, end_date):
 # ------------------------------------------------------------------------------------------
 
 def returns_graph(stock, start_date, end_date):
-  df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
+  df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
   df = pd.DataFrame(df)
   returns = df.pct_change()
   plt.figure(figsize=(20,10))
@@ -125,20 +124,12 @@ def returns_graph(stock, start_date, end_date):
 # ------------------------------------------------------------------------------------------
 
 def covariance(stocks, start_date, end_date, days):
-  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )['Close']
+  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )['Adj Close']
   df = pd.DataFrame(df)
   returns = df.pct_change()
   cov_matrix_annual = returns.cov()*days
   return cov_matrix_annual
 
-# ------------------------------------------------------------------------------------------
-
-def correlation(stocks, start_date, end_date, method='pearson'):
-  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )['Close']
-  df = pd.DataFrame(df)
-  returns = df.pct_change()
-  corr_matrix = returns.corr(method)
-  return corr_matrix
 
 # ------------------------------------------------------------------------------------------
 
@@ -296,7 +287,7 @@ def cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
 def efficient_frontier(stocks, start_date, end_date, iterations):
 
   stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
-  stock = stock_raw['Close']
+  stock = stock_raw['Adj Close']
   df = pd.DataFrame(stock)
   port_ret = stock.sum(axis=1)
   log_ret = np.log(stock/stock.shift(1))
@@ -355,7 +346,7 @@ def efficient_frontier(stocks, start_date, end_date, iterations):
 def individual_cum_returns_graph(stocks, start_date, end_date):
 
   stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
-  stock = stock_raw['Close']
+  stock = stock_raw['Adj Close']
   port_ret = stock.sum(axis=1)
   stock_normed = stock/stock.iloc[0]
   stock_normed.plot(figsize=(12,8))
@@ -365,7 +356,7 @@ def individual_cum_returns_graph(stocks, start_date, end_date):
 def individual_cum_returns(stocks, start_date, end_date):
 
   stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
-  stock = stock_raw['Close']
+  stock = stock_raw['Adj Close']
   port_ret = stock.sum(axis=1)
   stock_normed = stock/stock.iloc[0]
   return stock_normed
@@ -374,7 +365,7 @@ def individual_cum_returns(stocks, start_date, end_date):
 
 def individual_mean_daily_return(stocks, start_date, end_date):
   stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
-  stock = stock_raw['Close']
+  stock = stock_raw['Adj Close']
   port_ret = stock.sum(axis=1)
   mean_daily_ret = stock.pct_change(1).mean()
   return mean_daily_ret
@@ -383,7 +374,7 @@ def individual_mean_daily_return(stocks, start_date, end_date):
 
 def portfolio_daily_mean_return(stocks,wts, start_date, end_date):
   stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
-  stock = stock_raw['Close']
+  stock = stock_raw['Adj Close']
   port_ret = (stock * wts).sum(axis = 1)
   cum_port = port_ret.pct_change(1)
   mean_return_port = cum_port.mean()
@@ -458,7 +449,7 @@ def beta(stocks, wts, benchmark, start_date, end_date):
   print(beta)
   #-------------------------------------------------------------------------------------------------
 def correlation(stocks, start_date, end_date):
-  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )['Close']
+  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )['Adj Close']
   df = pd.DataFrame(df)
   returns = df.pct_change()
   corr_matrix = returns.corr('pearson')
@@ -466,7 +457,7 @@ def correlation(stocks, start_date, end_date):
 
 #-----------------------------------------------------------------------------------------------------
 def graph_kalman(stocks, start, end):
-  x = web.DataReader(stocks, data_source='yahoo', start = start, end= end)['Close']
+  x = web.DataReader(stocks, data_source='yahoo', start = start, end= end)['Adj Close']
 
   # Construct a Kalman filter
   kf = KalmanFilter(transition_matrices = [1],
@@ -491,7 +482,7 @@ def graph_kalman(stocks, start, end):
 #------------------------------------------------------------------------------------------------------------
 
 def kalman(stocks, start_date, end_date):
-  x = web.DataReader(stocks, data_source='yahoo', start = start, end= end)['Close']
+  x = web.DataReader(stocks, data_source='yahoo', start = start, end= end)['Adj Close']
 
   # Construct a Kalman filter
   kf = KalmanFilter(transition_matrices = [1],
@@ -511,14 +502,40 @@ def kalman(stocks, start_date, end_date):
 def capm(stocks, wts, start_date, end_date):
 
   R = portfolio_ret(stocks, wts, start_date, end_date)
-  R_F = web.DataReader('BIL', data_source='yahoo', start = start_date, end = end_date)['Close'].pct_change()[1:]
+  R_F = web.DataReader('BIL', data_source='yahoo', start = start_date, end = end_date)['Adj Close'].pct_change()[1:]
   
   # find it's beta against market
-  M = web.DataReader('SPY', data_source='yahoo', start = start_date, end = end_date)['Close'].pct_change()[1:]
+  M = web.DataReader('SPY', data_source='yahoo', start = start_date, end = end_date)['Adj Close'].pct_change()[1:]
 
   results = regression.linear_model.OLS(R-R_F, sm.add_constant(M)).fit()
   beta = results.params[1]
   return results.summary()
   #--------------------------------------------------------------------------------------------------------------
+  def cointegration(stock1, stock2, start_date, end_date):
+  X1 = web.DataReader("MSFT", data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  X2 = web.DataReader("GOOG", data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  X1.name = str(stock1)
+  X2.name = str(stock2)
+  def check_for_stationarity(X, cutoff=0.01):
+    # H_0 in adfuller is unit root exists (non-stationary)
+    # We must observe significant p-value to convince ourselves that the series is stationary
+    pvalue = adfuller(X)[1]
+    if pvalue < cutoff:
+        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely stationary.')
+        return True
+    else:
+        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely non-stationary.')
+        return False
+  Z = X2 - X1
+  Z.name = 'Z'
+
+  plt.plot(Z)
+  plt.xlabel('Time')
+  plt.ylabel('Series Value')
+  plt.legend(['Z']);
+
+  check_for_stationarity(Z);
+  #------------------------------------------------------------------------------------------------------------------
+  
   
 
