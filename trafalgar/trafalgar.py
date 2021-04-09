@@ -599,7 +599,7 @@ def capm(stocks, wts, start_date, end_date):
   check_for_stationarity(Z);
 #--------------------------------------------------------------------------------------------------------------------------
 
-  def stationarity(stock, start_date, end_date):
+def stationarity(stock, start_date, end_date):
   X = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
   def check_for_stationarity(X, cutoff=0.01):
     # H_0 in adfuller is unit root exists (non-stationary)
@@ -609,6 +609,11 @@ def capm(stocks, wts, start_date, end_date):
         print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely stationary.')
     else:
         print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely non-stationary.')
+
+  plt.plot(X)
+  plt.xlabel('Time')
+  plt.ylabel('Series Value')
+  plt.legend(['Z']);
   return check_for_stationarity(X)
 #---------------------------------------------------------------------------------------------------------------------
 def return_stationarity(stock, start_date, end_date):
@@ -622,6 +627,11 @@ def return_stationarity(stock, start_date, end_date):
         print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely stationary.')
     else:
         print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely non-stationary.')
+        
+  plt.plot(X)
+  plt.xlabel('Time')
+  plt.ylabel('Series Value')
+  plt.legend(['Z']);
   return check_for_stationarity(X)
 #-------------------------------------------------------------------------------------------------------------------------
 
