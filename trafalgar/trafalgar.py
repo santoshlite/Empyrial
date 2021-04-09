@@ -395,55 +395,40 @@ def var(value_invested, stocks, wts, alpha, start_date, end_date):
   return np.percentile(port_ret, 100 * (1-alpha)) * value_invested
 
 # ------------------------------------------------------------------------------------------
-def alpha(stocks, wts, benchmark, start_date, end_date):
-  yf.pdr_override()
+def alpha(stock, benchmark, start_date, end_date):
+  asset = web.DataReader('TSLA', data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  benchmark = web.DataReader('SPY', data_source='yahoo', start = start_date, end= end_date)['Adj Close']
 
-  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
-  price_data = price_data['Adj Close']
-
-  df2 = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date )
-
-  ret_data = price_data.pct_change()[1:]
-  return_df2 = df2.Close.pct_change()[1:]
-
-  port_ret = (ret_data * wts).sum(axis = 1)
-
-  X = return_df2.values
-  Y = port_ret.values
-
+  r_a = asset.pct_change()[1:]
+  r_b = benchmark.pct_change()[1:]
+  X = r_b.values
+  Y = r_a.values
   def linreg(x,y):
-    x = sm.add_constant(x)
-    model = regression.linear_model.OLS(y,x).fit()
-
-    X = x[:,1]
-    return model.params[0], model.params[1]
+      x = sm.add_constant(x)
+      model = regression.linear_model.OLS(y,x).fit()
+ 
+      x = x[:, 1]
+      return model.params[0], model.params[1]
 
   alpha, beta = linreg(X,Y)
   print(alpha)
-
   #--------------------------------------------------------------------------------------------
-def beta(stocks, wts, benchmark, start_date, end_date):
-  yf.pdr_override()
+def beta(stock, benchmark, start_date, end_date):
+  asset = web.DataReader('TSLA', data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  benchmark = web.DataReader('SPY', data_source='yahoo', start = start_date, end= end_date)['Adj Close']
 
-  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
-  price_data = price_data['Adj Close']
+  r_a = asset.pct_change()[1:]
+  r_b = benchmark.pct_change()[1:]
 
-  df2 = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date )
-
-  ret_data = price_data.pct_change()[1:]
-  return_df2 = df2.Close.pct_change()[1:]
-
-  port_ret = (ret_data * wts).sum(axis = 1)
-
-  X = return_df2.values
-  Y = port_ret.values
+  X = r_b.values 
+  Y = r_a.values
 
   def linreg(x,y):
-    x = sm.add_constant(x)
-    model = regression.linear_model.OLS(y,x).fit()
 
-    X = x[:,1]
-    return model.params[0], model.params[1]
+      x = sm.add_constant(x)
+      model = regression.linear_model.OLS(y,x).fit()
+      x = x[:, 1]
+      return model.params[0], model.params[1]
 
   alpha, beta = linreg(X,Y)
   print(beta)
