@@ -1,20 +1,15 @@
-#python librairies
-# Data manipulation
 import numpy as np
 import pandas as pd
 import statsmodels
-# Plotting
 import matplotlib.pyplot as plt
 import seaborn 
-# Statistical calculation
 from scipy.stats import norm
-# Tabular data output
 from pandas_datareader import data as web
 from datetime import datetime
 import statsmodels.api as sm
 from statsmodels.tsa.stattools import coint, adfuller
 from statsmodels import regression
-plt.style.use('fivethirtyeight')
+from sklearn.linear_model import LinearRegression
 
 # ------------------------------------------------------------------------------------------
 
@@ -652,6 +647,121 @@ def return_stationarity(stock, start_date, end_date):
   plt.legend(['Z']);
   return check_for_stationarity(X)
 #-------------------------------------------------------------------------------------------------------------------------
+def rolling_volatility(stock, start_date, end_date, window_time):
+  asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)
+  # Compute the logarithmic returns using the Closing price 
+  asset['Log_Ret'] = np.log(asset['Adj Close'] / asset['Adj Close'].shift(1))
+  # Compute Volatility using the pandas rolling standard deviation function
+  asset['Volatility'] = asset['Log_Ret'].rolling(window=window_time).std() * np.sqrt(252)
+  print(asset)
+  # Plot the NIFTY Price series and the Volatility
+  asset[['Volatility']].plot(subplots=True, color='blue',figsize=(8, 6))
+#------------------------------------------------------------------------------------------------------------------------
 
+def rolling_alpha(stock, benchmark, start_date, end_date, window_time):
+  # get the closing price of AMZN Stock
+  amzn = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
+  amzn = pd.DataFrame(amzn)
+  amzn['amzn_return'] = amzn['Close'].pct_change()
+  amzn['amzn_log_return'] = np.log(amzn['Close']) - np.log(amzn['Close'].shift(1))
+  amzn.dropna(inplace=True)
   
+  
+  nasdaq = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Close']
+  nasdaq = pd.DataFrame(nasdaq)
+  nasdaq['nasdaq_return'] = nasdaq['Close'].pct_change()
+  nasdaq['nasdaq_log_return'] = np.log(nasdaq['Close']) - np.log(nasdaq['Close'].shift(1))
+  nasdaq.dropna(inplace=True)
 
+  def market_alpha(X,Y,N):
+      """ 
+      X = The independent variable which is the Market
+      Y = The dependent variable which is the Stock
+      N = The length of the Window
+      
+      It returns the alphas and the betas of
+      the rolling regression
+      """
+      
+      # all the observations
+      obs = len(X)
+      
+      # initiate the betas with null values
+      betas = np.full(obs, np.nan)
+      
+      # initiate the alphas with null values
+      alphas = np.full(obs, np.nan)
+      
+      
+      for i in range((obs-N)):
+          regressor = LinearRegression()
+          regressor.fit(X.to_numpy()[i : i + N+1].reshape(-1,1), Y.to_numpy()[i : i + N+1])
+          
+          betas[i+N]  = regressor.coef_[0]
+          alphas[i+N]  = regressor.intercept_
+  
+      return(alphas, betas)
+    
+  results = market_alpha(amzn.amzn_return, nasdaq.nasdaq_return, window_time)
+  
+  results = pd.DataFrame(list(zip(*results)), columns = ['alpha', 'beta'])
+  
+  results.index = amzn.index
+  plt.figure(figsize=(12,8))
+  results.alpha.plot.line()
+  plt.title("Market Beta: Rolling Window of 30 Days")
+  
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------
+def rolling_beta(stock, benchmark, start_date, end_date, window_time):
+  # get the closing price of AMZN Stock
+  amzn = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
+  amzn = pd.DataFrame(amzn)
+  amzn['amzn_return'] = amzn['Close'].pct_change()
+  amzn['amzn_log_return'] = np.log(amzn['Close']) - np.log(amzn['Close'].shift(1))
+  amzn.dropna(inplace=True)
+  
+  
+  nasdaq = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Close']
+  nasdaq = pd.DataFrame(nasdaq)
+  nasdaq['nasdaq_return'] = nasdaq['Close'].pct_change()
+  nasdaq['nasdaq_log_return'] = np.log(nasdaq['Close']) - np.log(nasdaq['Close'].shift(1))
+  nasdaq.dropna(inplace=True)
+
+  def market_beta(X,Y,N):
+      """ 
+      X = The independent variable which is the Market
+      Y = The dependent variable which is the Stock
+      N = The length of the Window
+      
+      It returns the alphas and the betas of
+      the rolling regression
+      """
+      
+      # all the observations
+      obs = len(X)
+      
+      # initiate the betas with null values
+      betas = np.full(obs, np.nan)
+      
+      # initiate the alphas with null values
+      alphas = np.full(obs, np.nan)
+      
+      
+      for i in range((obs-N)):
+          regressor = LinearRegression()
+          regressor.fit(X.to_numpy()[i : i + N+1].reshape(-1,1), Y.to_numpy()[i : i + N+1])
+          
+          betas[i+N]  = regressor.coef_[0]
+          alphas[i+N]  = regressor.intercept_
+  
+      return(alphas, betas)
+    
+  results = market_beta(amzn.amzn_return, nasdaq.nasdaq_return, window_time)
+  
+  results = pd.DataFrame(list(zip(*results)), columns = ['alpha', 'beta'])
+  
+  results.index = amzn.index
+  plt.figure(figsize=(12,8))
+  results.beta.plot.line()
+  plt.title("Market Beta: Rolling Window of 30 Days")
+#------------------------------------------------------------------------------------------------------------------------------
