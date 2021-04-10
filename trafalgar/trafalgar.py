@@ -276,7 +276,7 @@ def cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
   df.columns = ['portfolio', 'benchmark']
   return df
 #-------------------------------------------------------------------------------------------
-def port_ret(stock,wts, start_date, end_date):
+def port_ret(stocks ,wts, start_date, end_date):
     assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
     ret_data = assets.pct_change()[1:]
     port_ret = (ret_data * wts).sum(axis = 1)
