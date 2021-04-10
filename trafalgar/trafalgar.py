@@ -765,3 +765,9 @@ def rolling_beta(stock, benchmark, start_date, end_date, window_time):
   results.beta.plot.line()
   plt.title("Market Beta: Rolling Window of 30 Days")
 #------------------------------------------------------------------------------------------------------------------------------
+def graph_port_ret(stock,wts, start_date, end_date):
+    assets = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+    ret_data = assets.pct_change()[1:]
+    port_ret = (ret_data * wts).sum(axis = 1)
+    port_ret.plot()
+#--------------------------------------------------------------------------------------------------------------------------------
