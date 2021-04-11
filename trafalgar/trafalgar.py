@@ -98,23 +98,37 @@ def volume(stock, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def returns(stocks, start_date, end_date):
-  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  df = pd.DataFrame(df)
-  returns = df.pct_change()
-  return returns
-
-# ------------------------------------------------------------------------------------------
-
-def returns_graph(stock, start_date, end_date):
-  df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  df = pd.DataFrame(df)
-  returns = df.pct_change()
-  plt.figure(figsize=(20,10))
-  plt.plot(returns.index, returns['Close'])
-  plt.xlabel("Date")
-  plt.ylabel("$ price")
-  plt.title(stock + " Adj Revenues from "+start_date + " to "+ end_date)
+def returns(stocks,wts, start_date, end_date):
+  if len(stocks) > 1:
+    assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+    ret_data = assets.pct_change()[1:]
+    port_ret = (ret_data * wts).sum(axis = 1)
+    port_ret = pd.DataFrame(port_ret)
+    port_ret.columns = ['returns']
+    return port_ret
+  else:
+    df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Close']
+    df = pd.DataFrame(df)
+    returns = df.pct_change()
+    returns = pd.DataFrame(returns)
+    return returns
+#---------------------------------------------------------------------------------------------
+def graph_returns(stock,wts, start_date, end_date):
+  if len(stock) > 1:
+    assets = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+    ret_data = assets.pct_change()[1:]
+    port_ret = (ret_data * wts).sum(axis = 1)
+    port_ret.plot()
+  else:
+    df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
+    df = pd.DataFrame(df)
+    returns = df.pct_change()
+    returns.columns = ['Close']
+    plt.figure(figsize=(20,10))
+    plt.plot(returns.index, returns['Close'])
+    plt.xlabel("Date")
+    plt.ylabel("$ price")
+    plt.title("Revenues from "+start_date + " to "+ end_date)
 
 # ------------------------------------------------------------------------------------------
 
@@ -275,12 +289,6 @@ def cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
   df = pd.DataFrame(df)
   df.columns = ['portfolio', 'benchmark']
   return df
-#-------------------------------------------------------------------------------------------
-def port_ret(stocks ,wts, start_date, end_date):
-    assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-    ret_data = assets.pct_change()[1:]
-    port_ret = (ret_data * wts).sum(axis = 1)
-    return port_ret
 
 # ------------------------------------------------------------------------------------------
 
