@@ -118,7 +118,13 @@ def graph_returns(stock,wts, start_date, end_date):
     assets = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
     ret_data = assets.pct_change()[1:]
     port_ret = (ret_data * wts).sum(axis = 1)
-    port_ret.plot()
+    fig = plt.figure(figsize=(20,10))
+    ax1 = fig.add_axes([0.1,0.1,0.8,0.8])
+    ax1.plot(port_ret)
+    ax1.set_xlabel('Date')
+    ax1.set_ylabel("Returns")
+    ax1.set_title("Portfolio Returns")
+    plt.show();
   else:
     df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
     df = pd.DataFrame(df)
@@ -129,7 +135,6 @@ def graph_returns(stock,wts, start_date, end_date):
     plt.xlabel("Date")
     plt.ylabel("$ price")
     plt.title("Revenues from "+start_date + " to "+ end_date)
-
 # ------------------------------------------------------------------------------------------
 
 def covariance(stocks, start_date, end_date, days):
@@ -158,37 +163,63 @@ def ohlcv(stock, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def cum_returns_graph(stocks, wts, start_date, end_date):
-
-  price_data = web.get_data_yahoo(stocks,
-                                start = start_date,
-                                end = end_date)
-  price_data = price_data['Adj Close']
-  ret_data = price_data.pct_change()[1:]
-  weighted_returns = (wts * ret_data)
-  port_ret = weighted_returns.sum(axis=1)
-  cumulative_ret = (port_ret + 1).cumprod()
-  fig = plt.figure(figsize=(20,10))
-  ax1 = fig.add_axes([0.1,0.1,0.8,0.8])
-  ax1.plot(cumulative_ret)
-  ax1.set_xlabel('Date')
-  ax1.set_ylabel("Cumulative Returns")
-  ax1.set_title("Portfolio Cumulative Returns")
-  plt.show();
+def graph_cumulative_ret(stock, wts, start_date, end_date):
+  if len(stock) > 1:
+    price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
+    price_data = price_data['Adj Close']
+    ret_data = price_data.pct_change()[1:]
+    weighted_returns = (wts * ret_data)
+    port_ret = weighted_returns.sum(axis=1)
+    cumulative_ret = (port_ret + 1).cumprod()
+    cumulative_ret = pd.DataFrame(cumulative_ret)
+    cumulative_ret.columns = ['Cumulative returns']
+    fig = plt.figure(figsize=(20,10))
+    ax1 = fig.add_axes([0.1,0.1,0.8,0.8])
+    ax1.plot(cumulative_ret)
+    ax1.set_xlabel('Date')
+    ax1.set_ylabel("Cumulative Returns")
+    ax1.set_title("Portfolio Cumulative Returns")
+    plt.show();
+  else:
+    price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
+    price_data = price_data['Adj Close']
+    ret_data = price_data.pct_change()[1:]
+    weighted_returns = ret_data
+    port_ret = weighted_returns.sum(axis=1)
+    cumulative_ret = (port_ret + 1).cumprod()
+    cumulative_ret = pd.DataFrame(cumulative_ret)
+    cumulative_ret.columns = ['Cumulative returns']
+    fig = plt.figure(figsize=(20,10))
+    ax1 = fig.add_axes([0.1,0.1,0.8,0.8])
+    ax1.plot(cumulative_ret)
+    ax1.set_xlabel('Date')
+    ax1.set_ylabel("Cumulative Returns")
+    ax1.set_title("Portfolio Cumulative Returns")
+    plt.show();
 
 # ------------------------------------------------------------------------------------------
 
-def cum_returns(stocks, wts, start_date, end_date):
-
-  price_data = web.get_data_yahoo(stocks,
-                                start = start_date,
-                                end = end_date)
-  price_data = price_data['Adj Close']
-  ret_data = price_data.pct_change()[1:]
-  weighted_returns = (wts * ret_data)
-  port_ret = weighted_returns.sum(axis=1)
-  cumulative_ret = (port_ret + 1).cumprod()
-  return cumulative_ret
+def cumulative_ret(stock, wts, start_date, end_date):
+  if len(stock) > 1:
+    price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
+    price_data = price_data['Adj Close']
+    ret_data = price_data.pct_change()[1:]
+    weighted_returns = (wts * ret_data)
+    port_ret = weighted_returns.sum(axis=1)
+    cumulative_ret = (port_ret + 1).cumprod()
+    cumulative_ret = pd.DataFrame(cumulative_ret)
+    cumulative_ret.columns = ['Cumulative returns']
+    return cumulative_ret
+  else:
+    price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
+    price_data = price_data['Adj Close']
+    ret_data = price_data.pct_change()[1:]
+    weighted_returns = ret_data
+    port_ret = weighted_returns.sum(axis=1)
+    cumulative_ret = (port_ret + 1).cumprod()
+    cumulative_ret = pd.DataFrame(cumulative_ret)
+    cumulative_ret.columns = ['Cumulative returns']
+    return cumulative_ret
 
 # ------------------------------------------------------------------------------------------
 
