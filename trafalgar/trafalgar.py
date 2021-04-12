@@ -387,7 +387,6 @@ def efficient_frontier(stocks, start_date, end_date, iterations):
   plt.show()
 
 # ------------------------------------------------------------------------------------------
-
 def mean_daily_return(stocks,wts, start_date, end_date):
   
   stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
@@ -420,87 +419,86 @@ def var(value_invested, stocks, wts, alpha, start_date, end_date):
   return np.percentile(port_ret, 100 * (1-alpha)) * value_invested
 
 # ------------------------------------------------------------------------------------------
-def alpha(stock, benchmark, start_date, end_date):
-  asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+def alpha(stocks, wts, benchmark, start_date, end_date):
+  if len(stocks) > 1:
+      assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+      benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+      ret_data = assets.pct_change()[1:]
+      r_a = (ret_data * wts).sum(axis = 1)
+      r_b = benchmark.pct_change()[1:]
 
-  r_a = asset.pct_change()[1:]
-  r_b = benchmark.pct_change()[1:]
-  X = r_b.values
-  Y = r_a.values
-  def linreg(x,y):
-      x = sm.add_constant(x)
-      model = regression.linear_model.OLS(y,x).fit()
- 
-      x = x[:, 1]
-      return model.params[0], model.params[1]
+      X = r_b.values # Get just the values, ignore the timestamps
+      Y = r_a.values
 
-  alpha, beta = linreg(X,Y)
-  return alpha
-  #--------------------------------------------------------------------------------------------
-def beta(stock, benchmark, start_date, end_date):
-  asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+      def linreg(x,y):
+          # We add a constant so that we can also fit an intercept (alpha) to the model
+          # This just adds a column of 1s to our data
+          x = sm.add_constant(x)
+          model = regression.linear_model.OLS(y,x).fit()
+          # Remove the constant now that we're done
+          x = x[:, 1]
+          return model.params[0], model.params[1]
 
-  r_a = asset.pct_change()[1:]
-  r_b = benchmark.pct_change()[1:]
+      alpha, beta = linreg(X,Y)
+      return alpha
+  else:
+      asset = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+      benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
 
-  X = r_b.values 
-  Y = r_a.values
+      r_a = asset.pct_change()[1:]
+      r_b = benchmark.pct_change()[1:]
+      X = r_b.values
+      Y = r_a.values
+      def linreg(x,y):
+          x = sm.add_constant(x)
+          model = regression.linear_model.OLS(y,x).fit()
+    
+          x = x[:, 1]
+          return model.params[0], model.params[1]
 
-  def linreg(x,y):
+      alpha, beta = linreg(X,Y)
+      return alpha
 
-      x = sm.add_constant(x)
-      model = regression.linear_model.OLS(y,x).fit()
-      x = x[:, 1]
-      return model.params[0], model.params[1]
+#-------------------------------------------------------------------------------------------------
+def beta(stocks, wts, benchmark, start_date, end_date):
+  if len(stocks) > 1:
+      assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+      benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+      ret_data = assets.pct_change()[1:]
+      r_a = (ret_data * wts).sum(axis = 1)
+      r_b = benchmark.pct_change()[1:]
 
-  alpha, beta = linreg(X,Y)
-  return beta
-  #-------------------------------------------------------------------------------------------------
-def port_beta(stocks, wts, benchmark, start_date, end_date):
-  assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  ret_data = assets.pct_change()[1:]
-  r_a = (ret_data * wts).sum(axis = 1)
-  r_b = benchmark.pct_change()[1:]
+      X = r_b.values # Get just the values, ignore the timestamps
+      Y = r_a.values
 
-  X = r_b.values # Get just the values, ignore the timestamps
-  Y = r_a.values
+      def linreg(x,y):
+          # We add a constant so that we can also fit an intercept (alpha) to the model
+          # This just adds a column of 1s to our data
+          x = sm.add_constant(x)
+          model = regression.linear_model.OLS(y,x).fit()
+          # Remove the constant now that we're done
+          x = x[:, 1]
+          return model.params[0], model.params[1]
 
-  def linreg(x,y):
-      # We add a constant so that we can also fit an intercept (alpha) to the model
-      # This just adds a column of 1s to our data
-      x = sm.add_constant(x)
-      model = regression.linear_model.OLS(y,x).fit()
-      # Remove the constant now that we're done
-      x = x[:, 1]
-      return model.params[0], model.params[1]
+      alpha, beta = linreg(X,Y)
+      return beta
+  else:
+      asset = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+      benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
 
-  alpha, beta = linreg(X,Y)
-  return beta
-#-------------------------------------------------------------------------------------------------------------
-def port_alpha(stocks, wts, benchmark, start_date, end_date):
-  assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  ret_data = assets.pct_change()[1:]
-  r_a = (ret_data * wts).sum(axis = 1)
-  r_b = benchmark.pct_change()[1:]
+      r_a = asset.pct_change()[1:]
+      r_b = benchmark.pct_change()[1:]
+      X = r_b.values
+      Y = r_a.values
+      def linreg(x,y):
+          x = sm.add_constant(x)
+          model = regression.linear_model.OLS(y,x).fit()
+    
+          x = x[:, 1]
+          return model.params[0], model.params[1]
 
-  X = r_b.values # Get just the values, ignore the timestamps
-  Y = r_a.values
-
-  def linreg(x,y):
-      # We add a constant so that we can also fit an intercept (alpha) to the model
-      # This just adds a column of 1s to our data
-      x = sm.add_constant(x)
-      model = regression.linear_model.OLS(y,x).fit()
-      # Remove the constant now that we're done
-      x = x[:, 1]
-      return model.params[0], model.params[1]
-
-  alpha, beta = linreg(X,Y)
-  return alpha
+      alpha, beta = linreg(X,Y)
+      return beta
 #-------------------------------------------------------------------------------------------------------------------
 
 def correlation(stocks, start_date, end_date):
@@ -769,11 +767,6 @@ def rolling_beta(stock, benchmark, start_date, end_date, window_time):
   results.index = amzn.index
   plt.figure(figsize=(12,8))
   results.beta.plot.line()
-  plt.title("Market Beta: Rolling Window of 30 Days")
-#------------------------------------------------------------------------------------------------------------------------------
-def graph_port_ret(stock,wts, start_date, end_date):
-    assets = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-    ret_data = assets.pct_change()[1:]
-    port_ret = (ret_data * wts).sum(axis = 1)
-    port_ret.plot()
+  plt.title("Market Beta: Rolling Window")
+
 #--------------------------------------------------------------------------------------------------------------------------------
