@@ -167,19 +167,19 @@ def graph_cumulative_ret(stock, wts, start_date, end_date):
   if len(stock) > 1:
     price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
     price_data = price_data['Adj Close']
+
     ret_data = price_data.pct_change()[1:]
-    weighted_returns = (wts * ret_data)
-    port_ret = weighted_returns.sum(axis=1)
-    cumulative_ret = (port_ret + 1).cumprod()
-    cumulative_ret = pd.DataFrame(cumulative_ret)
-    cumulative_ret.columns = ['Cumulative returns']
-    fig = plt.figure(figsize=(20,10))
-    ax1 = fig.add_axes([0.1,0.1,0.8,0.8])
-    ax1.plot(cumulative_ret)
-    ax1.set_xlabel('Date')
-    ax1.set_ylabel("Cumulative Returns")
-    ax1.set_title("Portfolio Cumulative Returns")
-    plt.show();
+
+    port_ret = (ret_data * wts).sum(axis = 1)
+    cumulative_ret_df1 = (port_ret + 1).cumprod()
+    
+    plt.figure(figsize=(20,10))
+    stock_raw = web.DataReader(stock, start = start_date, end= end_date)
+    stock = stock_raw['Close']
+    port_ret = stock.sum(axis=1)
+    stock_normed = stock/stock.iloc[0]
+    stock_normed['Portfolio'] = cumulative_ret_df1
+    stock_normed.plot(figsize=(12,8))
   else:
     price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
     price_data = price_data['Adj Close']
@@ -203,13 +203,19 @@ def cumulative_ret(stock, wts, start_date, end_date):
   if len(stock) > 1:
     price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
     price_data = price_data['Adj Close']
+
     ret_data = price_data.pct_change()[1:]
-    weighted_returns = (wts * ret_data)
-    port_ret = weighted_returns.sum(axis=1)
-    cumulative_ret = (port_ret + 1).cumprod()
-    cumulative_ret = pd.DataFrame(cumulative_ret)
-    cumulative_ret.columns = ['Cumulative returns']
-    return cumulative_ret
+
+    port_ret = (ret_data * wts).sum(axis = 1)
+    cumulative_ret_df1 = (port_ret + 1).cumprod()
+    
+    plt.figure(figsize=(20,10))
+    stock_raw = web.DataReader(stock, 'yahoo', start = start_date, end = end_date)
+    stock = stock_raw['Adj Close']
+    port_ret = stock.sum(axis=1)
+    stock_normed = stock/stock.iloc[0]
+    stock_normed['Portfolio'] = cumulative_ret_df1
+    return stock_normed
   else:
     price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
     price_data = price_data['Adj Close']
@@ -379,45 +385,6 @@ def efficient_frontier(stocks, start_date, end_date, iterations):
   # Add red dot for max SR
   plt.scatter(max_sr_vol,max_sr_ret,c='red',s=50,edgecolors='black')
   plt.show()
-
-# ------------------------------------------------------------------------------------------
-
-def individual_cum_returns_graph(stocks, wts, start_date, end_date):
-  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
-  price_data = price_data['Adj Close']
-
-  ret_data = price_data.pct_change()[1:]
-
-  port_ret = (ret_data * wts).sum(axis = 1)
-  cumulative_ret_df1 = (port_ret + 1).cumprod()
-  
-  plt.figure(figsize=(20,10))
-  stock_raw = web.DataReader(stocks, 'yahoo', "2020-01-01", "2021-01-01")
-  stock = stock_raw['Close']
-  port_ret = stock.sum(axis=1)
-  stock_normed = stock/stock.iloc[0]
-  stock_normed['Portfolio'] = cumulative_ret_df1
-  stock_normed.plot(figsize=(12,8))
-
-# ------------------------------------------------------------------------------------------
-
-def individual_cum_returns(stocks, wts, start_date, end_date):
-
-  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
-  price_data = price_data['Adj Close']
-
-  ret_data = price_data.pct_change()[1:]
-
-  port_ret = (ret_data * wts).sum(axis = 1)
-  cumulative_ret_df1 = (port_ret + 1).cumprod()
-  
-  plt.figure(figsize=(20,10))
-  stock_raw = web.DataReader(stocks, 'yahoo', "2020-01-01", "2021-01-01")
-  stock = stock_raw['Close']
-  port_ret = stock.sum(axis=1)
-  stock_normed = stock/stock.iloc[0]
-  stock_normed['Portfolio'] = cumulative_ret_df1
-  return stock_normed
 
 # ------------------------------------------------------------------------------------------
 
