@@ -29,44 +29,28 @@ def graph_close(stock, start_date, end_date):
   """
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
   df = pd.DataFrame(df)
-  plt.figure(figsize=(20,10))
-  plt.plot(df.index, df[stock])
-  plt.xlabel("Date")
-  plt.ylabel("$ price")
-  plt.title(" Close Price from "+start_date + " to "+ end_date)
+  df.plot(figsize=(20,10))
 
 # ------------------------------------------------------------------------------------------
 
 def graph_open(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Open']
   df = pd.DataFrame(df)
-  plt.figure(figsize=(20,10))
-  plt.plot(df.index, df[stock])
-  plt.xlabel("Date")
-  plt.ylabel("$ price")
-  plt.title(" Open Price from "+start_date + " to "+ end_date)
+  df.plot(figsize=(20,10))
 
 # ------------------------------------------------------------------------------------------
 
 def graph_volume(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Volume']
   df = pd.DataFrame(df)
-  plt.figure(figsize=(20,10))
-  plt.plot(df.index, df[stock])
-  plt.xlabel("Date")
-  plt.ylabel("$ price")
-  plt.title(" Close Price from "+start_date + " to "+ end_date)
+  df.plot(figsize=(20,10))
 
 # ------------------------------------------------------------------------------------------
 
 def graph_adj_close(stock, start_date, end_date):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
   df = pd.DataFrame(df)
-  plt.figure(figsize=(20,10))
-  plt.plot(df.index, df[stock])
-  plt.xlabel("Date")
-  plt.ylabel("$ price")
-  plt.title(" Close Price from "+start_date + " to "+ end_date)
+  df.plot(figsize=(20,10))
 
 # ------------------------------------------------------------------------------------------
 
@@ -103,9 +87,9 @@ def returns(stocks,wts, start_date, end_date):
     assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
     ret_data = assets.pct_change()[1:]
     port_ret = (ret_data * wts).sum(axis = 1)
-    port_ret = pd.DataFrame(port_ret)
-    port_ret.columns = ['returns']
-    return port_ret
+    ret_data['Portfolio returns'] = port_ret
+    ret_data = pd.DataFrame(ret_data)
+    return ret_data
   else:
     df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Close']
     df = pd.DataFrame(df)
@@ -118,13 +102,11 @@ def graph_returns(stock,wts, start_date, end_date):
     assets = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
     ret_data = assets.pct_change()[1:]
     port_ret = (ret_data * wts).sum(axis = 1)
-    fig = plt.figure(figsize=(20,10))
-    ax1 = fig.add_axes([0.1,0.1,0.8,0.8])
-    ax1.plot(port_ret)
-    ax1.set_xlabel('Date')
-    ax1.set_ylabel("Returns")
-    ax1.set_title("Portfolio Returns")
-    plt.show();
+    ret_data['Portfolio'] = port_ret
+    ret_data.plot(figsize=(20,10))
+    plt.xlabel('Date') 
+    plt.ylabel('Returns') 
+    plt.title('Portfolio returns')
   else:
     df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
     df = pd.DataFrame(df)
@@ -230,102 +212,198 @@ def cumulative_ret(stock, wts, start_date, end_date):
 # ------------------------------------------------------------------------------------------
 
 def annual_volatility(stocks, wts, start_date, end_date):
+  if len(stocks)>1:
+    price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
+    price_data = price_data['Adj Close']
 
-  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
-  price_data = price_data['Adj Close']
+    ret_data = price_data.pct_change()[1:]
+    port_ret = (ret_data * wts).sum(axis = 1)
+    cumulative_ret = (port_ret + 1).cumprod()
+    annual_std = np.std(port_ret) * np.sqrt(252)
+    return annual_std
+  else:
+    price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
+    price_data = price_data['Adj Close']
 
-  ret_data = price_data.pct_change()[1:]
-  port_ret = (ret_data * wts).sum(axis = 1)
-  cumulative_ret = (port_ret + 1).cumprod()
-  annual_std = np.std(port_ret) * np.sqrt(252)
-  return annual_std*100
+    ret_data = price_data.pct_change()[1:]
+    annual_std = np.std(ret_data) * np.sqrt(252)
+    return annual_std
 
 # ------------------------------------------------------------------------------------------
 
 def sharpe_ratio(stocks, wts, start_date, end_date):
+  if len(stocks)>1:
+    price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
+    price_data = price_data['Adj Close']
 
-  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
-  price_data = price_data['Adj Close']
+    ret_data = price_data.pct_change()[1:]
+    port_ret = (ret_data * wts).sum(axis = 1)
+    cumulative_ret = (port_ret + 1).cumprod()
+    geometric_port_return = np.prod(port_ret + 1) ** (252/port_ret.shape[0]) - 1
+    annual_std = np.std(port_ret) * np.sqrt(252)
+    port_sharpe_ratio = geometric_port_return / annual_std
+    return port_sharpe_ratio
+  else:
+    price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
+    price_data = price_data['Adj Close']
 
-  ret_data = price_data.pct_change()[1:]
-  port_ret = (ret_data * wts).sum(axis = 1)
-  cumulative_ret = (port_ret + 1).cumprod()
-  geometric_port_return = np.prod(port_ret + 1) ** (252/port_ret.shape[0]) - 1
-  annual_std = np.std(port_ret) * np.sqrt(252)
-  port_sharpe_ratio = geometric_port_return / annual_std
-  return 1+port_sharpe_ratio
-
-# ------------------------------------------------------------------------------------------
-
-def returns_benchmark(stocks, wts, benchmark, start_date, end_date):
-  yf.pdr_override()
-
-  price_data = web.get_data_yahoo(stocks,
-                                start = start_date,
-                                end = end_date)
-  price_data = price_data['Adj Close']
-
-  df2 = web.get_data_yahoo(benchmark, start=start_date, end= end_date)
-
-  ret_data = price_data.pct_change()[1:]
-  return_df2 = df2.Close.pct_change()[1:]
-
-  port_ret = (ret_data * wts).sum(axis = 1)
-
-  plt.figure(figsize=(20,10))
-  port_ret.plot()
-  return_df2.plot()
-  plt.ylabel("Daily return comparison")
-  plt.show()
+    ret_data = price_data.pct_change()[1:]
+    geometric_port_return = np.prod(ret_data + 1) ** (252/ret_data.shape[0]) - 1
+    annual_std = np.std(ret_data) * np.sqrt(252)
+    port_sharpe_ratio = geometric_port_return / annual_std
+    return port_sharpe_ratio
 
 # ------------------------------------------------------------------------------------------
 
-def graph_cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
-  yf.pdr_override()
+def graph_r_benchmark(stocks, wts, benchmark, start_date, end_date):
 
-  price_data = web.get_data_yahoo(stocks,
-                                start = start_date,
-                                end = end_date)
-  price_data = price_data['Adj Close']
+  if len(stocks)>1 and len(wts)>1:
 
-  df2 = web.get_data_yahoo(benchmark, start=start_date, end= end_date)
+    price_data = web.get_data_yahoo(stocks,
+                                  start = start_date,
+                                  end = end_date)
+    price_data = price_data['Adj Close']
 
-  ret_data = price_data.pct_change()[1:]
-  return_df2 = df2.Close.pct_change()[1:]
+    df2 = web.get_data_yahoo(benchmark, start=start_date, end= end_date)
 
-  port_ret = (ret_data * wts).sum(axis = 1)
-  cumulative_ret_df1 = (port_ret + 1).cumprod()
-  cumulative_ret_df2 = (return_df2 + 1).cumprod()
-  print(cumulative_ret_df1)
+    ret_data = price_data.pct_change()[1:]
+    return_df2 = df2.Close.pct_change()[1:]
 
-  plt.figure(figsize=(20,10))
-  cumulative_ret_df1.plot()
-  cumulative_ret_df2.plot()
-  plt.ylabel("Daily return comparison")
-  plt.show()
+    port_ret = (ret_data * wts).sum(axis = 1)
+
+    plt.figure(figsize=(20,10))
+    port_ret.plot()
+    return_df2.plot()
+    plt.ylabel("Daily return comparison")
+    plt.title('Comparison')
+    plt.show()
+  else:
+    price_data = web.get_data_yahoo(stocks,
+                                  start = start_date,
+                                  end = end_date)
+    price_data = price_data['Adj Close']
+
+    df2 = web.get_data_yahoo(benchmark, start=start_date, end= end_date)
+
+    ret_data = price_data.pct_change()[1:]
+    return_df2 = df2.Close.pct_change()[1:]
+    ret_data["benchmark"] = return_df2
+    ret_data.plot(figsize=(20,10))
+#----------------------------------------------------------------------------------------
+def r_benchmark(stocks, wts, benchmark, start_date, end_date):
+
+  if len(stocks)>1 and len(wts)>1:
+
+    price_data = web.get_data_yahoo(stocks,
+                                  start = start_date,
+                                  end = end_date)
+    price_data = price_data['Adj Close']
+
+    df2 = web.get_data_yahoo(benchmark, start=start_date, end= end_date)
+
+    ret_data = price_data.pct_change()[1:]
+    return_df2 = df2.Close.pct_change()[1:]
+
+    port_ret = (ret_data * wts).sum(axis = 1)
+    ret_data['benchmark'] = return_df2
+    ret_data['portfolio'] = port_ret
+    ret_data = pd.DataFrame(ret_data)
+    return ret_data
+
+  else:
+    price_data = web.get_data_yahoo(stocks,
+                                  start = start_date,
+                                  end = end_date)
+    price_data = price_data['Adj Close']
+
+    df2 = web.get_data_yahoo(benchmark, start=start_date, end= end_date)
+
+    ret_data = price_data.pct_change()[1:]
+    return_df2 = df2.Close.pct_change()[1:]
+    ret_data["benchmark"] = return_df2
+    ret_data = pd.DataFrame(ret_data)
+    return ret_data
 
 # ------------------------------------------------------------------------------------------
-def cum_returns_benchmark(stocks, wts, benchmark, start_date, end_date):
-  yf.pdr_override()
 
-  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
-  price_data = price_data['Adj Close']
+def c_benchmark(stocks, wts, benchmark, start_date, end_date):
+  if len(stocks)>1 and len(wts)>1:
+      price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
+      price_data = price_data['Adj Close']
 
-  df2 = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date )
+      df2 = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date )
 
-  ret_data = price_data.pct_change()[1:]
-  return_df2 = df2.Close.pct_change()[1:]
+      ret_data = price_data.pct_change()[1:]
+      return_df2 = df2.Close.pct_change()[1:]
 
-  port_ret = (ret_data * wts).sum(axis = 1)
-  cumulative_ret_df1 = (port_ret + 1).cumprod()
-  cumulative_ret_df2 = (return_df2 + 1).cumprod()
+      port_ret = (ret_data * wts).sum(axis = 1)
+      cumulative_ret_df1 = (port_ret + 1).cumprod()
+      cumulative_ret_df2 = (return_df2 + 1).cumprod()
 
-  df1 = pd.DataFrame(cumulative_ret_df1)
-  df2 = pd.DataFrame(cumulative_ret_df2)
-  df = pd.concat([df1,df2], axis=1)
-  df = pd.DataFrame(df)
-  df.columns = ['portfolio', 'benchmark']
-  return df
+      df1 = pd.DataFrame(cumulative_ret_df1)
+      df2 = pd.DataFrame(cumulative_ret_df2)
+      df = pd.concat([df1,df2], axis=1)
+      df = pd.DataFrame(df)
+      df.columns = ['portfolio', 'benchmark']
+      return df
+  else:
+    price_data = web.get_data_yahoo(stocks,
+                                  start = start_date,
+                                  end = end_date)
+    price_data = price_data['Adj Close']
+
+    df2 = web.get_data_yahoo(benchmark, start=start_date, end= end_date)
+
+    ret_data = price_data.pct_change()[1:]
+    return_df2 = df2.Close.pct_change()[1:]
+
+    cumulative_ret_df1 = (ret_data + 1).cumprod()
+    cumulative_ret_df2 = (return_df2 + 1).cumprod()
+
+    df = cumulative_ret_df1
+    df['benchmark'] = cumulative_ret_df2
+    df = pd.DataFrame(df)
+    return df
+
+# ------------------------------------------------------------------------------------------
+def graph_c_benchmark(stocks, wts, benchmark, start_date, end_date):
+  if len(stocks)>1 and len(wts)>1:
+      price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
+      price_data = price_data['Adj Close']
+
+      df2 = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date )
+
+      ret_data = price_data.pct_change()[1:]
+      return_df2 = df2.Close.pct_change()[1:]
+
+      port_ret = (ret_data * wts).sum(axis = 1)
+      cumulative_ret_df1 = (port_ret + 1).cumprod()
+      cumulative_ret_df2 = (return_df2 + 1).cumprod()
+
+      df1 = pd.DataFrame(cumulative_ret_df1)
+      df2 = pd.DataFrame(cumulative_ret_df2)
+      df = pd.concat([df1,df2], axis=1)
+      df = pd.DataFrame(df)
+      df.columns = ['portfolio', 'benchmark']
+      df.plot(figsize=(20,10))
+  else:
+    price_data = web.get_data_yahoo(stocks,
+                                  start = start_date,
+                                  end = end_date)
+    price_data = price_data['Adj Close']
+
+    df2 = web.get_data_yahoo(benchmark, start=start_date, end= end_date)
+
+    ret_data = price_data.pct_change()[1:]
+    return_df2 = df2.Close.pct_change()[1:]
+
+    cumulative_ret_df1 = (ret_data + 1).cumprod()
+    cumulative_ret_df2 = (return_df2 + 1).cumprod()
+
+    df = cumulative_ret_df1
+    df['benchmark'] = cumulative_ret_df2
+    df = pd.DataFrame(df)
+    df.plot(figsize=(20,10))
 
 # ------------------------------------------------------------------------------------------
 
