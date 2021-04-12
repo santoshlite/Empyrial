@@ -147,7 +147,7 @@ def covariance(stocks, start_date, end_date, days):
 
 # ------------------------------------------------------------------------------------------
 
-def correlation_graph(stocks, start_date, end_date):
+def graph_correlation(stocks, start_date, end_date):
     corr_mat = correlation(stocks, start_date, end_date)
     seaborn.heatmap(corr_mat, annot=True)
     plt.show()
@@ -388,22 +388,22 @@ def efficient_frontier(stocks, start_date, end_date, iterations):
 
 # ------------------------------------------------------------------------------------------
 
-def individual_mean_daily_return(stocks, start_date, end_date):
-  stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
-  stock = stock_raw['Adj Close']
-  port_ret = stock.sum(axis=1)
-  mean_daily_ret = stock.pct_change(1).mean()
-  return mean_daily_ret
-
-# ------------------------------------------------------------------------------------------
-
-def portfolio_daily_mean_return(stocks,wts, start_date, end_date):
+def mean_daily_return(stocks,wts, start_date, end_date):
+  
   stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
   stock = stock_raw['Adj Close']
   port_ret = (stock * wts).sum(axis = 1)
   cum_port = port_ret.pct_change(1)
   mean_return_port = cum_port.mean()
-  return mean_return_port
+
+  stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
+  stock = stock_raw['Adj Close']
+  port_ret = stock.sum(axis=1)
+  mean_daily_ret = stock.pct_change(1).mean()
+  mean_daily_ret["Portfolio"] = mean_return_port
+  mean_daily_ret = pd.DataFrame(mean_daily_ret)
+  
+  return mean_daily_ret
 
 # ------------------------------------------------------------------------------------------
 
