@@ -10,6 +10,7 @@ import statsmodels.api as sm
 from statsmodels.tsa.stattools import coint, adfuller
 from statsmodels import regression
 from sklearn.linear_model import LinearRegression
+from pykalman import KalmanFilter
 
 # ------------------------------------------------------------------------------------------
 
@@ -729,16 +730,51 @@ def return_stationarity(stock, start_date, end_date):
   plt.legend(['Z']);
   return check_for_stationarity(X)
 #-------------------------------------------------------------------------------------------------------------------------
-def rolling_volatility(stock, start_date, end_date, window_time):
-  asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)
-  # Compute the logarithmic returns using the Closing price 
-  asset['Log_Ret'] = np.log(asset['Adj Close'] / asset['Adj Close'].shift(1))
-  # Compute Volatility using the pandas rolling standard deviation function
-  asset['Volatility'] = asset['Log_Ret'].rolling(window=window_time).std() * np.sqrt(252)
-  print(asset)
-  # Plot the NIFTY Price series and the Volatility
-  asset[['Volatility']].plot(subplots=True, color='blue',figsize=(8, 6))
+def graph_rvolatility(stock, wts, start_date, end_date, window_time):
+  if len(stock)==1:
+    asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)
+    # Compute the logarithmic returns using the Closing price 
+    asset['Log_Ret'] = np.log(asset['Adj Close'] / asset['Adj Close'].shift(1))
+    # Compute Volatility using the pandas rolling standard deviation function
+    asset['Volatility'] = asset['Log_Ret'].rolling(window=window_time).std() * np.sqrt(252)
+    asset = pd.DataFrame(asset)
+    # Plot the NIFTY Price series and the Volatility
+    asset[['Volatility']].plot(subplots=True, color='blue',figsize=(8, 6))
+  else:
+    asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+    port_ret = (asset * wts).sum(axis = 1)
+    asset['Adj Close'] = port_ret
+    # Compute the logarithmic returns using the Closing price 
+    asset['Log_Ret'] = np.log(asset['Adj Close'] / asset['Adj Close'].shift(1))
+    # Compute Volatility using the pandas rolling standard deviation function
+    asset['Volatility'] = asset['Log_Ret'].rolling(window=window_time).std() * np.sqrt(252)
+    # Plot the NIFTY Price series and the Volatility
+    asset[['Volatility']].plot(subplots=True, color='blue',figsize=(8, 6))
 #------------------------------------------------------------------------------------------------------------------------
+def rvolatility(stock, wts, start_date, end_date, window_time):
+  if len(stock)==1:
+    asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)
+    # Compute the logarithmic returns using the Closing price 
+    asset['Log_Ret'] = np.log(asset['Adj Close'] / asset['Adj Close'].shift(1))
+    # Compute Volatility using the pandas rolling standard deviation function
+    asset['Volatility'] = asset['Log_Ret'].rolling(window=window_time).std() * np.sqrt(252)
+    df = asset['Volatility']
+    df = pd.DataFrame(df)
+    return df
+
+  else:
+    asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+    port_ret = (asset * wts).sum(axis = 1)
+    asset['Adj Close'] = port_ret
+    # Compute the logarithmic returns using the Closing price 
+    asset['Log_Ret'] = np.log(asset['Adj Close'] / asset['Adj Close'].shift(1))
+    print(asset['Adj Close'])
+    # Compute Volatility using the pandas rolling standard deviation function
+    asset['Volatility'] = asset['Log_Ret'].rolling(window=window_time).std() * np.sqrt(252)
+    df = asset['Volatility']
+    df = pd.DataFrame(df)
+    return df
+#------------------------------------------------------------------------------------------------------------------------------------------
 
 def rolling_alpha(stock, benchmark, start_date, end_date, window_time):
   # get the closing price of AMZN Stock
