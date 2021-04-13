@@ -157,7 +157,7 @@ def graph_creturns(stock, wts, start_date, end_date):
     cumulative_ret_df1 = (port_ret + 1).cumprod()
     
     plt.figure(figsize=(20,10))
-    stock_raw = web.DataReader(stock, start = start_date, end= end_date)
+    stock_raw = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)
     stock = stock_raw['Close']
     port_ret = stock.sum(axis=1)
     stock_normed = stock/stock.iloc[0]
@@ -643,56 +643,56 @@ def capm(stocks, wts, start_date, end_date):
   return results.summary()
   #--------------------------------------------------------------------------------------------------------------
   def cointegration(stock1, stock2, start_date, end_date):
-  X1 = web.DataReader(stock1, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  X2 = web.DataReader(stock2, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  X1.name = str(stock1)
-  X2.name = str(stock2)
-  def check_for_stationarity(X, cutoff=0.01):
-    # H_0 in adfuller is unit root exists (non-stationary)
-    # We must observe significant p-value to convince ourselves that the series is stationary
-    pvalue = adfuller(X)[1]
-    if pvalue < cutoff:
-        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely stationary.')
-        return True
-    else:
-        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely non-stationary.')
-        return False
-  Z = X2 - X1
-  Z.name = 'Z'
+    X1 = web.DataReader(stock1, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+    X2 = web.DataReader(stock2, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+    X1.name = str(stock1)
+    X2.name = str(stock2)
+    def check_for_stationarity(X, cutoff=0.01):
+      # H_0 in adfuller is unit root exists (non-stationary)
+      # We must observe significant p-value to convince ourselves that the series is stationary
+      pvalue = adfuller(X)[1]
+      if pvalue < cutoff:
+          print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely stationary.')
+          return True
+      else:
+          print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely non-stationary.')
+          return False
+    Z = X2 - X1
+    Z.name = 'Z'
 
-  plt.plot(Z)
-  plt.xlabel('Time')
-  plt.ylabel('Series Value')
-  plt.legend(['Z']);
+    plt.plot(Z)
+    plt.xlabel('Time')
+    plt.ylabel('Series Value')
+    plt.legend(['Z']);
 
-  check_for_stationarity(Z);
+    check_for_stationarity(Z);
   #------------------------------------------------------------------------------------------------------------------
   def return_cointegration(stock1, stock2, start_date, end_date):
-  X1 = web.DataReader(stock1, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  X2 = web.DataReader(stock2, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  X1 = X1.pct_change()[1:]
-  X2 = X2.pct_change()[1:]
-  X1.name = str(stock1)
-  X2.name = str(stock2)
-  def check_for_stationarity(X, cutoff=0.01):
-    # H_0 in adfuller is unit root exists (non-stationary)
-    # We must observe significant p-value to convince ourselves that the series is stationary
-    pvalue = adfuller(X)[1]
-    if pvalue < cutoff:
-        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely stationary.')
-        return True
-    else:
-        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely non-stationary.')
-        return False
-  Z = X2 - X1
-  Z.name = 'Z'
+    X1 = web.DataReader(stock1, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+    X2 = web.DataReader(stock2, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+    X1 = X1.pct_change()[1:]
+    X2 = X2.pct_change()[1:]
+    X1.name = str(stock1)
+    X2.name = str(stock2)
+    def check_for_stationarity(X, cutoff=0.01):
+      # H_0 in adfuller is unit root exists (non-stationary)
+      # We must observe significant p-value to convince ourselves that the series is stationary
+      pvalue = adfuller(X)[1]
+      if pvalue < cutoff:
+          print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely stationary.')
+          return True
+      else:
+          print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely non-stationary.')
+          return False
+    Z = X2 - X1
+    Z.name = 'Z'
 
-  plt.plot(Z)
-  plt.xlabel('Time')
-  plt.ylabel('Series Value')
-  plt.legend(['Z']);
+    plt.plot(Z)
+    plt.xlabel('Time')
+    plt.ylabel('Series Value')
+    plt.legend(['Z']);
 
-  check_for_stationarity(Z);
+    check_for_stationarity(Z);
 #--------------------------------------------------------------------------------------------------------------------------
 
 def stationarity(stock, start_date, end_date):
