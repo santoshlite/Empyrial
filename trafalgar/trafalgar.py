@@ -146,7 +146,7 @@ def ohlcv(stock, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def graph_cumulative_ret(stock, wts, start_date, end_date):
+def graph_creturns(stock, wts, start_date, end_date):
   if len(stock) > 1:
     price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
     price_data = price_data['Adj Close']
@@ -182,7 +182,7 @@ def graph_cumulative_ret(stock, wts, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def cumulative_ret(stock, wts, start_date, end_date):
+def creturns(stock, wts, start_date, end_date):
   if len(stock) > 1:
     price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
     price_data = price_data['Adj Close']
@@ -256,7 +256,7 @@ def sharpe_ratio(stocks, wts, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def graph_r_benchmark(stocks, wts, benchmark, start_date, end_date):
+def graph_rbenchmark(stocks, wts, benchmark, start_date, end_date):
 
   if len(stocks)>1 and len(wts)>1:
 
@@ -291,7 +291,7 @@ def graph_r_benchmark(stocks, wts, benchmark, start_date, end_date):
     ret_data["benchmark"] = return_df2
     ret_data.plot(figsize=(20,10))
 #----------------------------------------------------------------------------------------
-def r_benchmark(stocks, wts, benchmark, start_date, end_date):
+def rbenchmark(stocks, wts, benchmark, start_date, end_date):
 
   if len(stocks)>1 and len(wts)>1:
 
@@ -327,7 +327,7 @@ def r_benchmark(stocks, wts, benchmark, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def c_benchmark(stocks, wts, benchmark, start_date, end_date):
+def cbenchmark(stocks, wts, benchmark, start_date, end_date):
   if len(stocks)>1 and len(wts)>1:
       price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
       price_data = price_data['Adj Close']
@@ -367,7 +367,7 @@ def c_benchmark(stocks, wts, benchmark, start_date, end_date):
     return df
 
 # ------------------------------------------------------------------------------------------
-def graph_c_benchmark(stocks, wts, benchmark, start_date, end_date):
+def graph_cbenchmark(stocks, wts, benchmark, start_date, end_date):
   if len(stocks)>1 and len(wts)>1:
       price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
       price_data = price_data['Adj Close']
@@ -410,8 +410,8 @@ def graph_c_benchmark(stocks, wts, benchmark, start_date, end_date):
 
 def efficient_frontier(stocks, start_date, end_date, iterations):
 
-  stock_raw = web.DataReader(stocks, 'yahoo', "2020-01-01", "2021-01-01")
-  stock = stock_raw['Close']
+  stock_raw = web.DataReader(stocks, 'yahoo', start= start_date, end = end_date)
+  stock = stock_raw['Adj Close']
   df = pd.DataFrame(stock)
   port_ret = stock.sum(axis=1)
   log_ret = np.log(stock/stock.shift(1))
