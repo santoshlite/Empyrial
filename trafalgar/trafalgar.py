@@ -410,8 +410,8 @@ def graph_c_benchmark(stocks, wts, benchmark, start_date, end_date):
 
 def efficient_frontier(stocks, start_date, end_date, iterations):
 
-  stock_raw = web.DataReader(stocks, 'yahoo', start_date, end_date)
-  stock = stock_raw['Adj Close']
+  stock_raw = web.DataReader(stocks, 'yahoo', "2020-01-01", "2021-01-01")
+  stock = stock_raw['Close']
   df = pd.DataFrame(stock)
   port_ret = stock.sum(axis=1)
   log_ret = np.log(stock/stock.shift(1))
@@ -429,7 +429,7 @@ def efficient_frontier(stocks, start_date, end_date, iterations):
 
       # Rebalance Weights
       weights = weights / np.sum(weights)
-
+      
       # Save Weights
       all_weights[ind,:] = weights
 
@@ -441,20 +441,21 @@ def efficient_frontier(stocks, start_date, end_date, iterations):
 
       # Sharpe Ratio
       sharpe_arr[ind] = ret_arr[ind]/vol_arr[ind]
-
+  
   max_sr_ret = ret_arr[sharpe_arr.argmax()]
   max_sr_vol = vol_arr[sharpe_arr.argmax()]
 
-  print('Return with Maximum SR (in %):')
-  print(max_sr_ret*100)
-  print('Volality with Maximum SR (in %):')
-  print(max_sr_vol*100)
-  print('Max Sharpe Ratio:')
-  print(sharpe_arr.max())
+  data = {'stats': ['Expected Return (in %)','Volality','Sharpe ratio'],
+        'value': [max_sr_ret*100,max_sr_vol,sharpe_arr.max()]
+        }
+
   print('Optimized allocation (in %):')
   allocation = [i * 100 for i in all_weights[sharpe_arr.argmax(),:] ]
   print(allocation)
 
+  df = pd.DataFrame(data)
+  print(df)
+  
   plt.figure(figsize=(14,8))
   plt.scatter(vol_arr,ret_arr,c=sharpe_arr,cmap='plasma')
   plt.colorbar(label='Sharpe Ratio')
@@ -463,7 +464,6 @@ def efficient_frontier(stocks, start_date, end_date, iterations):
 
   # Add red dot for max SR
   plt.scatter(max_sr_vol,max_sr_ret,c='red',s=50,edgecolors='black')
-  plt.show()
 
 # ------------------------------------------------------------------------------------------
 def mean_daily_return(stocks,wts, start_date, end_date):
