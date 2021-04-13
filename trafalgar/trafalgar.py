@@ -1049,7 +1049,9 @@ def rbeta(stock,wts, benchmark, start_date, end_date, window_time):
     results = pd.DataFrame(list(zip(*results)), columns = ['alpha', 'beta'])
     
     results.index = amzn.index
-    return results.beta
+    df = results['beta']
+    df = pd.DataFrame(df)
+    return df
   else:
 
     amzn = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
@@ -1101,7 +1103,9 @@ def rbeta(stock,wts, benchmark, start_date, end_date, window_time):
     results = pd.DataFrame(list(zip(*results)), columns = ['alpha', 'beta'])
     
     results.index = df1.index
-    return results.beta
+    df = results['beta']
+    df = pd.DataFrame(df)
+    return df
 #--------------------------------------------------------------------------------------------------------------------------------------
 def ralpha(stock,wts, benchmark, start_date, end_date, window_time):
 
@@ -1154,7 +1158,9 @@ def ralpha(stock,wts, benchmark, start_date, end_date, window_time):
     results = pd.DataFrame(list(zip(*results)), columns = ['alpha', 'beta'])
     
     results.index = amzn.index
-    return results.alpha
+    df = results['alpha']
+    df = pd.DataFrame(df)
+    return df
   else:
 
     amzn = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
@@ -1206,4 +1212,67 @@ def ralpha(stock,wts, benchmark, start_date, end_date, window_time):
     results = pd.DataFrame(list(zip(*results)), columns = ['alpha', 'beta'])
     
     results.index = df1.index
+    df = results['alpha']
+    df = pd.DataFrame(df)
+    return df
     return results.alpha
+#-------------------------------------------------------------------------------------------------------------------
+def bsm_price(option_type, sigma, s, k, r, T, q):
+    # calculate the bsm price of European call and put options
+    sigma = float(sigma)
+    d1 = (np.log(s / k) + (r - q + sigma ** 2 * 0.5) * T) / (sigma * np.sqrt(T))
+    d2 = d1 - sigma * np.sqrt(T)
+    if option_type == 'c':
+        price = np.exp(-r*T) * (s * np.exp((r - q)*T) * norm.cdf(d1) - k *  norm.cdf(d2))
+        return price
+    elif option_type == 'p':
+        price = np.exp(-r*T) * (k * norm.cdf(-d2) - s * np.exp((r - q)*T) *  norm.cdf(-d1))
+        return price
+    else:
+        print('No such option type %s') %option_type
+#option type : "c" (call option) or "p"(put option)
+#P is a function of historical volatility
+#S : stock price
+#K : strike price
+#r : risk-free rate
+#T : the time to expiration
+def implied_vol(option_type, option_price, s, k, r, T, q):
+    # apply bisection method to get the implied volatility by solving the BSM function
+    precision = 0.00001
+    upper_vol = 500.0
+    max_vol = 500.0
+    min_vol = 0.0001
+    lower_vol = 0.0001
+    iteration = 0
+
+    while 1:
+        iteration +=1
+        mid_vol = (upper_vol + lower_vol)/2.0
+        price = bsm_price(option_type, mid_vol, s, k, r, T, q)
+        if option_type == 'c':
+
+            lower_price = bsm_price(option_type, lower_vol, s, k, r, T, q)
+            if (lower_price - option_price) * (price - option_price) > 0:
+                lower_vol = mid_vol
+            else:
+                upper_vol = mid_vol
+            if abs(price - option_price) < precision: 
+              break 
+            if mid_vol > max_vol - 5 :
+                mid_vol = 0.000001
+                break
+
+        elif option_type == 'p':
+            upper_price = bsm_price(option_type, upper_vol, s, k, r, T, q)
+
+            if (upper_price - option_price) * (price - option_price) > 0:
+                upper_vol = mid_vol
+            else:
+                lower_vol = mid_vol
+            if abs(price - option_price) < precision: 
+              break 
+            if iteration > 50: 
+              break
+
+    return mid_vol
+#--------------------------------------------------------------------------------------------------------------------
