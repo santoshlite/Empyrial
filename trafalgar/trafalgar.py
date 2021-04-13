@@ -632,14 +632,19 @@ def kalman(stocks, start_date, end_date, noise_value):
 #---------------------------------------------------------------------------------------------------------------
 def capm(stocks, wts, start_date, end_date):
 
-  R = portfolio_ret(stocks, wts, start_date, end_date)
-  R_F = web.DataReader('BIL', data_source='yahoo', start = start_date, end = end_date)['Adj Close'].pct_change()[1:]
+  assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+  ret_data = assets.pct_change()[1:]
+
+  R = (ret_data * wts).sum(axis = 1)
+
+  R_F = web.DataReader('BIL', data_source='yahoo', start = start_date, end = end_date)['Close'].pct_change()[1:]
   
   # find it's beta against market
-  M = web.DataReader('SPY', data_source='yahoo', start = start_date, end = end_date)['Adj Close'].pct_change()[1:]
+  M = web.DataReader('SPY', data_source='yahoo', start = start_date, end = end_date)['Close'].pct_change()[1:]
 
   results = regression.linear_model.OLS(R-R_F, sm.add_constant(M)).fit()
   beta = results.params[1]
+  alpha = results.params[0]
   return results.summary()
   #--------------------------------------------------------------------------------------------------------------
   def cointegration(stock1, stock2, start_date, end_date):
@@ -1276,3 +1281,44 @@ def implied_vol(option_type, option_price, s, k, r, T, q):
 
     return mid_vol
 #--------------------------------------------------------------------------------------------------------------------
+def backtest(stocks, wts, benchmark, start_date, end_date):
+
+  price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
+  price_data = price_data['Adj Close']
+
+
+  ret_data = price_data.pct_change()[1:]
+
+  port_ret = (ret_data * wts).sum(axis = 1)
+  cumulative_ret_df1 = (port_ret + 1).cumprod()
+
+  total_return = (cumulative_ret_df1.iloc[-1]-1)*100
+  total_return = round(total_return, 2)
+  total_return = str(total_return) + '%'
+  volatility = annual_volatility(stocks, wts,start_date, end_date)*100
+  volatility = round(volatility, 2)
+  volatility = str(volatility) + '%'
+  s_ratio = sharpe_ratio(stocks, wts ,start_date, end_date)
+  s_ratio = round(s_ratio, 2)
+  alpha_port = alpha(stocks, wts, benchmark, start_date, end_date)
+  alpha_port = round(alpha_port, 4)
+  beta_port = beta(stocks, wts, benchmark, start_date, end_date)
+  beta_port = round(beta_port, 2)
+
+  data = {'Backtest': ['Return','Annual volatility','Sharpe ratio','Alpha', 'Beta'],
+        'Portfolio': [total_return,volatility,s_ratio, alpha_port, beta_port]
+        }
+
+  df = pd.DataFrame(data)
+  df2 = mean_daily_return(stocks,wts, start_date, end_date)
+  df2 = pd.DataFrame(df2)
+  print("Mean daily return of the portfolio")
+  print(df2)
+  graph_cbenchmark(stock, wts, benchmark, start_date, end_date)
+  graph_creturns(stock, wts, start_date, end_date)
+  graph_returns(stock,wts, start_date, end_date)
+  graph_rbenchmark(stock, wts, benchmark, start_date, end_date)
+  graph_rvolatility(stock,wts, start_date, end_date, 180)
+  graph_rbeta(stock,wts, benchmark, start_date, end_date, 180)
+  print(capm(stock, wts, start_date, end_date))
+  return df
