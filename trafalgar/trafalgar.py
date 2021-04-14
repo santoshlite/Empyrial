@@ -833,7 +833,7 @@ def graph_ralpha(stock,wts, benchmark, start_date, end_date, window_time):
     results.index = amzn.index
     plt.figure(figsize=(12,8))
     results.alpha.plot.line()
-    plt.title("Market Beta: Rolling Window of 30 Days")
+    plt.title("Market Alpha: Rolling Window of "+str(window_time)+" Days")
   else:
 
     amzn = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
@@ -887,7 +887,7 @@ def graph_ralpha(stock,wts, benchmark, start_date, end_date, window_time):
     results.index = df1.index
     plt.figure(figsize=(12,8))
     results.alpha.plot.line()
-    plt.title("Market Beta: Rolling Window of 30 Days")
+    plt.title("Market Alpha: Rolling Window of "+ str(window_time) + " Days")
 
   
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -944,7 +944,7 @@ def graph_rbeta(stock,wts, benchmark, start_date, end_date, window_time):
     results.index = amzn.index
     plt.figure(figsize=(12,8))
     results.beta.plot.line()
-    plt.title("Market Beta: Rolling Window of 30 Days")
+    plt.title("Market Beta: Rolling Window of "+str(window_time) + " Days")
   else:
 
     amzn = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
@@ -998,7 +998,7 @@ def graph_rbeta(stock,wts, benchmark, start_date, end_date, window_time):
     results.index = df1.index
     plt.figure(figsize=(12,8))
     results.beta.plot.line()
-    plt.title("Market Beta: Rolling Window of 30 Days")
+    plt.title("Market Beta: Rolling Window of " +str(window_time)+ " Days")
 
 
 #--------------------------------------------------------------------------------------------------------------------------------
