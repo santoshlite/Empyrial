@@ -92,7 +92,7 @@ def returns(stocks,wts, start_date, end_date):
     ret_data = pd.DataFrame(ret_data)
     return ret_data
   else:
-    df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Close']
+    df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
     df = pd.DataFrame(df)
     returns = df.pct_change()
     returns = pd.DataFrame(returns)
@@ -109,12 +109,12 @@ def graph_returns(stock,wts, start_date, end_date):
     plt.ylabel('Returns') 
     plt.title('Portfolio returns')
   else:
-    df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
+    df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
     df = pd.DataFrame(df)
     returns = df.pct_change()
-    returns.columns = ['Close']
+    returns.columns = ['Adj Close']
     plt.figure(figsize=(20,10))
-    plt.plot(returns.index, returns['Close'])
+    plt.plot(returns.index, returns['Adj Close'])
     plt.xlabel("Date")
     plt.ylabel("$ price")
     plt.title("Revenues from "+start_date + " to "+ end_date)
@@ -158,7 +158,7 @@ def graph_creturns(stock, wts, start_date, end_date):
     
     plt.figure(figsize=(20,10))
     stock_raw = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)
-    stock = stock_raw['Close']
+    stock = stock_raw['Adj Close']
     port_ret = stock.sum(axis=1)
     stock_normed = stock/stock.iloc[0]
     stock_normed['Portfolio'] = cumulative_ret_df1
@@ -637,10 +637,10 @@ def capm(stocks, wts, start_date, end_date):
 
   R = (ret_data * wts).sum(axis = 1)
 
-  R_F = web.DataReader('BIL', data_source='yahoo', start = start_date, end = end_date)['Close'].pct_change()[1:]
+  R_F = web.DataReader('BIL', data_source='yahoo', start = start_date, end = end_date)['Adj Close'].pct_change()[1:]
   
   # find it's beta against market
-  M = web.DataReader('SPY', data_source='yahoo', start = start_date, end = end_date)['Close'].pct_change()[1:]
+  M = web.DataReader('SPY', data_source='yahoo', start = start_date, end = end_date)['Adj Close'].pct_change()[1:]
 
   results = regression.linear_model.OLS(R-R_F, sm.add_constant(M)).fit()
   beta = results.params[1]
