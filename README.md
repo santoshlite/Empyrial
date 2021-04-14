@@ -30,6 +30,16 @@ Note : Step 1 and 2 are not always necessary, just make sure the libraries requi
 
 Here is the code from a google collab, you can use it to follow along with the code: https://colab.research.google.com/drive/1qgFDDQneQP-oddbJVWWApfPKFMnbpj6I?usp=sharing
 
+## Credits ✌️
+
+This library would not exist without the existence of Github and :
+
+- the contributors @rslopes, @rakeshbhat9, @Haizzz and @george-adams1
+- Quantopian and their incredible lectures (https://gist.github.com/ih2502mk/50d8f7feb614c8676383431b056f4291)
+- the authors of codingfinance.com
+- Quantconnect
+- @mrmushfiq and his repo https://github.com/mrmushfiq/python_meets_finance
+
 # Documentation🚀
 
 ### Call the library
@@ -378,8 +388,132 @@ capm(stocks, wts, "2020-01-01", "2021-01-01")
 ```
 <center><img src="https://i.ibb.co/4p9H1cB/Capture.jpg"/></center>
 
+### Cointegration
+```sh
+#cointegration(stock1, stock2, start_date, end_date)
+cointegration("GOOG", "MSFT", "2012-01-01", "2021-01-01")
+```
+<center><img src="https://i.ibb.co/CbCXVb7/Capture.jpg"/></center>
+
+### Returns Cointegration
+```sh
+#return_cointegration(stock1, stock2, start_date, end_date)
+return_cointegration("GOOG", "MSFT", "2012-01-01", "2021-01-01")
+```
+<center><img src="https://i.ibb.co/XYG5wGH/Capture.jpg"/></center>
+
+### Stationarity
+```sh
+#stationarity(stock, start_date, end_date)
+stationarity("GOOG", "2020-01-01", "2021-01-01")
+```
+<center><img src="https://i.ibb.co/2MPh0S4/Capture.jpg"/></center>
+
+### Returns Stationarity
+```sh
+#return_stationarity(stock, start_date, end_date)
+return_stationarity("GOOG", "2020-01-01", "2021-01-01")
+```
+<center><img src="https://i.ibb.co/V2MPpqy/Capture.jpg"/></center>
+
+### Graph rolling volatility
+```sh
+#graph_rvolatility(stock, wts, start_date, end_date, window_time)
+#for a stock
+graph_rvolatility(["TSLA"], 1, "2019-01-01", "2021-01-01", 180)
+
+#for a portfolio
+graph_rvolatility(["AAPL", "AMD", "TSLA"], [0.45, 0.45, 0.1], "2019-01-01", "2021-01-01", 180)
+```
+<center><img src="https://i.ibb.co/d6QkDb3/Capture.jpg"/></center>
+
+### Get rolling volatility data
+```sh
+#rvolatility(stock, wts, start_date, end_date, window_time)
+#for a stock
+rvolatility(["TSLA"], 1, "2019-01-01", "2021-01-01", 180)
+
+#for a portfolio
+rvolatility(["AAPL", "AMD", "TSLA"], [0.45, 0.45, 0.1], "2019-01-01", "2021-01-01", 180)
+```
+<center><img src="https://i.ibb.co/T2W0Y3T/Capture.jpg"/></center>
+
+### Graph rolling beta
+```sh
+#graph_rbeta(stock,wts, benchmark, start_date, end_date, window_time)
+
+#for a stock
+graph_rbeta(["TSLA"], 1, "SPY", "2019-01-01", "2021-01-01", 180)
+
+#for a portfolio
+graph_rbeta(["AAPL", "AMD", "GOOG"], [0.45, 0.45, 0.1], "SPY", "2019-01-01", "2021-01-01", 180)
+```
+<center><img src="https://i.ibb.co/k2ZFRNH/Capture.jpg"/></center>
+
+### Get rolling beta data
+```sh
+#rbeta(stock,wts, benchmark, start_date, end_date, window_time)
+
+#for a stock
+rbeta(["TSLA"], 1, "SPY", "2019-01-01", "2021-01-01", 180)
+
+#for a portfolio
+rbeta(["AAPL", "AMD", "GOOG"], [0.45, 0.45, 0.1], "SPY", "2019-01-01", "2021-01-01", 180)
+```
+<center><img src="https://i.ibb.co/QQSWPP3/Capture.jpg"/></center>
+
+### Graph rolling alpha
+```sh
+#graph_ralpha(stock,wts, benchmark, start_date, end_date, window_time)
+
+#for a stock
+graph_ralpha(["TSLA"], 1, "SPY", "2019-01-01", "2021-01-01", 180)
+
+#for a portfolio
+graph_ralpha(["AAPL", "AMD", "GOOG"], [0.45, 0.45, 0.1], "SPY", "2019-01-01", "2021-01-01", 180)
+```
+<center><img src="https://i.ibb.co/BN7ZHQq/Capture.jpg"/></center>
+
+### Get rolling alpha data
+```sh
+#ralpha(stock,wts, benchmark, start_date, end_date, window_time)
+
+#for a stock
+ralpha(["TSLA"], 1, "SPY", "2019-01-01", "2021-01-01", 180)
+
+#for a portfolio
+ralpha(["AAPL", "AMD", "GOOG"], [0.45, 0.45, 0.1], "SPY", "2019-01-01", "2021-01-01", 180)
+```
+<center><img src="https://i.ibb.co/VJTgXs2/Capture.jpg"/></center>
+
+### Get implied volatility
+```sh
+#implied_vol(option_type, option_price, stock price, strike price, risk-free rate, the time to expiration, continuous dividend rate)
+#option type : "c" (call option) or "p"(put option)
+
+implied_vol('c', 0.3, 3, 3, 0.032, 30.0/365, 0.01)
+```
+<center><img src="https://i.ibb.co/gS19VTM/Capture.jpg"/></center>
+
+### Backtest your portfolio
+
+```sh
+#backtest(stocks, wts, benchmark, start_date, end_date)
+stocks = ["GOOG", "AMZN", "FB", "AAPL"]
+wts = [0.25, 0.25, 0.25, 0.25]
+backtest(stocks, wts, "SPY", "2019-01-01", "2021-01-01")
+```
+<center><img src="https://i.ibb.co/PmRR2gC/Capture.jpg"/></center>
+<center><img src="https://i.ibb.co/VwBNf17/t-l-chargement-14.png"/></center>
+<center><img src="https://i.ibb.co/mvvGwCf/Capture.jpg"/></center>
+<center><img src="https://i.ibb.co/VN83w2z/t-l-chargement-15.png"/></center>
+<center><img src="https://i.ibb.co/Bfc1xKG/t-l-chargement-16.png"/></center>
+<center><img src="https://i.ibb.co/R7cj5Hd/t-l-chargement-17.png"/></center>
+<center><img src="https://i.ibb.co/dWZq4wg/t-l-chargement-18.png"/></center>
+<center><img src="https://i.ibb.co/Df2FqWC/Capture.jpg"/></center>
+<center><img src="https://i.ibb.co/tY5rjhx/Capture.jpg"/></center>
+
 ## License
 
 **MIT**
-
 
