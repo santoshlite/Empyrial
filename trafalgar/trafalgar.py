@@ -647,7 +647,7 @@ def capm(stocks, wts, start_date, end_date):
   alpha = results.params[0]
   return results.summary()
   #--------------------------------------------------------------------------------------------------------------
-  def cointegration(stock1, stock2, start_date, end_date):
+def cointegration(stock1, stock2, start_date, end_date):
     X1 = web.DataReader(stock1, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
     X2 = web.DataReader(stock2, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
     X1.name = str(stock1)
@@ -672,7 +672,7 @@ def capm(stocks, wts, start_date, end_date):
 
     check_for_stationarity(Z);
   #------------------------------------------------------------------------------------------------------------------
-  def return_cointegration(stock1, stock2, start_date, end_date):
+def return_cointegration(stock1, stock2, start_date, end_date):
     X1 = web.DataReader(stock1, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
     X2 = web.DataReader(stock2, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
     X1 = X1.pct_change()[1:]
@@ -699,7 +699,6 @@ def capm(stocks, wts, start_date, end_date):
 
     check_for_stationarity(Z);
 #--------------------------------------------------------------------------------------------------------------------------
-
 def stationarity(stock, start_date, end_date):
   X = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
   def check_for_stationarity(X, cutoff=0.01):
