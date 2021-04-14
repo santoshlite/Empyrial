@@ -613,7 +613,7 @@ def graph_kalman(stocks, start_date, end_date, noise_value):
 #------------------------------------------------------------------------------------------------------------
 
 def kalman(stocks, start_date, end_date, noise_value):
-  x = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['AClose']
+  x = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
 
   # Construct a Kalman filter
   kf = KalmanFilter(transition_matrices = [1],
