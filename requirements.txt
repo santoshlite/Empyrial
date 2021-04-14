@@ -2,11 +2,8 @@ numpy
 matplotlib
 seaborn
 scipy
-tabulate
 pandas_datareader
 datetime
-plotly
-yfinance
 statsmodels
 pykalman
 sklearn
