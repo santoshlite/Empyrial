@@ -7,7 +7,7 @@ Python library to make development of portfolio analysis faster and easier
 To install Trafalgar, you should do:
 
 ```
-pip install trafalgars
+pip install trafalgar.py
 ```
 (https://pypi.org/project/trafalgars/0.0.2/#description)
 
@@ -45,7 +45,7 @@ This library would not exist without the existence of Github and :
 ### Call the library
 First, you should do:
 ```sh
-from Trafalgars import *
+from trafalgar import *
 ```
 
 ### Graph of the closing price of a stock
