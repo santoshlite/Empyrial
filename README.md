@@ -22,11 +22,11 @@ Note : Step 1 and 2 are not always necessary, just make sure the libraries requi
 ## Features include 📈
 
 - Get close price, open price, adj close, volume and graphs of these in one line of code!
-- Build a efficient frontier programm in 3 lines of code
+- Build an efficient frontier programm in 3 lines of code
 - Make quantitative analysis on stocks/portfolios (alpha, beta, skew, kurtosis, rolling volatility...)
 - Build a  Capital Asset Pricing Model of a portfolio
 - Backtest a portfolio, see its stats and compare it to a benchmark 
-- many other thnigs...
+- many other things...
 
 Here is the code from a google collab, you can use it to follow along with the code: https://colab.research.google.com/drive/13i049m2kIHK3WdklOZXrhqF1jw93kEBb?usp=sharing
 
@@ -301,7 +301,7 @@ cbenchmark(["TSLA"], 1, "SPY", "2020-01-01", "2021-01-01")
 cbenchmark(["AAPL", "AMD", "TSLA"], [0.25, 0.45, 0.3], "SPY",  "2020-01-01", "2021-01-01")
 ```
 
-<center><img src="https://i.ibb.co/LPvVw4t/Capture.jpg"/></center>
+<center><img src="https://i.ibb.co/wYRR4nJ/Capture.jpg"/></center>
 
 ### Alpha of a portfolio/stock
 
