@@ -28,7 +28,7 @@ Note : Step 1 and 2 are not always necessary, just make sure the libraries requi
 - Backtest a portfolio, see its stats and compare it to a benchmark 
 - many other thnigs...
 
-Here is the code from a google collab, you can use it to follow along with the code: https://colab.research.google.com/drive/1qgFDDQneQP-oddbJVWWApfPKFMnbpj6I?usp=sharing
+Here is the code from a google collab, you can use it to follow along with the code: https://colab.research.google.com/drive/13i049m2kIHK3WdklOZXrhqF1jw93kEBb?usp=sharing
 
 ## Credits ✌️
 
@@ -45,7 +45,7 @@ This library would not exist without the existence of Github and :
 ### Call the library
 First, you should do:
 ```sh
-from trafalgar import *
+from trafalgar import*
 ```
 
 ### Graph of the closing price of a stock
