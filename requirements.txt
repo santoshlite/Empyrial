@@ -8,3 +8,5 @@ datetime
 plotly
 yfinance
 statsmodels
+pykalman
+sklearn
