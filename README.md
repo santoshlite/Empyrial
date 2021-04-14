@@ -9,7 +9,7 @@ To install Trafalgar, you should do:
 ```
 pip install trafalgar.py
 ```
-(https://pypi.org/project/trafalgars/0.0.2/#description)
+(https://pypi.org/project/trafalgar.py/)
 
 For Anaconda setup you can simply run below to install all dependencies with env name trafalgar.
 
