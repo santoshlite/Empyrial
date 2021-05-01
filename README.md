@@ -1,4 +1,4 @@
-# Trafalgar🃏
+# Trafalgar🃏 [![Downloads](https://static.pepy.tech/personalized-badge/trafalgar-py?period=month&units=international_system&left_color=black&right_color=brightgreen&left_text=Users)](https://pepy.tech/project/trafalgar-py)
 
 Python library to make development of portfolio analysis faster and easier
 <img src="https://i.ibb.co/vVdyvfj/Trafalgar.png"/>
