@@ -1,4 +1,4 @@
-# Python library to make development of portfolio analysis faster and easier 🃏
+# Make development of portfolio analysis faster and easier 🃏
 
 <div align="center">
 <img src="https://i.ibb.co/vVdyvfj/Trafalgar.png"/>
