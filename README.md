@@ -1,4 +1,4 @@
-# Make development of portfolio analysis faster and easier 🃏
+# Makes development of portfolio analysis faster and easier 🃏
 
 <div align="center">
 <img src="https://i.ibb.co/vVdyvfj/Trafalgar.png"/>
