@@ -47,7 +47,7 @@ This library would not exist without the existence of Github and :
 ### Call the library
 First, you should do:
 ```sh
-from trafalgar import*
+import trafalgar
 ```
 
 ### Graph of the closing price of a stock
