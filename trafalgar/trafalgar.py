@@ -257,8 +257,21 @@ def graph_correlation(stocks, period="max", method="pearson", pricing="Adj Close
 
 # ------------------------------------------------------------------------------------------
 
-def ohlcv(stock, start_date, end_date):
-  df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
+def ohlcv(stocks, period="max", trading_year_days=252):
+
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
+
+  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)
+  df = pd.DataFrame(df)
+  df = df.tail(years[period])
   df = pd.DataFrame(df)
   df = df.drop(['Adj Close'], axis=1)
   df = df[["Open", "High", "Low", "Close", "Volume"]]
@@ -266,27 +279,42 @@ def ohlcv(stock, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def graph_creturns(stock, wts, start_date, end_date):
-  if len(stock) > 1:
-    price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
-    price_data = price_data['Adj Close']
+def graph_creturns(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
 
-    ret_data = price_data.pct_change()[1:]
+  if len(stocks) > 1:
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+    df = pd.DataFrame(df)
+    df = df.tail(years[period])
+
+    ret_data = df.pct_change()[1:]
 
     port_ret = (ret_data * wts).sum(axis = 1)
     cumulative_ret_df1 = (port_ret + 1).cumprod()
+
     
     plt.figure(figsize=(20,10))
-    stock_raw = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)
-    stock = stock_raw['Adj Close']
+    stock_raw = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+    stock = pd.DataFrame(stock_raw)
+    stock = stock.tail(years[period])
     port_ret = stock.sum(axis=1)
     stock_normed = stock/stock.iloc[0]
     stock_normed['Portfolio'] = cumulative_ret_df1
     stock_normed.plot(figsize=(12,8))
+
   else:
-    price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
-    price_data = price_data['Adj Close']
-    ret_data = price_data.pct_change()[1:]
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+    df = pd.DataFrame(df)
+    df = df.tail(years[period])
+    ret_data = df.pct_change()[1:]
     weighted_returns = ret_data
     port_ret = weighted_returns.sum(axis=1)
     cumulative_ret = (port_ret + 1).cumprod()
@@ -302,27 +330,42 @@ def graph_creturns(stock, wts, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def creturns(stock, wts=1, start_date, end_date):
-  if len(stock) > 1:
-    price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
-    price_data = price_data['Adj Close']
+def creturns(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
 
-    ret_data = price_data.pct_change()[1:]
+  if len(stocks) > 1:
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+    df = pd.DataFrame(df)
+    df = df.tail(years[period])
+
+    ret_data = df.pct_change()[1:]
 
     port_ret = (ret_data * wts).sum(axis = 1)
     cumulative_ret_df1 = (port_ret + 1).cumprod()
+
     
     plt.figure(figsize=(20,10))
-    stock_raw = web.DataReader(stock, 'yahoo', start = start_date, end = end_date)
-    stock = stock_raw['Adj Close']
+    stock_raw = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+    stock = pd.DataFrame(stock_raw)
+    stock = stock.tail(years[period])
     port_ret = stock.sum(axis=1)
     stock_normed = stock/stock.iloc[0]
     stock_normed['Portfolio'] = cumulative_ret_df1
     return stock_normed
+
   else:
-    price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
-    price_data = price_data['Adj Close']
-    ret_data = price_data.pct_change()[1:]
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+    df = pd.DataFrame(df)
+    df = df.tail(years[period])
+    ret_data = df.pct_change()[1:]
     weighted_returns = ret_data
     port_ret = weighted_returns.sum(axis=1)
     cumulative_ret = (port_ret + 1).cumprod()
