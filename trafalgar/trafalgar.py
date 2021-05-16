@@ -231,18 +231,27 @@ def graph_returns(stocks,wts=1, period="max", pricing="Adj Close", trading_year_
     plt.title(stocks[0] +' Returns (Period : '+ period+')')
 # ------------------------------------------------------------------------------------------
 
-def covariance(stocks, start_date, end_date, days):
-  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )['Adj Close']
+def covariance(stocks, period="max", pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)[pricing].pct_change())
+    }
+  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
   df = pd.DataFrame(df)
+  df = df.tail(years[period])
   returns = df.pct_change()
-  cov_matrix_annual = returns.cov()*days
+  cov_matrix_annual = returns.cov()*trading_year_days
   return cov_matrix_annual
-
 
 # ------------------------------------------------------------------------------------------
 
-def graph_correlation(stocks, start_date, end_date):
-    corr_mat = correlation(stocks, start_date, end_date)
+def graph_correlation(stocks, period="max", method="pearson", pricing="Adj Close", trading_year_days=252):
+    corr_mat = correlation(stocks, period, method, pricing, trading_year_days)
     seaborn.heatmap(corr_mat, annot=True)
     plt.show()
 
@@ -696,12 +705,22 @@ def beta(stocks, wts=1, benchmark, start_date, end_date):
       return beta
 #-------------------------------------------------------------------------------------------------------------------
 
-def correlation(stocks, start_date, end_date):
-  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )['Adj Close']
-  df = pd.DataFrame(df)
-  returns = df.pct_change()
-  corr_matrix = returns.corr('pearson')
-  return corr_matrix
+def correlation(stocks, period="max", method="pearson", pricing="Adj Close", trading_year_days=252):
+    p = {"period": period}
+    for stock in stocks:
+      years = {
+        '1y': trading_year_days,
+        '2y' : 2*trading_year_days,
+        '5y' : 5*trading_year_days,
+        '10y' : 10*trading_year_days,
+        'max' : len(yf.Ticker(stock).history(**p)[pricing].pct_change())
+      }
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+    df = pd.DataFrame(df)
+    df = df.tail(years[period])
+    returns = df.pct_change()
+    corr_matrix = returns.corr(method)
+    return corr_matrix
 
 #-----------------------------------------------------------------------------------------------------
 def graph_kalman(stocks, start_date, end_date, noise_value):
