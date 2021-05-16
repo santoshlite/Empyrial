@@ -37,9 +37,9 @@ def graph_close(stocks, period="max", trading_year_days=252):
       '10y' : 10*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
-  start_date = today - relativedelta(days=years[period])
-  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= today)['Close']
+  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Close']
   df = pd.DataFrame(df)
+  df = df.tail(years[period])
   df.plot(figsize=(20,10))
 
 # ------------------------------------------------------------------------------------------
@@ -54,9 +54,9 @@ def graph_open(stocks, period="max", trading_year_days=252):
       '10y' : 10*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Open'].pct_change())
     }
-  start_date = today - relativedelta(days=years[period])
-  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= today)['Open']
+  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Open']
   df = pd.DataFrame(df)
+  df = df.tail(years[period])
   df.plot(figsize=(20,10))
 
 # ------------------------------------------------------------------------------------------
@@ -72,9 +72,9 @@ def graph_volume(stocks, period="max", trading_year_days=252):
       '10y' : 10*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Volume'].pct_change())
     }
-  start_date = today - relativedelta(days=years[period])
-  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= today)['Volume']
+  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Volume']
   df = pd.DataFrame(df)
+  df = df.tail(years[period])
   df.plot(figsize=(20,10))
 
 # ------------------------------------------------------------------------------------------
@@ -90,37 +90,80 @@ def graph_adj_close(stocks, period="max", trading_year_days=252):
       '10y' : 10*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Adj Close'].pct_change())
     }
-  start_date = today - relativedelta(days=years[period])
-  df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= today)['Adj Close']
+  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Adj Close']
   df = pd.DataFrame(df)
+  df = df.tail(years[period])
   df.plot(figsize=(20,10))
 
 # ------------------------------------------------------------------------------------------
 
-def close(stock, start_date, end_date):
-  df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
+def close(stocks, period="max", trading_year_days=252):
+    
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
+  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Close']
   df = pd.DataFrame(df)
+  df = df.tail(years[period])
   return df
 
 # ------------------------------------------------------------------------------------------
 
-def open(stock, start_date, end_date):
-  df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Open']
+def open(stocks, period="max", trading_year_days=252):
+    
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Open'].pct_change())
+    }
+  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Open']
   df = pd.DataFrame(df)
+  df = df.tail(years[period])
   return df
 
 # ------------------------------------------------------------------------------------------
 
-def adj_close(stock, start_date, end_date):
-  df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+def adj_close(stocks, period="max", trading_year_days=252):
+    
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Adj Close'].pct_change())
+    }
+  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Adj Close']
   df = pd.DataFrame(df)
+  df = df.tail(years[period])
   return df
 
 # ------------------------------------------------------------------------------------------
-
-def volume(stock, start_date, end_date):
-  df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Volume']
+def volume(stocks, period="max", trading_year_days=252):
+    
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Volume'].pct_change())
+    }
+  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Volume']
   df = pd.DataFrame(df)
+  df = df.tail(years[period])
   return df
 
 # ------------------------------------------------------------------------------------------
