@@ -19,7 +19,7 @@ Featured on
 <img align="left" src="https://cdn-images-1.medium.com/max/1200/1*NHYVDHC_WbdaUicoYyJFrA.png" width="100"/>
 <img align="left" src="https://cdn-images-1.medium.com/max/1200/1*yAqDFIFA5F_NXalOJKz4TA.png" width="100"/>
 <img align="left"src="https://pychina.org/img/pycon.png" width="100"/><br>
-<img align="left"src="https://i.ibb.co/r4ZzyLQ/Capture.jpg" width="300"/>
+<img align="left"src="https://i.ibb.co/r4ZzyLQ/Capture.jpg" width="200"/>
 </div>
 
 
