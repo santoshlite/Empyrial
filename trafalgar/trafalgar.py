@@ -14,6 +14,16 @@ from pykalman import KalmanFilter
 
 # ------------------------------------------------------------------------------------------
 
+years = {
+    '1y': trading_year_days,
+    '2y' : 2*trading_year_days,
+    '5y' : 5*trading_year_days,
+    '10y' : 10*trading_year_days,
+    'max' : len(yf.Ticker("AAPL").history(**p)['Close'].pct_change())
+  }
+
+#-------------------------------------------------------------------------------------------
+
 def graph_close(stock, start_date, end_date):
 
   """
@@ -232,27 +242,32 @@ def annual_volatility(stocks, wts, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def sharpe_ratio(stocks, wts, start_date, end_date):
-  if len(stocks)>1:
-    price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
-    price_data = price_data['Adj Close']
+def sharpe(stocks, wts=1, rf=0.0, period='max', annualize=True, trading_year_days=253):
 
-    ret_data = price_data.pct_change()[1:]
+  p = {"period": period}
+
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
+
+  start_date = today - relativedelta(days=years[period]) 
+
+  if wts != 1:
+    assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= today)['Adj Close']
+    ret_data = assets.pct_change()[1:]
     port_ret = (ret_data * wts).sum(axis = 1)
-    cumulative_ret = (port_ret + 1).cumprod()
-    geometric_port_return = np.prod(port_ret + 1) ** (252/port_ret.shape[0]) - 1
-    annual_std = np.std(port_ret) * np.sqrt(252)
-    port_sharpe_ratio = geometric_port_return / annual_std
-    return port_sharpe_ratio
+    sharpe = qs.stats.sharpe(port_ret, rf=0.0, periods=period, annualize=True, trading_year_days=252)
+    return sharpe
   else:
-    price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
-    price_data = price_data['Adj Close']
+     _returns = yf.Ticker(stocks).history(**p)['Close'].pct_change()
+     sharpe = qs.stats.sharpe(_returns, rf=0.0, periods=period, annualize=True, trading_year_days=252)
+     return sharpe
 
-    ret_data = price_data.pct_change()[1:]
-    geometric_port_return = np.prod(ret_data + 1) ** (252/ret_data.shape[0]) - 1
-    annual_std = np.std(ret_data) * np.sqrt(252)
-    port_sharpe_ratio = geometric_port_return / annual_std
-    return port_sharpe_ratio
 
 # ------------------------------------------------------------------------------------------
 
