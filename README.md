@@ -18,7 +18,7 @@ Featured on
 <img align="left" src="https://www.libhunt.com/assets/logo/logo-og-12f445719d17ec887b4f67216c07a38850ebfbc93ed81fa8b3bbb338d63a7adb.png" width="200"/>
 <img align="left" src="https://cdn-images-1.medium.com/max/1200/1*NHYVDHC_WbdaUicoYyJFrA.png" width="100"/>
 <img align="left" src="https://cdn-images-1.medium.com/max/1200/1*yAqDFIFA5F_NXalOJKz4TA.png" width="100"/>
-<img align="left"src="https://pychina.org/img/pycon.png" width="100"/><br>
+<img align="left"src="https://pychina.org/img/pycon.png" width="100"/><br><br>
 <img align="left"src="https://i.ibb.co/r4ZzyLQ/Capture.jpg" width="200"/>
 </div>
 
