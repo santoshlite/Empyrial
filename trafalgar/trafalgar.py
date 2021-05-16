@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 import seaborn 
 from scipy.stats import norm
 from pandas_datareader import data as web
-from datetime import datetime
+import datetime as dt
+from dateutil.relativedelta import relativedelta
 import statsmodels.api as sm
 from statsmodels.tsa.stattools import coint, adfuller
 from statsmodels import regression
@@ -21,6 +22,8 @@ years = {
     '10y' : 10*trading_year_days,
     'max' : len(yf.Ticker(stocks).history(**p)['Close'].pct_change())
   }
+
+today = dt.date.today()
 
 #-------------------------------------------------------------------------------------------
 def graph_close(stocks, period="max", trading_year_days=252):
