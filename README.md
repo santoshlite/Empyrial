@@ -47,6 +47,7 @@ pip install trafalgar.py
 
 Here is the code from a google collab, you can use it to follow along with the code: https://colab.research.google.com/drive/13i049m2kIHK3WdklOZXrhqF1jw93kEBb?usp=sharing
 
+## MANY OTHER STUFFS COMING SOON
 ## Credits ✌️
 
 This library would not exist without the existence of Github and :
