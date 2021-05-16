@@ -168,41 +168,67 @@ def volume(stocks, period="max", trading_year_days=252):
 
 # ------------------------------------------------------------------------------------------
 
-def returns(stocks,wts, start_date, end_date):
+def returns(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
+
   if len(stocks) > 1:
-    assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-    ret_data = assets.pct_change()[1:]
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+    df = pd.DataFrame(df)
+    df = df.tail(years[period])
+    ret_data = df.pct_change()[1:]
     port_ret = (ret_data * wts).sum(axis = 1)
     ret_data['Portfolio returns'] = port_ret
     ret_data = pd.DataFrame(ret_data)
     return ret_data
   else:
-    df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
     df = pd.DataFrame(df)
+    df = df.tail(years[period])
     returns = df.pct_change()
     returns = pd.DataFrame(returns)
     return returns
 #---------------------------------------------------------------------------------------------
-def graph_returns(stock,wts, start_date, end_date):
-  if len(stock) > 1:
-    assets = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-    ret_data = assets.pct_change()[1:]
+def graph_returns(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
+
+  if len(stocks) > 1:
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+    df = pd.DataFrame(df)
+    df = df.tail(years[period])
+    ret_data = df.pct_change()[1:]
     port_ret = (ret_data * wts).sum(axis = 1)
-    ret_data['Portfolio'] = port_ret
+    ret_data['Portfolio returns'] = port_ret
+    ret_data = pd.DataFrame(ret_data)
     ret_data.plot(figsize=(20,10))
     plt.xlabel('Date') 
     plt.ylabel('Returns') 
-    plt.title('Portfolio returns')
+    plt.title(period + 'Portfolio returns')
   else:
-    df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
     df = pd.DataFrame(df)
+    df = df.tail(years[period])
     returns = df.pct_change()
-    returns.columns = ['Adj Close']
-    plt.figure(figsize=(20,10))
-    plt.plot(returns.index, returns['Adj Close'])
-    plt.xlabel("Date")
-    plt.ylabel("$ price")
-    plt.title("Revenues from "+start_date + " to "+ end_date)
+    returns = pd.DataFrame(returns)
+    returns.plot(figsize=(20,10))
+    plt.xlabel('Date') 
+    plt.ylabel('Returns') 
+    plt.title(stocks[0] +' Returns (Period : '+ period+')')
 # ------------------------------------------------------------------------------------------
 
 def covariance(stocks, start_date, end_date, days):
