@@ -887,33 +887,6 @@ def cointegration(stock1, stock2, start_date, end_date):
     plt.legend(['Z']);
 
     check_for_stationarity(Z);
-  #------------------------------------------------------------------------------------------------------------------
-def return_cointegration(stock1, stock2, start_date, end_date):
-    X1 = web.DataReader(stock1, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-    X2 = web.DataReader(stock2, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-    X1 = X1.pct_change()[1:]
-    X2 = X2.pct_change()[1:]
-    X1.name = str(stock1)
-    X2.name = str(stock2)
-    def check_for_stationarity(X, cutoff=0.01):
-      # H_0 in adfuller is unit root exists (non-stationary)
-      # We must observe significant p-value to convince ourselves that the series is stationary
-      pvalue = adfuller(X)[1]
-      if pvalue < cutoff:
-          print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely stationary.')
-          return True
-      else:
-          print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely non-stationary.')
-          return False
-    Z = X2 - X1
-    Z.name = 'Z'
-
-    plt.plot(Z)
-    plt.xlabel('Time')
-    plt.ylabel('Series Value')
-    plt.legend(['Z']);
-
-    check_for_stationarity(Z);
 #--------------------------------------------------------------------------------------------------------------------------
 def stationarity(stock, start_date, end_date):
   X = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
@@ -932,24 +905,7 @@ def stationarity(stock, start_date, end_date):
   plt.legend(['Z']);
   return check_for_stationarity(X)
 #---------------------------------------------------------------------------------------------------------------------
-def return_stationarity(stock, start_date, end_date):
-  X = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  X = X.pct_change()[1:]
-  def check_for_stationarity(X, cutoff=0.01):
-    # H_0 in adfuller is unit root exists (non-stationary)
-    # We must observe significant p-value to convince ourselves that the series is stationary
-    pvalue = adfuller(X)[1]
-    if pvalue < cutoff:
-        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely stationary.')
-    else:
-        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely non-stationary.')
-        
-  plt.plot(X)
-  plt.xlabel('Time')
-  plt.ylabel('Series Value')
-  plt.legend(['Z']);
-  return check_for_stationarity(X)
-#-------------------------------------------------------------------------------------------------------------------------
+
 def graph_rvolatility(stock, wts=1, start_date, end_date, window_time):
   if len(stock)==1:
     asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)
@@ -1436,65 +1392,6 @@ def ralpha(stock,wts=1, benchmark, start_date, end_date, window_time):
     df = pd.DataFrame(df)
     return df
     return results.alpha
-#-------------------------------------------------------------------------------------------------------------------
-def bsm_price(option_type, sigma, s, k, r, T, q):
-    # calculate the bsm price of European call and put options
-    sigma = float(sigma)
-    d1 = (np.log(s / k) + (r - q + sigma ** 2 * 0.5) * T) / (sigma * np.sqrt(T))
-    d2 = d1 - sigma * np.sqrt(T)
-    if option_type == 'c':
-        price = np.exp(-r*T) * (s * np.exp((r - q)*T) * norm.cdf(d1) - k *  norm.cdf(d2))
-        return price
-    elif option_type == 'p':
-        price = np.exp(-r*T) * (k * norm.cdf(-d2) - s * np.exp((r - q)*T) *  norm.cdf(-d1))
-        return price
-    else:
-        print('No such option type %s') %option_type
-#option type : "c" (call option) or "p"(put option)
-#P is a function of historical volatility
-#S : stock price
-#K : strike price
-#r : risk-free rate
-#T : the time to expiration
-def implied_vol(option_type, option_price, s, k, r, T, q):
-    # apply bisection method to get the implied volatility by solving the BSM function
-    precision = 0.00001
-    upper_vol = 500.0
-    max_vol = 500.0
-    min_vol = 0.0001
-    lower_vol = 0.0001
-    iteration = 0
-
-    while 1:
-        iteration +=1
-        mid_vol = (upper_vol + lower_vol)/2.0
-        price = bsm_price(option_type, mid_vol, s, k, r, T, q)
-        if option_type == 'c':
-
-            lower_price = bsm_price(option_type, lower_vol, s, k, r, T, q)
-            if (lower_price - option_price) * (price - option_price) > 0:
-                lower_vol = mid_vol
-            else:
-                upper_vol = mid_vol
-            if abs(price - option_price) < precision: 
-              break 
-            if mid_vol > max_vol - 5 :
-                mid_vol = 0.000001
-                break
-
-        elif option_type == 'p':
-            upper_price = bsm_price(option_type, upper_vol, s, k, r, T, q)
-
-            if (upper_price - option_price) * (price - option_price) > 0:
-                upper_vol = mid_vol
-            else:
-                lower_vol = mid_vol
-            if abs(price - option_price) < precision: 
-              break 
-            if iteration > 50: 
-              break
-
-    return mid_vol
 #--------------------------------------------------------------------------------------------------------------------
 def backtest(stocks, wts=1, benchmark, start_date, end_date):
 
