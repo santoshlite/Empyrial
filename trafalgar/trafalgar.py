@@ -454,78 +454,6 @@ def sharpe(stocks, wts=1, rf=0.0, period='max', annualize=True, trading_year_day
      sharpe = qs.stats.sharpe(_returns, rf=0.0, periods=period, annualize=True, trading_year_days=252)
      return sharpe
 
-
-# ------------------------------------------------------------------------------------------
-
-def graph_rbenchmark(stocks, wts=1, benchmark, start_date, end_date):
-
-  if len(stocks)>1 and len(wts)>1:
-
-    price_data = web.get_data_yahoo(stocks,
-                                  start = start_date,
-                                  end = end_date)
-    price_data = price_data['Adj Close']
-
-    df2 = web.get_data_yahoo(benchmark, start=start_date, end= end_date)
-
-    ret_data = price_data.pct_change()[1:]
-    return_df2 = df2.Close.pct_change()[1:]
-
-    port_ret = (ret_data * wts).sum(axis = 1)
-
-    plt.figure(figsize=(20,10))
-    port_ret.plot()
-    return_df2.plot()
-    plt.ylabel("Daily return comparison")
-    plt.title('Comparison')
-    plt.show()
-  else:
-    price_data = web.get_data_yahoo(stocks,
-                                  start = start_date,
-                                  end = end_date)
-    price_data = price_data['Adj Close']
-
-    df2 = web.get_data_yahoo(benchmark, start=start_date, end= end_date)
-
-    ret_data = price_data.pct_change()[1:]
-    return_df2 = df2.Close.pct_change()[1:]
-    ret_data["benchmark"] = return_df2
-    ret_data.plot(figsize=(20,10))
-#----------------------------------------------------------------------------------------
-def rbenchmark(stocks, wts=1, benchmark, start_date, end_date):
-
-  if len(stocks)>1 and len(wts)>1:
-
-    price_data = web.get_data_yahoo(stocks,
-                                  start = start_date,
-                                  end = end_date)
-    price_data = price_data['Adj Close']
-
-    df2 = web.get_data_yahoo(benchmark, start=start_date, end= end_date)
-
-    ret_data = price_data.pct_change()[1:]
-    return_df2 = df2.Close.pct_change()[1:]
-
-    port_ret = (ret_data * wts).sum(axis = 1)
-    ret_data['benchmark'] = return_df2
-    ret_data['portfolio'] = port_ret
-    ret_data = pd.DataFrame(ret_data)
-    return ret_data
-
-  else:
-    price_data = web.get_data_yahoo(stocks,
-                                  start = start_date,
-                                  end = end_date)
-    price_data = price_data['Adj Close']
-
-    df2 = web.get_data_yahoo(benchmark, start=start_date, end= end_date)
-
-    ret_data = price_data.pct_change()[1:]
-    return_df2 = df2.Close.pct_change()[1:]
-    ret_data["benchmark"] = return_df2
-    ret_data = pd.DataFrame(ret_data)
-    return ret_data
-
 # ------------------------------------------------------------------------------------------
 
 def creturns(stocks,wts=1, period="max", benchmark= None, plot=True, pricing="Adj Close", trading_year_days=252):
@@ -804,12 +732,24 @@ def correlation(stocks, period="max", plot=True, method="pearson", pricing="Adj 
       plt.show()
 
 #-----------------------------------------------------------------------------------------------------
-def graph_kalman(stocks, start_date, end_date, noise_value):
-  x = web.DataReader(stocks, data_source='yahoo', start = start_date, end = end_date)['Adj Close']
+def kalman(stocks, noise_value=0.01, period="max", plot=True, pricing="Adj Close", trading_year_days=252):
+
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
+  x = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end = today)[pricing]
+  x = x.tail(years[period])
+
   # Construct a Kalman filter
   kf = KalmanFilter(transition_matrices = [1],
                     observation_matrices = [1],
-                    initial_state_mean = x[0],
+                    initial_state_mean = x[stocks].iloc[0],
                     initial_state_covariance = 1,
                     observation_covariance=1,
                     transition_covariance= noise_value)
@@ -817,34 +757,18 @@ def graph_kalman(stocks, start_date, end_date, noise_value):
   # Use the observed values of the price to get a rolling mean
   state_means, _ = kf.filter(x.values)
   state_means = pd.Series(state_means.flatten(), index=x.index)
-  x = pd.DataFrame(x)
+  x = pd.DataFrame(state_means)
 
-  plt.plot(state_means)
-  plt.plot(x)
+  if plot==False:
+    return x
+  else:
+    plt.plot(state_means)
+    plt.plot(x)
 
-  plt.title('Kalman filter estimate of average')
-  plt.legend(['Kalman Estimate', 'X'])
-  plt.xlabel('Day')
-  plt.ylabel('Price');
-#------------------------------------------------------------------------------------------------------------
-
-def kalman(stocks, start_date, end_date, noise_value):
-  x = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-
-  # Construct a Kalman filter
-  kf = KalmanFilter(transition_matrices = [1],
-                    observation_matrices = [1],
-                    initial_state_mean = x[0],
-                    initial_state_covariance = 1,
-                    observation_covariance=1,
-                    transition_covariance= noise_value)
-
-  # Use the observed values of the price to get a rolling mean
-  state_means, _ = kf.filter(x.values)
-  state_means = pd.Series(state_means.flatten(), index=x.index)
-  state_means = pd.DataFrame(state_means)
-  return state_means
-
+    plt.title('Kalman filter estimate of average')
+    plt.legend(['Kalman Estimate', 'X'])
+    plt.xlabel('Day')
+    plt.ylabel('Price');
 #---------------------------------------------------------------------------------------------------------------
 def capm(stocks, wts=1, start_date, end_date):
 
