@@ -786,7 +786,7 @@ def beta(stocks, wts=1, benchmark, start_date, end_date):
       return beta
 #-------------------------------------------------------------------------------------------------------------------
 
-def correlation(stocks, period="max", method="pearson", pricing="Adj Close", trading_year_days=252):
+def corr(stocks, period="max", method="pearson", pricing="Adj Close", trading_year_days=252):
     p = {"period": period}
     for stock in stocks:
       years = {
@@ -794,7 +794,7 @@ def correlation(stocks, period="max", method="pearson", pricing="Adj Close", tra
         '2y' : 2*trading_year_days,
         '5y' : 5*trading_year_days,
         '10y' : 10*trading_year_days,
-        'max' : len(yf.Ticker(stock).history(**p)[pricing].pct_change())
+        'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
       }
     df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
     df = pd.DataFrame(df)
@@ -802,6 +802,14 @@ def correlation(stocks, period="max", method="pearson", pricing="Adj Close", tra
     returns = df.pct_change()
     corr_matrix = returns.corr(method)
     return corr_matrix
+#-----------------------------------------------------------------------------------------------------
+def correlation(stocks, period="max", plot=True, method="pearson", pricing="Adj Close", trading_year_days=252):
+    if plot==False:
+      return corr(stocks, period, method, pricing, trading_year_days)
+    else:
+      corr_mat = corr(stocks, period, method, pricing, trading_year_days)
+      seaborn.heatmap(corr_mat, annot=True)
+      plt.show()
 
 #-----------------------------------------------------------------------------------------------------
 def graph_kalman(stocks, start_date, end_date, noise_value):
