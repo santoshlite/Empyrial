@@ -279,14 +279,6 @@ def covariance(stocks, period="max", pricing="Adj Close", trading_year_days=252)
   returns = df.pct_change()
   cov_matrix_annual = returns.cov()*trading_year_days
   return cov_matrix_annual
-
-# ------------------------------------------------------------------------------------------
-
-def graph_correlation(stocks, period="max", method="pearson", pricing="Adj Close", trading_year_days=252):
-    corr_mat = correlation(stocks, period, method, pricing, trading_year_days)
-    seaborn.heatmap(corr_mat, annot=True)
-    plt.show()
-
 # ------------------------------------------------------------------------------------------
 
 def ohlcv(stocks, period="max", trading_year_days=252):
