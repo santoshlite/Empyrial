@@ -16,6 +16,9 @@ from pykalman import KalmanFilter
 # ------------------------------------------------------------------------------------------
 
 years = {
+    '1mo' : math.ceil(trading_year_days/12),
+    '3mo' : math.ceil(trading_year_days/4),
+    '6mo' : math.ceil(trading_year_days/2),
     '1y': trading_year_days,
     '2y' : 2*trading_year_days,
     '5y' : 5*trading_year_days,
@@ -31,6 +34,9 @@ def graph_close(stocks, period="max", trading_year_days=252):
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
@@ -48,6 +54,9 @@ def graph_open(stocks, period="max", trading_year_days=252):
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
@@ -66,6 +75,9 @@ def graph_volume(stocks, period="max", trading_year_days=252):
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
@@ -84,6 +96,9 @@ def graph_adj_close(stocks, period="max", trading_year_days=252):
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
@@ -102,6 +117,9 @@ def close(stocks, period="max", trading_year_days=252):
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
@@ -120,6 +138,9 @@ def open(stocks, period="max", trading_year_days=252):
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
@@ -138,6 +159,9 @@ def adj_close(stocks, period="max", trading_year_days=252):
   p = {"period": period}
   for stock in stocks:
     years = {
+       '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
@@ -154,7 +178,10 @@ def volume(stocks, period="max", trading_year_days=252):
     
   p = {"period": period}
   for stock in stocks:
-    years = {
+    years = {  
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
@@ -167,11 +194,13 @@ def volume(stocks, period="max", trading_year_days=252):
   return df
 
 # ------------------------------------------------------------------------------------------
-
-def returns(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=252):
+def returns(stocks,wts=1, period="max", benchmark= None, plot=True, pricing="Adj Close", trading_year_days=252):
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
@@ -181,60 +210,63 @@ def returns(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=2
 
   if len(stocks) > 1:
     df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
-    df = pd.DataFrame(df)
-    df = df.tail(years[period])
-    ret_data = df.pct_change()[1:]
-    port_ret = (ret_data * wts).sum(axis = 1)
-    ret_data['Portfolio returns'] = port_ret
-    ret_data = pd.DataFrame(ret_data)
-    return ret_data
-  else:
-    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
-    df = pd.DataFrame(df)
-    df = df.tail(years[period])
-    returns = df.pct_change()
-    returns = pd.DataFrame(returns)
-    return returns
-#---------------------------------------------------------------------------------------------
-def graph_returns(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=252):
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
-    }
+    if benchmark != None:
+      df2 = web.DataReader(benchmark, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+      return_df2 = df2.pct_change()[1:]
+      df = pd.DataFrame(df)
+      df = df.tail(years[period])
+      ret_data = df.pct_change()[1:]
+      port_ret = (ret_data * wts).sum(axis = 1)
+      ret_data['Portfolio returns'] = port_ret
+      ret_data['Benchmark'] = return_df2
+      ret_data = pd.DataFrame(ret_data)
+    else:     
+      df = pd.DataFrame(df)
+      df = df.tail(years[period])
+      ret_data = df.pct_change()[1:]
+      port_ret = (ret_data * wts).sum(axis = 1)
+      ret_data['Portfolio returns'] = port_ret
+      ret_data = pd.DataFrame(ret_data)
 
-  if len(stocks) > 1:
-    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
-    df = pd.DataFrame(df)
-    df = df.tail(years[period])
-    ret_data = df.pct_change()[1:]
-    port_ret = (ret_data * wts).sum(axis = 1)
-    ret_data['Portfolio returns'] = port_ret
-    ret_data = pd.DataFrame(ret_data)
-    ret_data.plot(figsize=(20,10))
-    plt.xlabel('Date') 
-    plt.ylabel('Returns') 
-    plt.title(period + 'Portfolio returns')
+    if plot==True:
+      ret_data.plot(figsize=(20,10))
+      plt.xlabel('Date') 
+      plt.ylabel('Returns') 
+      plt.title(period + 'Portfolio returns')
+    else:
+      return ret_data
   else:
     df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
-    df = pd.DataFrame(df)
-    df = df.tail(years[period])
-    returns = df.pct_change()
-    returns = pd.DataFrame(returns)
-    returns.plot(figsize=(20,10))
-    plt.xlabel('Date') 
-    plt.ylabel('Returns') 
-    plt.title(stocks[0] +' Returns (Period : '+ period+')')
+    if benchmark != None:
+      df2 = web.DataReader(benchmark, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+      return_df2 = df2.pct_change()[1:]
+      df = pd.DataFrame(df)
+      df = df.tail(years[period])
+      returns = df.pct_change()
+      returns["benchmark"] = return_df2
+      returns = pd.DataFrame(returns)
+    else:
+      df = pd.DataFrame(df)
+      df = df.tail(years[period])
+      returns = df.pct_change()
+      returns = pd.DataFrame(returns)
+
+    if plot==True:
+        returns.plot(figsize=(20,10))
+        plt.xlabel('Date') 
+        plt.ylabel('Returns') 
+        plt.title(stocks[0] +' Returns (Period : '+ period+')')
+    else:
+        return returns
 # ------------------------------------------------------------------------------------------
 
 def covariance(stocks, period="max", pricing="Adj Close", trading_year_days=252):
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
@@ -262,6 +294,9 @@ def ohlcv(stocks, period="max", trading_year_days=252):
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
@@ -283,6 +318,9 @@ def graph_creturns(stocks,wts=1, period="max", pricing="Adj Close", trading_year
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
@@ -334,6 +372,9 @@ def creturns(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
