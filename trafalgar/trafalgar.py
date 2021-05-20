@@ -816,7 +816,7 @@ def rvolatility(stocks,wts=1, period="max", pricing="Adj Close", trading_year_da
     
     qs.plots.rolling_volatility(portfolio)
   else:
-    stock = qs.utils.download_returns('FB')
+    stock = qs.utils.download_returns(stocks[0])
     qs.plots.rolling_volatility(stock)
 
 #------------------------------------------------------------------------------------------------------------------------------------------
@@ -953,6 +953,28 @@ def rbeta(stocks,wts=1, period="max", pricing="Adj Close", benchmark="SPY", trad
     
     qs.plots.rolling_beta(portfolio, benchmark)
   else:
-    stock = qs.utils.download_returns('FB')
+    stock = qs.utils.download_returns(stocks[0])
     qs.plots.rolling_beta(stock, benchmark)
 #--------------------------------------------------------------------------------------------------------------------------------------
+def rsharpe(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
+
+  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+
+  if len(stocks) > 1:
+    df = df.tail(years[period])
+    port_ret = (df * wts).sum(axis = 1)
+    portfolio = port_ret.pct_change()[1:]
+    
+    qs.plots.rolling_sharpe(portfolio)
+  else:
+    stock = qs.utils.download_returns(stocks[0])
+    qs.plots.rolling_sharpe(stock)
