@@ -841,51 +841,29 @@ def stationarity(stock, start_date, end_date):
   plt.legend(['Z']);
   return check_for_stationarity(X)
 #---------------------------------------------------------------------------------------------------------------------
+def rvolatility(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
 
-def graph_rvolatility(stock, wts=1, start_date, end_date, window_time):
-  if len(stock)==1:
-    asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)
-    # Compute the logarithmic returns using the Closing price 
-    asset['Log_Ret'] = np.log(asset['Adj Close'] / asset['Adj Close'].shift(1))
-    # Compute Volatility using the pandas rolling standard deviation function
-    asset['Volatility'] = asset['Log_Ret'].rolling(window=window_time).std() * np.sqrt(252)
-    asset = pd.DataFrame(asset)
-    # Plot the NIFTY Price series and the Volatility
-    asset[['Volatility']].plot(subplots=True, color='blue',figsize=(8, 6))
-  else:
-    asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-    port_ret = (asset * wts).sum(axis = 1)
-    asset['Adj Close'] = port_ret
-    # Compute the logarithmic returns using the Closing price 
-    asset['Log_Ret'] = np.log(asset['Adj Close'] / asset['Adj Close'].shift(1))
-    # Compute Volatility using the pandas rolling standard deviation function
-    asset['Volatility'] = asset['Log_Ret'].rolling(window=window_time).std() * np.sqrt(252)
-    # Plot the NIFTY Price series and the Volatility
-    asset[['Volatility']].plot(subplots=True, color='blue',figsize=(8, 6))
-#------------------------------------------------------------------------------------------------------------------------
-def rvolatility(stock, wts=1, start_date, end_date, window_time):
-  if len(stock)==1:
-    asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)
-    # Compute the logarithmic returns using the Closing price 
-    asset['Log_Ret'] = np.log(asset['Adj Close'] / asset['Adj Close'].shift(1))
-    # Compute Volatility using the pandas rolling standard deviation function
-    asset['Volatility'] = asset['Log_Ret'].rolling(window=window_time).std() * np.sqrt(252)
-    df = asset['Volatility']
-    df = pd.DataFrame(df)
-    return df
+  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
 
+  if len(stocks) > 1:
+    df = df.tail(years[period])
+    port_ret = (df * wts).sum(axis = 1)
+    portfolio = port_ret.pct_change()[1:]
+    
+    qs.plots.rolling_volatility(portfolio)
   else:
-    asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-    port_ret = (asset * wts).sum(axis = 1)
-    asset['Adj Close'] = port_ret
-    # Compute the logarithmic returns using the Closing price 
-    asset['Log_Ret'] = np.log(asset['Adj Close'] / asset['Adj Close'].shift(1))
-    print(asset['Adj Close'])
-    # Compute Volatility using the pandas rolling standard deviation function
-    asset['Volatility'] = asset['Log_Ret'].rolling(window=window_time).std() * np.sqrt(252)
-    df = asset['Volatility']
-    df = pd.DataFrame(df)
-    return df
+    stock = qs.utils.download_returns('FB')
+    qs.plots.rolling_volatility(stock)
+
 #------------------------------------------------------------------------------------------------------------------------------------------
 
 def graph_ralpha(stock,wts=1, benchmark, start_date, end_date, window_time):
