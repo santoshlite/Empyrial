@@ -159,7 +159,7 @@ def adj_close(stocks, period="max", trading_year_days=252):
   p = {"period": period}
   for stock in stocks:
     years = {
-       '1mo' : math.ceil(trading_year_days/12),
+      '1mo' : math.ceil(trading_year_days/12),
       '3mo' : math.ceil(trading_year_days/4),
       '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
@@ -536,84 +536,81 @@ def rbenchmark(stocks, wts=1, benchmark, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def cbenchmark(stocks, wts=1, benchmark, start_date, end_date):
-  if len(stocks)>1 and len(wts)>1:
-      price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
-      price_data = price_data['Adj Close']
+def creturns(stocks,wts=1, period="max", benchmark= None, plot=True, pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
 
-      df2 = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date )
-
-      ret_data = price_data.pct_change()[1:]
-      return_df2 = df2.Close.pct_change()[1:]
-
-      port_ret = (ret_data * wts).sum(axis = 1)
-      cumulative_ret_df1 = (port_ret + 1).cumprod()
-      cumulative_ret_df2 = (return_df2 + 1).cumprod()
-
-      df1 = pd.DataFrame(cumulative_ret_df1)
-      df2 = pd.DataFrame(cumulative_ret_df2)
-      df = pd.concat([df1,df2], axis=1)
+  if len(stocks) > 1:
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+    if benchmark != None:
+      df2 = web.DataReader(benchmark, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
       df = pd.DataFrame(df)
-      df.columns = ['portfolio', 'benchmark']
-      return df
-  else:
-    price_data = web.get_data_yahoo(stocks,
-                                  start = start_date,
-                                  end = end_date)
-    price_data = price_data['Adj Close']
-
-    df2 = web.get_data_yahoo(benchmark, start=start_date, end= end_date)
-
-    ret_data = price_data.pct_change()[1:]
-    return_df2 = df2.Close.pct_change()[1:]
-
-    cumulative_ret_df1 = (ret_data + 1).cumprod()
-    cumulative_ret_df2 = (return_df2 + 1).cumprod()
-
-    df = cumulative_ret_df1
-    df['benchmark'] = cumulative_ret_df2
-    df = pd.DataFrame(df)
-    return df
-
-# ------------------------------------------------------------------------------------------
-def graph_cbenchmark(stocks, wts=1, benchmark, start_date, end_date):
-  if len(stocks)>1 and len(wts)>1:
-      price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
-      price_data = price_data['Adj Close']
-
-      df2 = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date )
-
-      ret_data = price_data.pct_change()[1:]
-      return_df2 = df2.Close.pct_change()[1:]
-
+      df = df.tail(years[period])
+      df2 = df2.tail(years[period])
+      return_df2 = df2.pct_change()[1:]
+      ret_data = df.pct_change()[1:]
+      ret_data = (ret_data + 1).cumprod()
       port_ret = (ret_data * wts).sum(axis = 1)
-      cumulative_ret_df1 = (port_ret + 1).cumprod()
-      cumulative_ret_df2 = (return_df2 + 1).cumprod()
-
-      df1 = pd.DataFrame(cumulative_ret_df1)
-      df2 = pd.DataFrame(cumulative_ret_df2)
-      df = pd.concat([df1,df2], axis=1)
+      return_df2 = (return_df2 + 1).cumprod()
+      ret_data['Portfolio'] = port_ret
+      ret_data['Benchmark'] = return_df2
+      ret_data = pd.DataFrame(ret_data)
+    else:     
       df = pd.DataFrame(df)
-      df.columns = ['portfolio', 'benchmark']
-      df.plot(figsize=(20,10))
+      df = df.tail(years[period])
+      ret_data = df.pct_change()[1:]
+      ret_data = (ret_data + 1).cumprod()
+      port_ret = (ret_data * wts).sum(axis = 1)
+      ret_data['Portfolio'] = port_ret
+      ret_data = pd.DataFrame(ret_data)
+
+    if plot==True:
+      ret_data.plot(figsize=(20,10))
+      plt.xlabel('Date') 
+      plt.ylabel('Returns') 
+      plt.title(period + 'Portfolio Cumulative Returns')
+    else:
+      return ret_data
   else:
-    price_data = web.get_data_yahoo(stocks,
-                                  start = start_date,
-                                  end = end_date)
-    price_data = price_data['Adj Close']
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+    if benchmark != None:
+      df2 = web.DataReader(benchmark, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+      return_df2 = df2.pct_change()[1:]
+      df = pd.DataFrame(df)
+      df = df.tail(years[period])
+      df2 = df2.tail(years[period])
+      return_df2 = df2.pct_change()[1:]
+      returns = df.pct_change()
+      returns = (returns + 1).cumprod()
+      return_df2 = (return_df2 + 1).cumprod()
+      returns["benchmark"] = return_df2
+      returns = pd.DataFrame(returns)
+    else:
+      df = pd.DataFrame(df)
+      df = df.tail(years[period])
+      returns = df.pct_change()
+      returns = (returns + 1).cumprod()
+      returns = pd.DataFrame(returns)
 
-    df2 = web.get_data_yahoo(benchmark, start=start_date, end= end_date)
+    if plot==True:
+        returns.plot(figsize=(20,10))
+        plt.axvline(x=1)
+        plt.xlabel('Date') 
+        plt.ylabel('Returns') 
+        plt.title(stocks[0] +' Cumulative Returns (Period : '+ period+')')
 
-    ret_data = price_data.pct_change()[1:]
-    return_df2 = df2.Close.pct_change()[1:]
-
-    cumulative_ret_df1 = (ret_data + 1).cumprod()
-    cumulative_ret_df2 = (return_df2 + 1).cumprod()
-
-    df = cumulative_ret_df1
-    df['benchmark'] = cumulative_ret_df2
-    df = pd.DataFrame(df)
-    df.plot(figsize=(20,10))
+    else:
+        return returns
 
 # ------------------------------------------------------------------------------------------
 
