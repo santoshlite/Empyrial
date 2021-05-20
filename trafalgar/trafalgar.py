@@ -306,13 +306,10 @@ def ohlcv(stocks, period="max", trading_year_days=252):
 
 # ------------------------------------------------------------------------------------------
 
-def graph_creturns(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=252):
+def creturns(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=252, plot=True):
   p = {"period": period}
   for stock in stocks:
     years = {
-      '1mo' : math.ceil(trading_year_days/12),
-      '3mo' : math.ceil(trading_year_days/4),
-      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
@@ -330,7 +327,6 @@ def graph_creturns(stocks,wts=1, period="max", pricing="Adj Close", trading_year
     port_ret = (ret_data * wts).sum(axis = 1)
     cumulative_ret_df1 = (port_ret + 1).cumprod()
 
-    
     plt.figure(figsize=(20,10))
     stock_raw = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
     stock = pd.DataFrame(stock_raw)
@@ -338,7 +334,14 @@ def graph_creturns(stocks,wts=1, period="max", pricing="Adj Close", trading_year
     port_ret = stock.sum(axis=1)
     stock_normed = stock/stock.iloc[0]
     stock_normed['Portfolio'] = cumulative_ret_df1
-    stock_normed.plot(figsize=(12,8))
+
+    if plot!=True:
+      return stock_normed
+    else:
+      stock_normed.plot(figsize=(20,10))
+      plt.xlabel('Date') 
+      plt.ylabel('Returns') 
+      plt.title('Portfolio Cumulative Returns (Period : '+ period+')')
 
   else:
     df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
@@ -350,61 +353,13 @@ def graph_creturns(stocks,wts=1, period="max", pricing="Adj Close", trading_year
     cumulative_ret = (port_ret + 1).cumprod()
     cumulative_ret = pd.DataFrame(cumulative_ret)
     cumulative_ret.columns = ['Cumulative returns']
-    fig = plt.figure(figsize=(20,10))
-    ax1 = fig.add_axes([0.1,0.1,0.8,0.8])
-    ax1.plot(cumulative_ret)
-    ax1.set_xlabel('Date')
-    ax1.set_ylabel("Cumulative Returns")
-    ax1.set_title("Portfolio Cumulative Returns")
-    plt.show();
-
-# ------------------------------------------------------------------------------------------
-
-def creturns(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=252):
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1mo' : math.ceil(trading_year_days/12),
-      '3mo' : math.ceil(trading_year_days/4),
-      '6mo' : math.ceil(trading_year_days/2),
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
-    }
-
-  if len(stocks) > 1:
-    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
-    df = pd.DataFrame(df)
-    df = df.tail(years[period])
-
-    ret_data = df.pct_change()[1:]
-
-    port_ret = (ret_data * wts).sum(axis = 1)
-    cumulative_ret_df1 = (port_ret + 1).cumprod()
-
-    
-    plt.figure(figsize=(20,10))
-    stock_raw = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
-    stock = pd.DataFrame(stock_raw)
-    stock = stock.tail(years[period])
-    port_ret = stock.sum(axis=1)
-    stock_normed = stock/stock.iloc[0]
-    stock_normed['Portfolio'] = cumulative_ret_df1
-    return stock_normed
-
-  else:
-    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
-    df = pd.DataFrame(df)
-    df = df.tail(years[period])
-    ret_data = df.pct_change()[1:]
-    weighted_returns = ret_data
-    port_ret = weighted_returns.sum(axis=1)
-    cumulative_ret = (port_ret + 1).cumprod()
-    cumulative_ret = pd.DataFrame(cumulative_ret)
-    cumulative_ret.columns = ['Cumulative returns']
-    return cumulative_ret
+    if plot!=True:
+      return cumulative_ret
+    else:
+      cumulative_ret.plot(figsize=(20,10))
+      plt.xlabel('Date') 
+      plt.ylabel('Returns') 
+      plt.title(stocks[0] +' Cumulative Returns (Period : '+ period+')')
 
 # ------------------------------------------------------------------------------------------
 
