@@ -520,63 +520,34 @@ def creturns(stocks,wts=1, period="max", benchmark= None, plot=True, pricing="Ad
         return returns
 
 # ------------------------------------------------------------------------------------------
+def efficient_frontier(stocks, period="max", pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
 
-def efficient_frontier(stocks, start_date, end_date, iterations):
+  df = pd.DataFrame()
+  for stock in stocks:
+    df[stock] = web.DataReader(stock, data_source='yahoo', start = "1980-01-01", end=today)[pricing]
+    df[stock] = df[stock].tail(years[period])
+  mu = expected_returns.mean_historical_return(df)
+  S = risk_models.sample_cov(df)
 
-  stock_raw = web.DataReader(stocks, 'yahoo', start= start_date, end = end_date)
-  stock = stock_raw['Adj Close']
-  df = pd.DataFrame(stock)
-  port_ret = stock.sum(axis=1)
-  log_ret = np.log(stock/stock.shift(1))
-  num_runs = iterations
-
-  all_weights = np.zeros((num_runs,len(stock.columns)))
-  ret_arr = np.zeros(num_runs)
-  vol_arr = np.zeros(num_runs)
-  sharpe_arr = np.zeros(num_runs)
-
-  for ind in range(num_runs):
-
-      # Create Random Weights
-      weights = np.array(np.random.random(len(stocks)))
-
-      # Rebalance Weights
-      weights = weights / np.sum(weights)
-      
-      # Save Weights
-      all_weights[ind,:] = weights
-
-      # Expected Return
-      ret_arr[ind] = np.sum((log_ret.mean() * weights) *252)
-
-      # Expected Variance
-      vol_arr[ind] = np.sqrt(np.dot(weights.T, np.dot(log_ret.cov() * 252, weights)))
-
-      # Sharpe Ratio
-      sharpe_arr[ind] = ret_arr[ind]/vol_arr[ind]
-  
-  max_sr_ret = ret_arr[sharpe_arr.argmax()]
-  max_sr_vol = vol_arr[sharpe_arr.argmax()]
-
-  data = {'stats': ['Expected Return (in %)','Volality','Sharpe ratio'],
-        'value': [max_sr_ret*100,max_sr_vol,sharpe_arr.max()]
-        }
-
-  print('Optimized allocation (in %):')
-  allocation = [i * 100 for i in all_weights[sharpe_arr.argmax(),:] ]
-  print(allocation)
-
-  df = pd.DataFrame(data)
-  print(df)
-  
-  plt.figure(figsize=(14,8))
-  plt.scatter(vol_arr,ret_arr,c=sharpe_arr,cmap='plasma')
-  plt.colorbar(label='Sharpe Ratio')
-  plt.xlabel('Volatility')
-  plt.ylabel('Return')
-
-  # Add red dot for max SR
-  plt.scatter(max_sr_vol,max_sr_ret,c='red',s=50,edgecolors='black')
+  #optimize for max sharpe ratio
+  ef = EfficientFrontier(mu, S)
+  weights = ef.max_sharpe()
+  cleaned_weights = ef.clean_weights()
+  print(cleaned_weights)
+  ef.portfolio_performance(verbose=True)
 
 # ------------------------------------------------------------------------------------------
 def mean_daily_return(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=252):
