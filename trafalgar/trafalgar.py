@@ -591,7 +591,8 @@ def var(value_invested, stocks, wts=1, alpha, start_date, end_date):
   return np.percentile(port_ret, 100 * (1-alpha)) * value_invested
 
 # ------------------------------------------------------------------------------------------
-def alpha(stocks, period="max", wts=1, benchmark="SPY", pricing="Adj Close", trading_year_days=252):
+def alpha(stocks, wts=1, benchmark='SPY', period='10y', pricing='Close', trading_year_days=253):
+
   p = {"period": period}
   for stock in stocks:
     years = {
@@ -601,37 +602,28 @@ def alpha(stocks, period="max", wts=1, benchmark="SPY", pricing="Adj Close", tra
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+      '10y' : 10*trading_year_days
     }
 
-  if len(stocks) > 1:
-    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+  start_date = today - relativedelta(days=years[period]) 
 
-    df = pd.DataFrame(df)
-    df = df.tail(years[period])
-    ret_data = df.pct_change()[1:]
+  if wts != 1:
+    assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= today)[pricing]
+    ret_data = assets.pct_change()[1:]
     port_ret = (ret_data * wts).sum(axis = 1)
-    ret_data['Portfolio returns'] = port_ret
-    returns= ret_data['Portfolio returns']
-    returns = pd.DataFrame(returns)
+    alpha_beta = qs.stats.greeks(port_ret, benchmark)
+    return alpha_beta
   else:
-    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
-    df = pd.DataFrame(df)
-    df = df.tail(years[period])
-    returns = df.pct_change()
-    returns = pd.DataFrame(returns)
-  
-  dfb = web.DataReader(benchmark, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
-  dfb = pd.DataFrame(dfb)
-  dfb = dfb.tail(years[period])
-  benchmark = dfb.pct_change()
-  benchmark = pd.DataFrame(benchmark)
-  alpha, beta = alpha_beta(returns, benchmark)
-  return alpha
+     _returns = yf.Ticker(stocks[0]).history(**p)[pricing].pct_change()
+     _returns = _returns.iloc[1:]
+     benchmark = yf.Ticker(benchmark).history(**p)[pricing].pct_change()
+     benchmark = benchmark.iloc[1:]
+     alpha_beta = qs.stats.greeks(_returns, benchmark)
+  return alpha_beta[1]
 
 #-------------------------------------------------------------------------------------------------
-def beta(stocks, period="max", wts=1, benchmark="SPY", pricing="Adj Close", trading_year_days=252):
+def beta(stocks, wts=1, benchmark='SPY', period='10y', pricing='Close', trading_year_days=253):
+
   p = {"period": period}
   for stock in stocks:
     years = {
@@ -642,33 +634,23 @@ def beta(stocks, period="max", wts=1, benchmark="SPY", pricing="Adj Close", trad
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
 
-  if len(stocks) > 1:
-    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+  start_date = today - relativedelta(days=years[period]) 
 
-    df = pd.DataFrame(df)
-    df = df.tail(years[period])
-    ret_data = df.pct_change()[1:]
+  if wts != 1:
+    assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= today)[pricing]
+    ret_data = assets.pct_change()[1:]
     port_ret = (ret_data * wts).sum(axis = 1)
-    ret_data['Portfolio returns'] = port_ret
-    returns= ret_data['Portfolio returns']
-    returns = pd.DataFrame(returns)
+    alpha_beta = qs.stats.greeks(port_ret, benchmark)
+    return alpha_beta
   else:
-    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
-    df = pd.DataFrame(df)
-    df = df.tail(years[period])
-    returns = df.pct_change()
-    returns = pd.DataFrame(returns)
-  
-  dfb = web.DataReader(benchmark, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
-  dfb = pd.DataFrame(dfb)
-  dfb = dfb.tail(years[period])
-  benchmark = dfb.pct_change()
-  benchmark = pd.DataFrame(benchmark)
-  alpha, beta = alpha_beta(returns, benchmark)
-  return beta
+     _returns = yf.Ticker(stocks[0]).history(**p)[pricing].pct_change()
+     _returns = _returns.iloc[1:]
+     benchmark = yf.Ticker(benchmark).history(**p)[pricing].pct_change()
+     benchmark = benchmark.iloc[1:]
+     alpha_beta = qs.stats.greeks(_returns, benchmark)
+  return alpha_beta[0]
 #-------------------------------------------------------------------------------------------------------------------
 
 def corr(stocks, period="max", method="pearson", pricing="Adj Close", trading_year_days=252):
