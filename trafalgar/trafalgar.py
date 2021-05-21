@@ -25,6 +25,7 @@ years = {
     '2y' : 2*trading_year_days,
     '5y' : 5*trading_year_days,
     '10y' : 10*trading_year_days,
+    '20y' : 20*trading_year_days,
     'max' : len(yf.Ticker(stocks).history(**p)['Close'].pct_change())
   }
 
@@ -43,6 +44,7 @@ def graph_close(stocks, period="max", trading_year_days=252):
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
   df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Close']
@@ -63,6 +65,7 @@ def graph_open(stocks, period="max", trading_year_days=252):
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Open'].pct_change())
     }
   df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Open']
@@ -84,6 +87,7 @@ def graph_volume(stocks, period="max", trading_year_days=252):
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Volume'].pct_change())
     }
   df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Volume']
@@ -105,6 +109,7 @@ def graph_adj_close(stocks, period="max", trading_year_days=252):
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Adj Close'].pct_change())
     }
   df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Adj Close']
@@ -126,6 +131,7 @@ def close(stocks, period="max", trading_year_days=252):
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
   df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Close']
@@ -147,6 +153,7 @@ def open(stocks, period="max", trading_year_days=252):
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Open'].pct_change())
     }
   df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Open']
@@ -168,6 +175,7 @@ def adj_close(stocks, period="max", trading_year_days=252):
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Adj Close'].pct_change())
     }
   df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Adj Close']
@@ -188,6 +196,7 @@ def volume(stocks, period="max", trading_year_days=252):
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Volume'].pct_change())
     }
   df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Volume']
@@ -207,6 +216,7 @@ def returns(stocks,wts=1, period="max", benchmark= None, plot=True, pricing="Adj
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
 
@@ -273,6 +283,7 @@ def covariance(stocks, period="max", pricing="Adj Close", trading_year_days=252)
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)[pricing].pct_change())
     }
   df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
@@ -295,6 +306,7 @@ def ohlcv(stocks, period="max", trading_year_days=252):
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
 
@@ -316,6 +328,7 @@ def creturns(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
 
@@ -378,6 +391,7 @@ def volatility(stocks, wts=1, period='max', pricing='Adj Close', annualize=True,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
 
@@ -409,6 +423,7 @@ def sharpe(stocks, wts=1, risk_free=0.0, period='max',pricing='Adj Close', annua
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
 
@@ -438,6 +453,7 @@ def creturns(stocks,wts=1, period="max", benchmark= None, plot=True, pricing="Ad
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
 
@@ -572,6 +588,7 @@ def mean_daily_return(stocks,wts=1, period="max", pricing="Adj Close", trading_y
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
 
@@ -606,6 +623,7 @@ def var(stocks, wts=1, confidence=0.95, period='max', pricing='Adj Close',tradin
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
 
@@ -640,7 +658,8 @@ def alpha(stocks, wts=1, benchmark='SPY', period='10y', pricing='Close', trading
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days
+      '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
     }
 
   start_date = today - relativedelta(days=years[period]) 
@@ -672,6 +691,7 @@ def beta(stocks, wts=1, benchmark='SPY', period='10y', pricing='Close', trading_
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
     }
 
   start_date = today - relativedelta(days=years[period]) 
@@ -699,6 +719,7 @@ def corr(stocks, period="max", method="pearson", pricing="Adj Close", trading_ye
         '2y' : 2*trading_year_days,
         '5y' : 5*trading_year_days,
         '10y' : 10*trading_year_days,
+        '20y' : 20*trading_year_days,
         'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
       }
     df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
@@ -726,6 +747,7 @@ def kalman(stocks, noise_value=0.01, period="max", plot=True, pricing="Adj Close
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
   x = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end = today)[pricing]
@@ -783,6 +805,7 @@ def cointegration(stocks, period="max", cutoff_value=0.01, pricing="Adj Close", 
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
     X1 = web.DataReader(stocks[0], data_source='yahoo', start = "1980-01-01", end= today)['Adj Close']
@@ -822,6 +845,7 @@ def stationarity(stocks, period="max", cutoff_value=0.1, pricing="Adj Close", tr
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
   X = web.DataReader(stocks[0], data_source='yahoo', start = "1980-01-01", end= today)[pricing]
@@ -846,10 +870,14 @@ def rvolatility(stocks,wts=1, period="max", pricing="Adj Close", trading_year_da
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
 
@@ -871,10 +899,14 @@ def ralpha(stocks,wts=1, period="10y", benchmark="SPY", window=180, pricing="Adj
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
     }
 
   df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
@@ -900,10 +932,14 @@ def rbeta(stocks,wts=1, period="max", pricing="Adj Close", benchmark="SPY", trad
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
 
@@ -923,10 +959,14 @@ def rsharpe(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=2
   p = {"period": period}
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
 
