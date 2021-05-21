@@ -593,18 +593,40 @@ def mean_daily_return(stocks,wts=1, period="max", pricing="Adj Close", trading_y
   return mean_daily_ret*100
 
 # ------------------------------------------------------------------------------------------
+def var(stocks, wts=1, confidence=0.95, period='max', pricing='Adj Close',trading_year_days=253):
 
-def var(value_invested, stocks, wts=1, alpha, start_date, end_date):
-  price_data = web.DataReader(stocks, 'yahoo', start_date, end_date)
-  price_data = price_data['Adj Close']
-  ret_data = price_data.pct_change()[1:]
-  weighted_returns = (wts * ret_data)
-  port_ret = weighted_returns.sum(axis=1)
-  #df = pd.concat([return_fb, return_aapl], axis=1)
-  port_ret = port_ret.fillna(0.0)
+  p = {"period": period}
 
-    # Compute the correct percentile loss and multiply by value invested
-  return np.percentile(port_ret, 100 * (1-alpha)) * value_invested
+  for stock in stocks:
+    years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
+
+  start_date = today - relativedelta(days=years[period]) 
+
+  if confidence > 1:
+      confidence = confidence/100
+
+  if wts != 1:
+    assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= today)[pricing]
+    ret_data = assets.pct_change()[1:]
+    port_ret = (ret_data * wts).sum(axis = 1)
+    var = qs.stats.var(port_ret, sigma=1, confidence=confidence)
+    print("Note : Result is in %")
+    return var*100
+  else:
+     stock = qs.utils.download_returns(stocks[0])
+     stock = stock.tail(years[period])
+     var = qs.stats.var(stock, sigma=1, confidence=confidence)
+     print("Note : Result is in %")
+     return var*100
 
 # ------------------------------------------------------------------------------------------
 def alpha(stocks, wts=1, benchmark='SPY', period='10y', pricing='Close', trading_year_days=253):
