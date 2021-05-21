@@ -867,116 +867,33 @@ def rvolatility(stocks,wts=1, period="max", pricing="Adj Close", trading_year_da
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 
-def graph_ralpha(stock,wts=1, benchmark, start_date, end_date, window_time):
+def ralpha(stocks,wts=1, period="10y", benchmark="SPY", window=180, pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+    }
 
-  if len(stock)==1:
-    # get the closing price of AMZN Stock
-    amzn = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)
-    amzn = pd.DataFrame(amzn)
-    amzn['amzn_return'] = amzn['Adj Close'].pct_change()
-    amzn['amzn_log_return'] = np.log(amzn['Adj Close']) - np.log(amzn['Adj Close'].shift(1))
-    amzn.dropna(inplace=True)
-    
-    
-    nasdaq = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-    nasdaq = pd.DataFrame(nasdaq)
-    nasdaq['nasdaq_return'] = nasdaq['Adj Close'].pct_change()
-    nasdaq['nasdaq_log_return'] = np.log(nasdaq['Adj Close']) - np.log(nasdaq['Adj Close'].shift(1))
-    nasdaq.dropna(inplace=True)
+  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
 
-    def market_beta(X,Y,N):
-        """ 
-        X = The independent variable which is the Market
-        Y = The dependent variable which is the Stock
-        N = The length of the Window
-        
-        It returns the alphas and the betas of
-        the rolling regression
-        """
-        
-        # all the observations
-        obs = len(X)
-        
-        # initiate the betas with null values
-        betas = np.full(obs, np.nan)
-        
-        # initiate the alphas with null values
-        alphas = np.full(obs, np.nan)
-        
-        
-        for i in range((obs-N)):
-            regressor = LinearRegression()
-            regressor.fit(X.to_numpy()[i : i + N+1].reshape(-1,1), Y.to_numpy()[i : i + N+1])
-            
-            betas[i+N]  = regressor.coef_[0]
-            alphas[i+N]  = regressor.intercept_
-    
-        return(alphas, betas)
-      
-    results = market_beta(amzn.amzn_return, nasdaq.nasdaq_return, window_time)
-    
-    results = pd.DataFrame(list(zip(*results)), columns = ['alpha', 'beta'])
-    
-    results.index = amzn.index
-    plt.figure(figsize=(12,8))
-    results.alpha.plot.line()
-    plt.title("Market Alpha: Rolling Window of "+str(window_time)+" Days")
+  if len(stocks) > 1:
+    df = df.tail(years[period])
+    port_ret = (df * wts).sum(axis = 1)
+    returns = port_ret.pct_change()[1:]
   else:
+    returns = qs.utils.download_returns(stocks[0])
+    returns = returns.tail(years[period])
 
-    amzn = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-    amzn['Adj Close'] = (amzn * wts).sum(axis = 1)
-    df = returns(stock, wts, start_date, end_date)
-    df['Adj Close'] = amzn[['Adj Close']]
-    df1 = df[['Adj Close', 'Portfolio returns']]
-    df1.columns = ['Adj Close', 'returns' ]
-    df1['log_return'] = np.log(df1['Adj Close']) - np.log(df1['Adj Close'].shift(1))
-    df.dropna(inplace=True)
-    
-    
-    nasdaq = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-    nasdaq = pd.DataFrame(nasdaq)
-    nasdaq['nasdaq_return'] = nasdaq['Adj Close'].pct_change()
-    nasdaq['nasdaq_log_return'] = np.log(nasdaq['Adj Close']) - np.log(nasdaq['Adj Close'].shift(1))
-    nasdaq.dropna(inplace=True)
-    def market_beta(X,Y,N):
-        """ 
-        X = The independent variable which is the Market
-        Y = The dependent variable which is the Stock
-        N = The length of the Window
-        
-        It returns the alphas and the betas of
-        the rolling regression
-        """
-        
-        # all the observations
-        obs = len(X)
-        
-        # initiate the betas with null values
-        betas = np.full(obs, np.nan)
-        
-        # initiate the alphas with null values
-        alphas = np.full(obs, np.nan)
-        
-        
-        for i in range((obs-N)):
-            regressor = LinearRegression()
-            regressor.fit(X.to_numpy()[i : i + N+1].reshape(-1,1), Y.to_numpy()[i : i + N+1])
-            
-            betas[i+N]  = regressor.coef_[0]
-            alphas[i+N]  = regressor.intercept_
-    
-        return(alphas, betas)
-      
-    results = market_beta(df1.returns, nasdaq.nasdaq_return, window_time)
-    
-    results = pd.DataFrame(list(zip(*results)), columns = ['alpha', 'beta'])
-    
-    results.index = df1.index
-    plt.figure(figsize=(12,8))
-    results.alpha.plot.line()
-    plt.title("Market Alpha: Rolling Window of "+ str(window_time) + " Days")
-
-  
+  dfb = web.DataReader(benchmark, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+  dfb = pd.DataFrame(dfb)
+  dfb = dfb.tail(years[period])
+  benchmark = dfb.pct_change()
+  benchmark = pd.DataFrame(benchmark)
+  ralpha = roll_alpha_beta(returns, benchmark, window=window)
+  plt.plot(ralpha[0])
 
 #--------------------------------------------------------------------------------------------------------------------------------
 def rbeta(stocks,wts=1, period="max", pricing="Adj Close", benchmark="SPY", trading_year_days=252):
