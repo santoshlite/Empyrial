@@ -591,86 +591,84 @@ def var(value_invested, stocks, wts=1, alpha, start_date, end_date):
   return np.percentile(port_ret, 100 * (1-alpha)) * value_invested
 
 # ------------------------------------------------------------------------------------------
-def alpha(stocks, wts=1, benchmark, start_date, end_date):
+def alpha(stocks, period="max", wts=1, benchmark="SPY", pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
+
   if len(stocks) > 1:
-      assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-      benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-      ret_data = assets.pct_change()[1:]
-      r_a = (ret_data * wts).sum(axis = 1)
-      r_b = benchmark.pct_change()[1:]
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
 
-      X = r_b.values # Get just the values, ignore the timestamps
-      Y = r_a.values
-
-      def linreg(x,y):
-          # We add a constant so that we can also fit an intercept (alpha) to the model
-          # This just adds a column of 1s to our data
-          x = sm.add_constant(x)
-          model = regression.linear_model.OLS(y,x).fit()
-          # Remove the constant now that we're done
-          x = x[:, 1]
-          return model.params[0], model.params[1]
-
-      alpha, beta = linreg(X,Y)
-      return alpha
+    df = pd.DataFrame(df)
+    df = df.tail(years[period])
+    ret_data = df.pct_change()[1:]
+    port_ret = (ret_data * wts).sum(axis = 1)
+    ret_data['Portfolio returns'] = port_ret
+    returns= ret_data['Portfolio returns']
+    returns = pd.DataFrame(returns)
   else:
-      asset = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-      benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-
-      r_a = asset.pct_change()[1:]
-      r_b = benchmark.pct_change()[1:]
-      X = r_b.values
-      Y = r_a.values
-      def linreg(x,y):
-          x = sm.add_constant(x)
-          model = regression.linear_model.OLS(y,x).fit()
-    
-          x = x[:, 1]
-          return model.params[0], model.params[1]
-
-      alpha, beta = linreg(X,Y)
-      return alpha
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+    df = pd.DataFrame(df)
+    df = df.tail(years[period])
+    returns = df.pct_change()
+    returns = pd.DataFrame(returns)
+  
+  dfb = web.DataReader(benchmark, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+  dfb = pd.DataFrame(dfb)
+  dfb = dfb.tail(years[period])
+  benchmark = dfb.pct_change()
+  benchmark = pd.DataFrame(benchmark)
+  alpha, beta = alpha_beta(returns, benchmark)
+  return alpha
 
 #-------------------------------------------------------------------------------------------------
-def beta(stocks, wts=1, benchmark, start_date, end_date):
+def beta(stocks, period="max", wts=1, benchmark="SPY", pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
+
   if len(stocks) > 1:
-      assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-      benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-      ret_data = assets.pct_change()[1:]
-      r_a = (ret_data * wts).sum(axis = 1)
-      r_b = benchmark.pct_change()[1:]
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
 
-      X = r_b.values # Get just the values, ignore the timestamps
-      Y = r_a.values
-
-      def linreg(x,y):
-          # We add a constant so that we can also fit an intercept (alpha) to the model
-          # This just adds a column of 1s to our data
-          x = sm.add_constant(x)
-          model = regression.linear_model.OLS(y,x).fit()
-          # Remove the constant now that we're done
-          x = x[:, 1]
-          return model.params[0], model.params[1]
-
-      alpha, beta = linreg(X,Y)
-      return beta
+    df = pd.DataFrame(df)
+    df = df.tail(years[period])
+    ret_data = df.pct_change()[1:]
+    port_ret = (ret_data * wts).sum(axis = 1)
+    ret_data['Portfolio returns'] = port_ret
+    returns= ret_data['Portfolio returns']
+    returns = pd.DataFrame(returns)
   else:
-      asset = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-      benchmark = web.DataReader(benchmark, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-
-      r_a = asset.pct_change()[1:]
-      r_b = benchmark.pct_change()[1:]
-      X = r_b.values
-      Y = r_a.values
-      def linreg(x,y):
-          x = sm.add_constant(x)
-          model = regression.linear_model.OLS(y,x).fit()
-    
-          x = x[:, 1]
-          return model.params[0], model.params[1]
-
-      alpha, beta = linreg(X,Y)
-      return beta
+    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+    df = pd.DataFrame(df)
+    df = df.tail(years[period])
+    returns = df.pct_change()
+    returns = pd.DataFrame(returns)
+  
+  dfb = web.DataReader(benchmark, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+  dfb = pd.DataFrame(dfb)
+  dfb = dfb.tail(years[period])
+  benchmark = dfb.pct_change()
+  benchmark = pd.DataFrame(benchmark)
+  alpha, beta = alpha_beta(returns, benchmark)
+  return beta
 #-------------------------------------------------------------------------------------------------------------------
 
 def corr(stocks, period="max", method="pearson", pricing="Adj Close", trading_year_days=252):
@@ -753,13 +751,27 @@ def capm(stocks, wts=1, start_date, end_date):
   beta = results.params[1]
   alpha = results.params[0]
   return results.summary()
-  #--------------------------------------------------------------------------------------------------------------
-def cointegration(stock1, stock2, start_date, end_date):
-    X1 = web.DataReader(stock1, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-    X2 = web.DataReader(stock2, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-    X1.name = str(stock1)
-    X2.name = str(stock2)
-    def check_for_stationarity(X, cutoff=0.01):
+#--------------------------------------------------------------------------------------------------------------
+def cointegration(stocks, period="max", cutoff_value=0.01, pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
+    X1 = web.DataReader(stocks[0], data_source='yahoo', start = "1980-01-01", end= today)['Adj Close']
+    X2 = web.DataReader(stocks[1], data_source='yahoo', start = "1980-01-01", end= today)['Adj Close']
+    X1.name = str(stocks[0])
+    X2.name = str(stocks[1])
+    X1 = X1.tail(years[period])
+    X2 = X2.tail(years[period])
+    def check_for_stationarity(X, cutoff=cutoff_value):
       # H_0 in adfuller is unit root exists (non-stationary)
       # We must observe significant p-value to convince ourselves that the series is stationary
       pvalue = adfuller(X)[1]
@@ -779,9 +791,23 @@ def cointegration(stock1, stock2, start_date, end_date):
 
     check_for_stationarity(Z);
 #--------------------------------------------------------------------------------------------------------------------------
-def stationarity(stock, start_date, end_date):
-  X = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  def check_for_stationarity(X, cutoff=0.01):
+def stationarity(stocks, period="max", cutoff_value=0.1, pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
+  X = web.DataReader(stocks[0], data_source='yahoo', start = "1980-01-01", end= today)[pricing]
+  X = X.tail(years[period])
+
+  def check_for_stationarity(X, cutoff=cutoff_value):
     # H_0 in adfuller is unit root exists (non-stationary)
     # We must observe significant p-value to convince ourselves that the series is stationary
     pvalue = adfuller(X)[1]
