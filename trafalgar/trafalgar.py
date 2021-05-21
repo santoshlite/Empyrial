@@ -17,18 +17,6 @@ import quantstats as qs
 
 # ------------------------------------------------------------------------------------------
 
-years = {
-    '1mo' : math.ceil(trading_year_days/12),
-    '3mo' : math.ceil(trading_year_days/4),
-    '6mo' : math.ceil(trading_year_days/2),
-    '1y': trading_year_days,
-    '2y' : 2*trading_year_days,
-    '5y' : 5*trading_year_days,
-    '10y' : 10*trading_year_days,
-    '20y' : 20*trading_year_days,
-    'max' : len(yf.Ticker(stocks).history(**p)['Close'].pct_change())
-  }
-
 today = dt.date.today()
 
 #-------------------------------------------------------------------------------------------
