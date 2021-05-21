@@ -363,24 +363,35 @@ def creturns(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=
 
 # ------------------------------------------------------------------------------------------
 
-def annual_volatility(stocks, wts=1, start_date, end_date):
-  if len(stocks)>1:
-    price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
-    price_data = price_data['Adj Close']
+def volatility(stocks, wts=1, period='max', pricing='Adj Close', annualize=True, trading_year_days=253):
 
-    ret_data = price_data.pct_change()[1:]
+  p = {"period": period}
+
+  for stock in stocks:
+    years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
+
+  start_date = today - relativedelta(days=years[period]) 
+
+  if wts != 1:
+    assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= today)[pricing]
+    ret_data = assets.pct_change()[1:]
     port_ret = (ret_data * wts).sum(axis = 1)
-    cumulative_ret = (port_ret + 1).cumprod()
-    annual_std = np.std(port_ret) * np.sqrt(252)
-    return annual_std
+    vol = qs.stats.volatility(port_ret, periods=period, annualize=True, trading_year_days=252)
+    return vol
   else:
-    price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
-    price_data = price_data['Adj Close']
-
-    ret_data = price_data.pct_change()[1:]
-    annual_std = np.std(ret_data) * np.sqrt(252)
-    return annual_std
-
+     stock = qs.utils.download_returns(stocks[0])
+     stock = stock.tail(years[period])
+     vol = qs.stats.volatility(stock, periods=period, annualize=True, trading_year_days=252)
+     return vol
 # ------------------------------------------------------------------------------------------
 
 def sharpe(stocks, wts=1, risk_free=0.0, period='max',pricing='Adj Close', annualize=True, trading_year_days=253):
