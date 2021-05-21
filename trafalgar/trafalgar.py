@@ -383,12 +383,15 @@ def annual_volatility(stocks, wts=1, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def sharpe(stocks, wts=1, rf=0.0, period='max', annualize=True, trading_year_days=253):
+def sharpe(stocks, wts=1, risk_free=0.0, period='max',pricing='Adj Close', annualize=True, trading_year_days=253):
 
   p = {"period": period}
 
   for stock in stocks:
     years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
       '1y': trading_year_days,
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
@@ -399,16 +402,16 @@ def sharpe(stocks, wts=1, rf=0.0, period='max', annualize=True, trading_year_day
   start_date = today - relativedelta(days=years[period]) 
 
   if wts != 1:
-    assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= today)['Adj Close']
+    assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= today)[pricing]
     ret_data = assets.pct_change()[1:]
     port_ret = (ret_data * wts).sum(axis = 1)
-    sharpe = qs.stats.sharpe(port_ret, rf=0.0, periods=period, annualize=True, trading_year_days=252)
+    sharpe = qs.stats.sharpe(port_ret, rf=risk_free, periods=period, annualize=True, trading_year_days=252)
     return sharpe
   else:
-     _returns = yf.Ticker(stocks).history(**p)['Close'].pct_change()
-     sharpe = qs.stats.sharpe(_returns, rf=0.0, periods=period, annualize=True, trading_year_days=252)
+     stock = qs.utils.download_returns(stocks[0])
+     stock = stock.tail(years[period])
+     sharpe = qs.stats.sharpe(stock, rf=risk_free, periods=period, annualize=True, trading_year_days=252)
      return sharpe
-
 # ------------------------------------------------------------------------------------------
 
 def creturns(stocks,wts=1, period="max", benchmark= None, plot=True, pricing="Adj Close", trading_year_days=252):
