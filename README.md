@@ -1,5 +1,5 @@
-✋ 🛑 **DISCLAIMER: Trafalgar will soon be named Empyrial**
-This library is still usable but a lot of improvements and new features are added everyday so there may be bugs.
+✋ 🛑 **DISCLAIMER: Trafalgar became Empyrial**
+Trafalgar is still usable but a lot of improvements and new features are added everyday so there may be bugs. Empyrial is still in development and there will be a lot more than Trafalgar!
 
 # By Investors, for Investors.
 <br><br><br><br><br><br>
@@ -38,5 +38,7 @@ To install Empyrial, you should do:
 pip install empyrial
 ```
 (https://pypi.org/project/empyrial/)
+
+# Features that we are adding 🔥
 
 
