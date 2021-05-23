@@ -39,6 +39,5 @@ pip install empyrial
 ```
 (https://pypi.org/project/empyrial/)
 
-# Features that we are adding 🔥
-
+Coding...
 
