@@ -37,7 +37,32 @@ To install Empyrial, you should do:
 ```
 pip install empyrial
 ```
-(https://pypi.org/project/empyrial/)
 
-Coding...
+# Usage 
+```py
+from empyrial import returns, empyrial
+import pandas as pd
+
+#define your portfolio
+portfolio = ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"]
+wts = [0.2, 0.2, 0.2, 0.2, 0.2]
+
+#calculate the portfolio returns
+port_ret = returns(portfolio, wts, period="1y", plot=False)
+port_ret = pd.DataFrame(port_ret['Portfolio returns'])
+
+#calculate benchmark returns
+bench = returns(["SPY"], period="1y", plot=False)
+
+#execute
+empyrial(port_ret,bench)
+```
+
+Output:
+
+ <img src="https://i.ibb.co/1JS42qK/pic.png"/>
+
+
+
+
 
