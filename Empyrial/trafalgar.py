@@ -11,14 +11,17 @@ from statsmodels.tsa.stattools import coint, adfuller
 from statsmodels import regression
 from sklearn.linear_model import LinearRegression
 from pykalman import KalmanFilter
+from pypfopt import EfficientFrontier, risk_models, expected_returns
 
+
+
+today = datetime.date.today()
 # ------------------------------------------------------------------------------------------
 
-def graph_close(stock, start_date, end_date):
+def graph_close(stock, start_date, end_date=today, x=20,y=10):
 
   """
   Source and plot Close prices from yahoo for any given stock/s & period
-
   Parameters
   ----------
   stock : str,list
@@ -30,60 +33,60 @@ def graph_close(stock, start_date, end_date):
   """
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
   df = pd.DataFrame(df)
-  df.plot(figsize=(20,10))
+  df.plot(figsize=(x,y))
 
 # ------------------------------------------------------------------------------------------
 
-def graph_open(stock, start_date, end_date):
+def graph_open(stock, start_date, end_date=today,x=20, y=10):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Open']
   df = pd.DataFrame(df)
-  df.plot(figsize=(20,10))
+  df.plot(figsize=(x,y))
 
 # ------------------------------------------------------------------------------------------
 
-def graph_volume(stock, start_date, end_date):
+def graph_volume(stock, start_date, end_date=today, x=20, y=10):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Volume']
   df = pd.DataFrame(df)
-  df.plot(figsize=(20,10))
+  df.plot(figsize=(x,y))
 
 # ------------------------------------------------------------------------------------------
 
-def graph_adj_close(stock, start_date, end_date):
+def graph_adj_close(stock, start_date, end_date=today, x=20, y=10):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
   df = pd.DataFrame(df)
-  df.plot(figsize=(20,10))
+  df.plot(figsize=(x,y))
 
 # ------------------------------------------------------------------------------------------
 
-def close(stock, start_date, end_date):
+def close(stock, start_date, end_date=today):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Close']
   df = pd.DataFrame(df)
   return df
 
 # ------------------------------------------------------------------------------------------
 
-def open(stock, start_date, end_date):
+def open(stock, start_date, end_date=today):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Open']
   df = pd.DataFrame(df)
   return df
 
 # ------------------------------------------------------------------------------------------
 
-def adj_close(stock, start_date, end_date):
+def adj_close(stock, start_date, end_date=today):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
   df = pd.DataFrame(df)
   return df
 
 # ------------------------------------------------------------------------------------------
 
-def volume(stock, start_date, end_date):
+def volume(stock, start_date, end_date=today):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Volume']
   df = pd.DataFrame(df)
   return df
 
 # ------------------------------------------------------------------------------------------
 
-def returns(stocks,wts, start_date, end_date):
+def returns(stocks,wts=1, start_date, end_date=today):
   if len(stocks) > 1:
     assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
     ret_data = assets.pct_change()[1:]
@@ -98,13 +101,13 @@ def returns(stocks,wts, start_date, end_date):
     returns = pd.DataFrame(returns)
     return returns
 #---------------------------------------------------------------------------------------------
-def graph_returns(stock,wts, start_date, end_date):
+def graph_returns(stock,wts=1, start_date, end_date, x=20, y=10):
   if len(stock) > 1:
     assets = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
     ret_data = assets.pct_change()[1:]
     port_ret = (ret_data * wts).sum(axis = 1)
     ret_data['Portfolio'] = port_ret
-    ret_data.plot(figsize=(20,10))
+    ret_data.plot(figsize=(x,y))
     plt.xlabel('Date') 
     plt.ylabel('Returns') 
     plt.title('Portfolio returns')
@@ -113,14 +116,14 @@ def graph_returns(stock,wts, start_date, end_date):
     df = pd.DataFrame(df)
     returns = df.pct_change()
     returns.columns = ['Adj Close']
-    plt.figure(figsize=(20,10))
+    plt.figure(figsize=(x,y))
     plt.plot(returns.index, returns['Adj Close'])
     plt.xlabel("Date")
     plt.ylabel("$ price")
     plt.title("Revenues from "+start_date + " to "+ end_date)
 # ------------------------------------------------------------------------------------------
 
-def covariance(stocks, start_date, end_date, days):
+def covariance(stocks, start_date, end_date=today, days):
   df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )['Adj Close']
   df = pd.DataFrame(df)
   returns = df.pct_change()
@@ -130,14 +133,14 @@ def covariance(stocks, start_date, end_date, days):
 
 # ------------------------------------------------------------------------------------------
 
-def graph_correlation(stocks, start_date, end_date):
+def graph_correlation(stocks, start_date, end_date=today):
     corr_mat = correlation(stocks, start_date, end_date)
     seaborn.heatmap(corr_mat, annot=True)
     plt.show()
 
 # ------------------------------------------------------------------------------------------
 
-def ohlcv(stock, start_date, end_date):
+def ohlcv(stock, start_date, end_date=today):
   df = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
   df = pd.DataFrame(df)
   df = df.drop(['Adj Close'], axis=1)
@@ -146,7 +149,7 @@ def ohlcv(stock, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def graph_creturns(stock, wts, start_date, end_date):
+def graph_creturns(stock, wts=1, start_date, end_date=today,x,y):
   if len(stock) > 1:
     price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
     price_data = price_data['Adj Close']
@@ -156,13 +159,13 @@ def graph_creturns(stock, wts, start_date, end_date):
     port_ret = (ret_data * wts).sum(axis = 1)
     cumulative_ret_df1 = (port_ret + 1).cumprod()
     
-    plt.figure(figsize=(20,10))
+    plt.figure(figsize=(x,y))
     stock_raw = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)
     stock = stock_raw['Adj Close']
     port_ret = stock.sum(axis=1)
     stock_normed = stock/stock.iloc[0]
     stock_normed['Portfolio'] = cumulative_ret_df1
-    stock_normed.plot(figsize=(12,8))
+    stock_normed.plot(figsize=(x,y))
   else:
     price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
     price_data = price_data['Adj Close']
@@ -172,7 +175,7 @@ def graph_creturns(stock, wts, start_date, end_date):
     cumulative_ret = (port_ret + 1).cumprod()
     cumulative_ret = pd.DataFrame(cumulative_ret)
     cumulative_ret.columns = ['Cumulative returns']
-    fig = plt.figure(figsize=(20,10))
+    fig = plt.figure(figsize=(x,y))
     ax1 = fig.add_axes([0.1,0.1,0.8,0.8])
     ax1.plot(cumulative_ret)
     ax1.set_xlabel('Date')
@@ -182,7 +185,7 @@ def graph_creturns(stock, wts, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def creturns(stock, wts, start_date, end_date):
+def creturns(stock, wts=1, start_date, end_date=today):
   if len(stock) > 1:
     price_data = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date )
     price_data = price_data['Adj Close']
@@ -212,7 +215,7 @@ def creturns(stock, wts, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def annual_volatility(stocks, wts, start_date, end_date):
+def annual_volatility(stocks, wts=1, start_date, end_date=today):
   if len(stocks)>1:
     price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
     price_data = price_data['Adj Close']
@@ -232,7 +235,7 @@ def annual_volatility(stocks, wts, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def sharpe_ratio(stocks, wts, start_date, end_date):
+def sharpe_ratio(stocks, wts=1, start_date, end_date=today):
   if len(stocks)>1:
     price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
     price_data = price_data['Adj Close']
@@ -256,7 +259,7 @@ def sharpe_ratio(stocks, wts, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def graph_rbenchmark(stocks, wts, benchmark, start_date, end_date):
+def graph_rbenchmark(stocks=1, wts, benchmark, start_date, end_date=today, x=20, y=10):
 
   if len(stocks)>1 and len(wts)>1:
 
@@ -272,7 +275,7 @@ def graph_rbenchmark(stocks, wts, benchmark, start_date, end_date):
 
     port_ret = (ret_data * wts).sum(axis = 1)
 
-    plt.figure(figsize=(20,10))
+    plt.figure(figsize=(x,y))
     port_ret.plot()
     return_df2.plot()
     plt.ylabel("Daily return comparison")
@@ -289,9 +292,9 @@ def graph_rbenchmark(stocks, wts, benchmark, start_date, end_date):
     ret_data = price_data.pct_change()[1:]
     return_df2 = df2.Close.pct_change()[1:]
     ret_data["benchmark"] = return_df2
-    ret_data.plot(figsize=(20,10))
+    ret_data.plot(figsize=(x,y))
 #----------------------------------------------------------------------------------------
-def rbenchmark(stocks, wts, benchmark, start_date, end_date):
+def rbenchmark(stocks, wts=1, benchmark, start_date, end_date=today):
 
   if len(stocks)>1 and len(wts)>1:
 
@@ -327,7 +330,7 @@ def rbenchmark(stocks, wts, benchmark, start_date, end_date):
 
 # ------------------------------------------------------------------------------------------
 
-def cbenchmark(stocks, wts, benchmark, start_date, end_date):
+def cbenchmark(stocks, wts=1, benchmark, start_date, end_date=today):
   if len(stocks)>1 and len(wts)>1:
       price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
       price_data = price_data['Adj Close']
@@ -367,7 +370,7 @@ def cbenchmark(stocks, wts, benchmark, start_date, end_date):
     return df
 
 # ------------------------------------------------------------------------------------------
-def graph_cbenchmark(stocks, wts, benchmark, start_date, end_date):
+def graph_cbenchmark(stocks, wts=1, benchmark, start_date, end_date=today, x=20, y=10):
   if len(stocks)>1 and len(wts)>1:
       price_data = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date )
       price_data = price_data['Adj Close']
@@ -386,7 +389,7 @@ def graph_cbenchmark(stocks, wts, benchmark, start_date, end_date):
       df = pd.concat([df1,df2], axis=1)
       df = pd.DataFrame(df)
       df.columns = ['portfolio', 'benchmark']
-      df.plot(figsize=(20,10))
+      df.plot(figsize=(x,y))
   else:
     price_data = web.get_data_yahoo(stocks,
                                   start = start_date,
@@ -407,63 +410,34 @@ def graph_cbenchmark(stocks, wts, benchmark, start_date, end_date):
     df.plot(figsize=(20,10))
 
 # ------------------------------------------------------------------------------------------
+def efficient_frontier(stocks, period="max", pricing="Adj Close", trading_year_days=252):
+  p = {"period": period}
+  for stock in stocks:
+    years = {
+      '1mo' : math.ceil(trading_year_days/12),
+      '3mo' : math.ceil(trading_year_days/4),
+      '6mo' : math.ceil(trading_year_days/2),
+      '1y': trading_year_days,
+      '2y' : 2*trading_year_days,
+      '5y' : 5*trading_year_days,
+      '10y' : 10*trading_year_days,
+      '20y' : 20*trading_year_days,
+      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
+    }
 
-def efficient_frontier(stocks, start_date, end_date, iterations):
+  df = pd.DataFrame()
+  for stock in stocks:
+    df[stock] = web.DataReader(stock, data_source='yahoo', start = "1980-01-01", end=today)[pricing]
+    df[stock] = df[stock].tail(years[period])
+  mu = expected_returns.mean_historical_return(df)
+  S = risk_models.sample_cov(df)
 
-  stock_raw = web.DataReader(stocks, 'yahoo', start= start_date, end = end_date)
-  stock = stock_raw['Adj Close']
-  df = pd.DataFrame(stock)
-  port_ret = stock.sum(axis=1)
-  log_ret = np.log(stock/stock.shift(1))
-  num_runs = iterations
-
-  all_weights = np.zeros((num_runs,len(stock.columns)))
-  ret_arr = np.zeros(num_runs)
-  vol_arr = np.zeros(num_runs)
-  sharpe_arr = np.zeros(num_runs)
-
-  for ind in range(num_runs):
-
-      # Create Random Weights
-      weights = np.array(np.random.random(len(stocks)))
-
-      # Rebalance Weights
-      weights = weights / np.sum(weights)
-      
-      # Save Weights
-      all_weights[ind,:] = weights
-
-      # Expected Return
-      ret_arr[ind] = np.sum((log_ret.mean() * weights) *252)
-
-      # Expected Variance
-      vol_arr[ind] = np.sqrt(np.dot(weights.T, np.dot(log_ret.cov() * 252, weights)))
-
-      # Sharpe Ratio
-      sharpe_arr[ind] = ret_arr[ind]/vol_arr[ind]
-  
-  max_sr_ret = ret_arr[sharpe_arr.argmax()]
-  max_sr_vol = vol_arr[sharpe_arr.argmax()]
-
-  data = {'stats': ['Expected Return (in %)','Volality','Sharpe ratio'],
-        'value': [max_sr_ret*100,max_sr_vol,sharpe_arr.max()]
-        }
-
-  print('Optimized allocation (in %):')
-  allocation = [i * 100 for i in all_weights[sharpe_arr.argmax(),:] ]
-  print(allocation)
-
-  df = pd.DataFrame(data)
-  print(df)
-  
-  plt.figure(figsize=(14,8))
-  plt.scatter(vol_arr,ret_arr,c=sharpe_arr,cmap='plasma')
-  plt.colorbar(label='Sharpe Ratio')
-  plt.xlabel('Volatility')
-  plt.ylabel('Return')
-
-  # Add red dot for max SR
-  plt.scatter(max_sr_vol,max_sr_ret,c='red',s=50,edgecolors='black')
+  #optimize for max sharpe ratio
+  ef = EfficientFrontier(mu, S)
+  weights = ef.max_sharpe()
+  cleaned_weights = ef.clean_weights()
+  print(cleaned_weights)
+  ef.portfolio_performance(verbose=True)
 
 # ------------------------------------------------------------------------------------------
 def mean_daily_return(stocks,wts, start_date, end_date):
@@ -588,12 +562,12 @@ def correlation(stocks, start_date, end_date):
   return corr_matrix
 
 #-----------------------------------------------------------------------------------------------------
-def graph_kalman(stocks, start_date, end_date, noise_value):
+def graph_kalman(stocks, start_date, end_date, noise_value=0.01,axis=20, y=10):
   x = web.DataReader(stocks, data_source='yahoo', start = start_date, end = end_date)['Adj Close']
   # Construct a Kalman filter
   kf = KalmanFilter(transition_matrices = [1],
                     observation_matrices = [1],
-                    initial_state_mean = x[0],
+                    initial_state_mean = x[stocks].iloc[0],
                     initial_state_covariance = 1,
                     observation_covariance=1,
                     transition_covariance= noise_value)
@@ -603,8 +577,10 @@ def graph_kalman(stocks, start_date, end_date, noise_value):
   state_means = pd.Series(state_means.flatten(), index=x.index)
   x = pd.DataFrame(x)
 
+  plt.figure(figsize=(axis, y))
   plt.plot(state_means)
   plt.plot(x)
+
 
   plt.title('Kalman filter estimate of average')
   plt.legend(['Kalman Estimate', 'X'])
@@ -734,7 +710,7 @@ def return_stationarity(stock, start_date, end_date):
   plt.legend(['Z']);
   return check_for_stationarity(X)
 #-------------------------------------------------------------------------------------------------------------------------
-def graph_rvolatility(stock, wts, start_date, end_date, window_time):
+def graph_rvolatility(stock, wts=1, start_date, end_date=today, window_time=180,x=20, y=10):
   if len(stock)==1:
     asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)
     # Compute the logarithmic returns using the Closing price 
@@ -743,7 +719,7 @@ def graph_rvolatility(stock, wts, start_date, end_date, window_time):
     asset['Volatility'] = asset['Log_Ret'].rolling(window=window_time).std() * np.sqrt(252)
     asset = pd.DataFrame(asset)
     # Plot the NIFTY Price series and the Volatility
-    asset[['Volatility']].plot(subplots=True, color='blue',figsize=(8, 6))
+    asset[['Volatility']].plot(subplots=True, color='blue',figsize=(x, y))
   else:
     asset = web.DataReader(stock, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
     port_ret = (asset * wts).sum(axis = 1)
@@ -753,7 +729,7 @@ def graph_rvolatility(stock, wts, start_date, end_date, window_time):
     # Compute Volatility using the pandas rolling standard deviation function
     asset['Volatility'] = asset['Log_Ret'].rolling(window=window_time).std() * np.sqrt(252)
     # Plot the NIFTY Price series and the Volatility
-    asset[['Volatility']].plot(subplots=True, color='blue',figsize=(8, 6))
+    asset[['Volatility']].plot(subplots=True, color='blue',figsize=(x, y))
 #------------------------------------------------------------------------------------------------------------------------
 def rvolatility(stock, wts, start_date, end_date, window_time):
   if len(stock)==1:
@@ -780,7 +756,7 @@ def rvolatility(stock, wts, start_date, end_date, window_time):
     return df
 #------------------------------------------------------------------------------------------------------------------------------------------
 
-def graph_ralpha(stock,wts, benchmark, start_date, end_date, window_time):
+def graph_ralpha(stock,wts=1, benchmark, start_date, end_date=today, window_time=180, x=20, y=10):
 
   if len(stock)==1:
     # get the closing price of AMZN Stock
@@ -831,7 +807,7 @@ def graph_ralpha(stock,wts, benchmark, start_date, end_date, window_time):
     results = pd.DataFrame(list(zip(*results)), columns = ['alpha', 'beta'])
     
     results.index = amzn.index
-    plt.figure(figsize=(12,8))
+    plt.figure(figsize=(x,y))
     results.alpha.plot.line()
     plt.title("Market Alpha: Rolling Window of "+str(window_time)+" Days")
   else:
@@ -885,13 +861,13 @@ def graph_ralpha(stock,wts, benchmark, start_date, end_date, window_time):
     results = pd.DataFrame(list(zip(*results)), columns = ['alpha', 'beta'])
     
     results.index = df1.index
-    plt.figure(figsize=(12,8))
+    plt.figure(figsize=(x,y))
     results.alpha.plot.line()
     plt.title("Market Alpha: Rolling Window of "+ str(window_time) + " Days")
 
   
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-def graph_rbeta(stock,wts, benchmark, start_date, end_date, window_time):
+def graph_rbeta(stock,wts=1, benchmark, start_date, end_date=today, window_time=180, x=20, y=10):
 
   if len(stock)==1:
     # get the closing price of AMZN Stock
@@ -942,7 +918,7 @@ def graph_rbeta(stock,wts, benchmark, start_date, end_date, window_time):
     results = pd.DataFrame(list(zip(*results)), columns = ['alpha', 'beta'])
     
     results.index = amzn.index
-    plt.figure(figsize=(12,8))
+    plt.figure(figsize=(x,y))
     results.beta.plot.line()
     plt.title("Market Beta: Rolling Window of "+str(window_time) + " Days")
   else:
@@ -996,7 +972,7 @@ def graph_rbeta(stock,wts, benchmark, start_date, end_date, window_time):
     results = pd.DataFrame(list(zip(*results)), columns = ['alpha', 'beta'])
     
     results.index = df1.index
-    plt.figure(figsize=(12,8))
+    plt.figure(figsize=(x,y))
     results.beta.plot.line()
     plt.title("Market Beta: Rolling Window of " +str(window_time)+ " Days")
 
