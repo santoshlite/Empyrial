@@ -4,6 +4,7 @@ import math
 import statsmodels
 import matplotlib.pyplot as plt
 import seaborn
+import yfinance as yf
 from scipy.stats import norm
 from pandas_datareader import data as web
 import datetime as dt
@@ -689,142 +690,7 @@ def corr(stocks, period="max", method="pearson", pricing="Adj Close", trading_ye
     corr_matrix = returns.corr(method)
     return corr_matrix
 #-----------------------------------------------------------------------------------------------------
-def correlation(stocks, period="max", plot=True, method="pearson", pricing="Adj Close", trading_year_days=252):
-    if plot==False:
-      return corr(stocks, period, method, pricing, trading_year_days)
-    else:
-      corr_mat = corr(stocks, period, method, pricing, trading_year_days)
-      seaborn.heatmap(corr_mat, annot=True)
-      plt.show()
 
-#-----------------------------------------------------------------------------------------------------
-def kalman(stocks, noise_value=0.01, period="max", plot=True, pricing="Adj Close", trading_year_days=252):
-
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      '20y' : 20*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
-    }
-  x = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end = today)[pricing]
-  x = x.tail(years[period])
-
-  # Construct a Kalman filter
-  kf = KalmanFilter(transition_matrices = [1],
-                    observation_matrices = [1],
-                    initial_state_mean = x[stocks].iloc[0],
-                    initial_state_covariance = 1,
-                    observation_covariance=1,
-                    transition_covariance= noise_value)
-
-  # Use the observed values of the price to get a rolling mean
-  state_means, _ = kf.filter(x.values)
-  state_means = pd.Series(state_means.flatten(), index=x.index)
-  x = pd.DataFrame(state_means)
-
-  if plot==False:
-    return x
-  else:
-    plt.plot(state_means)
-    plt.plot(x)
-
-    plt.title('Kalman filter estimate of average')
-    plt.legend(['Kalman Estimate', 'X'])
-    plt.xlabel('Day')
-    plt.ylabel('Price');
-#---------------------------------------------------------------------------------------------------------------
-def capm(stocks, wts=1, start_date, end_date):
-
-  assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
-  ret_data = assets.pct_change()[1:]
-
-  R = (ret_data * wts).sum(axis = 1)
-
-  R_F = web.DataReader('BIL', data_source='yahoo', start = start_date, end = end_date)['Adj Close'].pct_change()[1:]
-
-  # find it's beta against market
-  M = web.DataReader('SPY', data_source='yahoo', start = start_date, end = end_date)['Adj Close'].pct_change()[1:]
-
-  results = regression.linear_model.OLS(R-R_F, sm.add_constant(M)).fit()
-  beta = results.params[1]
-  alpha = results.params[0]
-  return results.summary()
-#--------------------------------------------------------------------------------------------------------------
-def cointegration(stocks, period="max", cutoff_value=0.01, pricing="Adj Close", trading_year_days=252):
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1mo' : math.ceil(trading_year_days/12),
-      '3mo' : math.ceil(trading_year_days/4),
-      '6mo' : math.ceil(trading_year_days/2),
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      '20y' : 20*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
-    }
-    X1 = web.DataReader(stocks[0], data_source='yahoo', start = "1980-01-01", end= today)['Adj Close']
-    X2 = web.DataReader(stocks[1], data_source='yahoo', start = "1980-01-01", end= today)['Adj Close']
-    X1.name = str(stocks[0])
-    X2.name = str(stocks[1])
-    X1 = X1.tail(years[period])
-    X2 = X2.tail(years[period])
-    def check_for_stationarity(X, cutoff=cutoff_value):
-      # H_0 in adfuller is unit root exists (non-stationary)
-      # We must observe significant p-value to convince ourselves that the series is stationary
-      pvalue = adfuller(X)[1]
-      if pvalue < cutoff:
-          print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely stationary.')
-          return True
-      else:
-          print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely non-stationary.')
-          return False
-    Z = X2 - X1
-    Z.name = 'Z'
-
-    plt.plot(Z)
-    plt.xlabel('Time')
-    plt.ylabel('Series Value')
-    plt.legend(['Z']);
-
-    check_for_stationarity(Z);
-#--------------------------------------------------------------------------------------------------------------------------
-def stationarity(stocks, period="max", cutoff_value=0.1, pricing="Adj Close", trading_year_days=252):
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1mo' : math.ceil(trading_year_days/12),
-      '3mo' : math.ceil(trading_year_days/4),
-      '6mo' : math.ceil(trading_year_days/2),
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      '20y' : 20*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
-    }
-  X = web.DataReader(stocks[0], data_source='yahoo', start = "1980-01-01", end= today)[pricing]
-  X = X.tail(years[period])
-
-  def check_for_stationarity(X, cutoff=cutoff_value):
-    # H_0 in adfuller is unit root exists (non-stationary)
-    # We must observe significant p-value to convince ourselves that the series is stationary
-    pvalue = adfuller(X)[1]
-    if pvalue < cutoff:
-        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely stationary.')
-    else:
-        print('p-value = ' + str(pvalue) + ' The series ' + X.name +' is likely non-stationary.')
-
-  plt.plot(X)
-  plt.xlabel('Time')
-  plt.ylabel('Series Value')
-  plt.legend(['Z']);
-  return check_for_stationarity(X)
 #---------------------------------------------------------------------------------------------------------------------
 def rvolatility(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=252):
   p = {"period": period}
@@ -942,7 +808,7 @@ def rsharpe(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=2
     stock = qs.utils.download_returns(stocks[0])
     qs.plots.rolling_sharpe(stock)
 #------------------------------------------------------------------------------------------------------------------------------------------------------
-def lens(returns, benchmark):
+def empyrial(returns, benchmark):
 
   print("Start date: "+ str(returns.index[0]))
   print("End date: "+ str(returns.index[-1]))
@@ -951,7 +817,7 @@ def lens(returns, benchmark):
   CAGR = CAGR.tolist()
   CAGR = str(CAGR[0]*100) + '%'
 
-  CUM = cum_returns(ret, starting_value=0, out=None)*100
+  CUM = cum_returns(returns, starting_value=0, out=None)*100
   CUM = round(CUM,2)
   CUM = CUM.iloc[-1]
   CUM = CUM.tolist()
@@ -977,7 +843,7 @@ def lens(returns, benchmark):
   STABILITY = str(STABILITY)
 
 
-  MD = max_drawdown(ret, out=None)
+  MD = max_drawdown(returns, out=None)
   MD = round(MD,2)
   MD = MD.tolist()
   MD = str(MD[0])+' %'
@@ -1016,15 +882,15 @@ def lens(returns, benchmark):
   CSR = str(CSR[0])
 
 
-  VAR = qs.stats.value_at_risk(ret, sigma=1, confidence=0.95)
+  VAR = qs.stats.value_at_risk(returns, sigma=1, confidence=0.95)
   VAR = np.round(VAR, decimals=2)
   VAR = str(VAR[0])+' %'
 
-  AL = alpha_beta(ret, benchmark, risk_free=0.0)
+  AL = alpha_beta(returns, benchmark, risk_free=0.0)
   AL = AL[0]
   AL = round(AL,2)
 
-  BTA = alpha_beta(ret, benchmark, risk_free=0.0)
+  BTA = alpha_beta(returns, benchmark, risk_free=0.0)
   BTA = BTA[1]
   BTA = round(BTA,2)
 
