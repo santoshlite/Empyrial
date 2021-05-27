@@ -195,7 +195,7 @@ def volume(stocks, period="max", trading_year_days=252):
   return df
 
 # ------------------------------------------------------------------------------------------
-def returns(stocks,wts=1, period="max", benchmark= None, plot=True, pricing="Adj Close", trading_year_days=252):
+def returns(stocks,wts=1, period="max", benchmark= None, plot=False, pricing="Adj Close", trading_year_days=252):
   p = {"period": period}
   for stock in stocks:
     years = {
@@ -206,7 +206,6 @@ def returns(stocks,wts=1, period="max", benchmark= None, plot=True, pricing="Adj
       '2y' : 2*trading_year_days,
       '5y' : 5*trading_year_days,
       '10y' : 10*trading_year_days,
-      '20y' : 20*trading_year_days,
       'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
     }
 
@@ -222,21 +221,19 @@ def returns(stocks,wts=1, period="max", benchmark= None, plot=True, pricing="Adj
       ret_data['Portfolio returns'] = port_ret
       ret_data['Benchmark'] = return_df2
       ret_data = pd.DataFrame(ret_data)
-    else:
+    else:     
       df = pd.DataFrame(df)
       df = df.tail(years[period])
       ret_data = df.pct_change()[1:]
       port_ret = (ret_data * wts).sum(axis = 1)
-      ret_data['Portfolio returns'] = port_ret
-      ret_data = pd.DataFrame(ret_data)
 
     if plot==True:
       ret_data.plot(figsize=(20,10))
-      plt.xlabel('Date')
-      plt.ylabel('Returns')
+      plt.xlabel('Date') 
+      plt.ylabel('Returns') 
       plt.title(period + 'Portfolio returns')
     else:
-      return ret_data
+      return port_ret
   else:
     df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
     if benchmark != None:
@@ -255,8 +252,8 @@ def returns(stocks,wts=1, period="max", benchmark= None, plot=True, pricing="Adj
 
     if plot==True:
         returns.plot(figsize=(20,10))
-        plt.xlabel('Date')
-        plt.ylabel('Returns')
+        plt.xlabel('Date') 
+        plt.ylabel('Returns') 
         plt.title(stocks[0] +' Returns (Period : '+ period+')')
     else:
         return returns
