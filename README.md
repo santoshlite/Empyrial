@@ -30,7 +30,7 @@ Featured on
 
 <br><br><br><br><br><br>
 
-# Installation 🔥
+## Installation 🔥
 
 To install Empyrial, you should do:
 
@@ -38,7 +38,7 @@ To install Empyrial, you should do:
 pip install empyrial
 ```
 
-# Usage 
+## Usage 
 ```py
 from empyrial import returns, empyrial
 import pandas as pd
