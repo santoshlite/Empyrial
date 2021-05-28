@@ -49,7 +49,6 @@ wts = [0.2, 0.2, 0.2, 0.2, 0.2]
 
 #calculate the portfolio returns
 port_ret = returns(portfolio, wts, period="1y", plot=False)
-port_ret = pd.DataFrame(port_ret['Portfolio returns'])
 
 #calculate benchmark returns
 bench = returns(["SPY"], period="1y", plot=False)
