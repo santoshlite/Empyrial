@@ -22,177 +22,6 @@ import quantstats as qs
 today = dt.date.today()
 
 #-------------------------------------------------------------------------------------------
-def graph_close(stocks, period="max", trading_year_days=252):
-
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1mo' : math.ceil(trading_year_days/12),
-      '3mo' : math.ceil(trading_year_days/4),
-      '6mo' : math.ceil(trading_year_days/2),
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      '20y' : 20*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
-    }
-  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Close']
-  df = pd.DataFrame(df)
-  df = df.tail(years[period])
-  df.plot(figsize=(20,10))
-
-# ------------------------------------------------------------------------------------------
-def graph_open(stocks, period="max", trading_year_days=252):
-
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1mo' : math.ceil(trading_year_days/12),
-      '3mo' : math.ceil(trading_year_days/4),
-      '6mo' : math.ceil(trading_year_days/2),
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      '20y' : 20*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Open'].pct_change())
-    }
-  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Open']
-  df = pd.DataFrame(df)
-  df = df.tail(years[period])
-  df.plot(figsize=(20,10))
-
-# ------------------------------------------------------------------------------------------
-
-def graph_volume(stocks, period="max", trading_year_days=252):
-
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1mo' : math.ceil(trading_year_days/12),
-      '3mo' : math.ceil(trading_year_days/4),
-      '6mo' : math.ceil(trading_year_days/2),
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      '20y' : 20*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Volume'].pct_change())
-    }
-  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Volume']
-  df = pd.DataFrame(df)
-  df = df.tail(years[period])
-  df.plot(figsize=(20,10))
-
-# ------------------------------------------------------------------------------------------
-
-def graph_adj_close(stocks, period="max", trading_year_days=252):
-
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1mo' : math.ceil(trading_year_days/12),
-      '3mo' : math.ceil(trading_year_days/4),
-      '6mo' : math.ceil(trading_year_days/2),
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      '20y' : 20*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Adj Close'].pct_change())
-    }
-  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Adj Close']
-  df = pd.DataFrame(df)
-  df = df.tail(years[period])
-  df.plot(figsize=(20,10))
-
-# ------------------------------------------------------------------------------------------
-
-def close(stocks, period="max", trading_year_days=252):
-
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1mo' : math.ceil(trading_year_days/12),
-      '3mo' : math.ceil(trading_year_days/4),
-      '6mo' : math.ceil(trading_year_days/2),
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      '20y' : 20*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
-    }
-  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Close']
-  df = pd.DataFrame(df)
-  df = df.tail(years[period])
-  return df
-
-# ------------------------------------------------------------------------------------------
-
-def open(stocks, period="max", trading_year_days=252):
-
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1mo' : math.ceil(trading_year_days/12),
-      '3mo' : math.ceil(trading_year_days/4),
-      '6mo' : math.ceil(trading_year_days/2),
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      '20y' : 20*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Open'].pct_change())
-    }
-  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Open']
-  df = pd.DataFrame(df)
-  df = df.tail(years[period])
-  return df
-
-# ------------------------------------------------------------------------------------------
-
-def adj_close(stocks, period="max", trading_year_days=252):
-
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1mo' : math.ceil(trading_year_days/12),
-      '3mo' : math.ceil(trading_year_days/4),
-      '6mo' : math.ceil(trading_year_days/2),
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      '20y' : 20*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Adj Close'].pct_change())
-    }
-  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Adj Close']
-  df = pd.DataFrame(df)
-  df = df.tail(years[period])
-  return df
-
-# ------------------------------------------------------------------------------------------
-def volume(stocks, period="max", trading_year_days=252):
-
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1mo' : math.ceil(trading_year_days/12),
-      '3mo' : math.ceil(trading_year_days/4),
-      '6mo' : math.ceil(trading_year_days/2),
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      '20y' : 20*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Volume'].pct_change())
-    }
-  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)['Volume']
-  df = pd.DataFrame(df)
-  df = df.tail(years[period])
-  return df
 
 # ------------------------------------------------------------------------------------------
 def returns(stocks,wts=1, period="max", benchmark= None, plot=False, pricing="Adj Close", trading_year_days=252):
@@ -243,12 +72,10 @@ def returns(stocks,wts=1, period="max", benchmark= None, plot=False, pricing="Ad
       df = df.tail(years[period])
       returns = df.pct_change()
       returns["benchmark"] = return_df2
-      returns = pd.DataFrame(returns)
     else:
-      df = pd.DataFrame(df)
       df = df.tail(years[period])
       returns = df.pct_change()
-      returns = pd.DataFrame(returns)
+      returns = returns.iloc[:,0]
 
     if plot==True:
         returns.plot(figsize=(20,10))
@@ -281,7 +108,7 @@ def covariance(stocks, period="max", pricing="Adj Close", trading_year_days=252)
   return cov_matrix_annual
 # ------------------------------------------------------------------------------------------
 
-def ohlcv(stocks, period="max", trading_year_days=252):
+def get_data(stocks, period="max", trading_year_days=252):
 
   p = {"period": period}
   for stock in stocks:
@@ -804,36 +631,44 @@ def rsharpe(stocks,wts=1, period="max", pricing="Adj Close", trading_year_days=2
   else:
     stock = qs.utils.download_returns(stocks[0])
     qs.plots.rolling_sharpe(stock)
+
+#---------------------------------------
+
+def information_ratio(returns, benchmark_returns, days=252):
+ return_difference = returns - benchmark_returns
+ volatility = return_difference.std() * np.sqrt(days)
+ information_ratio = return_difference.mean() / volatility
+ return information_ratio
 #------------------------------------------------------------------------------------------------------------------------------------------------------
-def empyrial(returns, benchmark):
+def empyrial(returns, benchmark, rf=0.0, confidence_value=0.95, sigma_value=1):
 
   print("Start date: "+ str(returns.index[0]))
   print("End date: "+ str(returns.index[-1]))
   CAGR = cagr(returns, period=DAILY, annualization=None)
   CAGR = round(CAGR,2)
   CAGR = CAGR.tolist()
-  CAGR = str(CAGR[0]*100) + '%'
+  CAGR = str(CAGR*100) + '%'
 
   CUM = cum_returns(returns, starting_value=0, out=None)*100
   CUM = round(CUM,2)
   CUM = CUM.iloc[-1]
   CUM = CUM.tolist()
-  CUM = str(CUM[0]) + '%'
+  CUM = str(CUM) + '%'
 
 
   VOL = qs.stats.volatility(returns, annualize=True, trading_year_days=252)
   VOL = round(VOL,2)
   VOL = VOL.tolist()
-  VOL = str(VOL[0])+' %'
+  VOL = str(VOL*100)+' %'
 
-  SR = sharpe_ratio(returns, risk_free=0, period=DAILY)
+  SR = sharpe_ratio(returns, risk_free=rf, period=DAILY)
   SR = np.round(SR, decimals=2)
-  SR = str(SR[0])
+  SR = str(SR)
 
   CR =  qs.stats.calmar(returns)
   CR = round(CR,2)
   CR = CR.tolist()
-  CR = str(CR[0])+'%'
+  CR = str(CR)
 
   STABILITY = stability_of_timeseries(returns)
   STABILITY = round(STABILITY,2)
@@ -842,31 +677,29 @@ def empyrial(returns, benchmark):
 
   MD = max_drawdown(returns, out=None)
   MD = round(MD,2)
-  MD = MD.tolist()
-  MD = str(MD[0])+' %'
+  MD = str(MD*100)+' %'
 
-  '''
-  OR = omega_ratio(returns, risk_free=0.0, required_return=0.0)
+  
+  '''OR = omega_ratio(returns, risk_free=0.0, required_return=0.0)
   OR = round(OR,2)
   OR = str(OR)
   print(OR)'''
 
   SOR = sortino_ratio(returns, required_return=0, period=DAILY)
   SOR = round(SOR,2)
-  SOR = SOR.tolist()
-  SOR = str(SOR[0])
+  SOR = str(SOR)
 
 
   SK = qs.stats.skew(returns)
   SK = round(SK,2)
   SK = SK.tolist()
-  SK = str(SK[0])
+  SK = str(SK)
 
 
   KU = qs.stats.kurtosis(returns)
   KU = round(KU,2)
   KU = KU.tolist()
-  KU = str(KU[0])
+  KU = str(KU)
 
   TA = tail_ratio(returns)
   TA = round(TA,2)
@@ -876,26 +709,40 @@ def empyrial(returns, benchmark):
   CSR = qs.stats.common_sense_ratio(returns)
   CSR = round(CSR,2)
   CSR = CSR.tolist()
-  CSR = str(CSR[0])
+  CSR = str(CSR)
 
 
-  VAR = qs.stats.value_at_risk(returns, sigma=1, confidence=0.95)
+  VAR = qs.stats.value_at_risk(returns, sigma=sigma_value, confidence=confidence_value)
   VAR = np.round(VAR, decimals=2)
-  VAR = str(VAR[0])+' %'
+  VAR = str(VAR*100)+' %'
 
-  AL = alpha_beta(returns, benchmark, risk_free=0.0)
+  AL = alpha_beta(returns, benchmark, risk_free=rf)
   AL = AL[0]
   AL = round(AL,2)
 
-  BTA = alpha_beta(returns, benchmark, risk_free=0.0)
+  BTA = alpha_beta(returns, benchmark, risk_free=rf)
   BTA = BTA[1]
   BTA = round(BTA,2)
 
-  data = {'':['Annual return', 'Cumulative return', 'Annual volatility', 'Sharpe ratio','Calmar ratio', 'Stability', 'Max Drawdown','Sortino ratio','Skew', 'Kurtosis', 'Tail Ratio', 'Common sense ratio', 'Daily value at risk',
+  def condition(x):
+    return x > 0
+
+  win = sum(condition(x) for x in returns)
+  total = len(returns)
+  win_ratio = win/total
+  win_ratio = win_ratio*100
+  win_ratio = round(win_ratio,2)
+
+  IR = information_ratio(returns, benchmark)
+  IR = round(IR,2)
+
+
+
+  data = {'':['Annual return', 'Cumulative return', 'Annual volatility','Winning day ratio', 'Sharpe ratio','Calmar ratio', 'Information ratio', 'Stability', 'Max Drawdown','Sortino ratio','Skew', 'Kurtosis', 'Tail Ratio', 'Common sense ratio', 'Daily value at risk',
               'Alpha', 'Beta'
 
   ],
-        'Backtest':[CAGR, CUM, VOL, SR, CR, STABILITY, MD, SOR, SK, KU, TA, CSR, VAR, AL, BTA]}
+        'Backtest':[CAGR, CUM, VOL,f'{win_ratio}%', SR, CR, IR, STABILITY, MD, SOR, SK, KU, TA, CSR, VAR, AL, BTA]}
 
   # Create DataFrame
 
@@ -904,4 +751,18 @@ def empyrial(returns, benchmark):
   df.style.set_properties(**{'background-color': 'white',
                            'color': 'black',
                            'border-color':'black'})
-  return df
+  
+  y = []
+  for x in returns:
+    y.append(x)
+
+  arr = np.array(y)
+  arr
+  returns.index
+  my_color = np.where(arr>=0, 'blue', 'grey')
+  plt.figure(figsize=(30,8))
+  plt.vlines(x=returns.index, ymin=0, ymax=arr, color=my_color, alpha=0.4)
+  plt.title('Returns')
+
+  display(df)
+  return qs.plots.returns(returns,benchmark, cumulative=True), qs.plots.monthly_heatmap(returns), qs.plots.drawdown(returns), qs.plots.drawdowns_periods(returns), qs.plots.rolling_volatility(returns), qs.plots.rolling_sharpe(returns), qs.plots.rolling_beta(returns, benchmark)
