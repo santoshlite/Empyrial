@@ -45,8 +45,10 @@ from empyrial import empyrial
 portfolio = Beibo(    
                   start_date= "2020-06-09", 
                   end_date = "2021-01-01", #if you want to put date to today, type "None"
-                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], #the assets you have in your portfolio
-                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #the allocation of capital in your portfolio
+                  #define your portfolio
+                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
+                  #the allocation of capital in your portfolio
+                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], 
                   benchmark = ["SPY"] 
 )
 ```
