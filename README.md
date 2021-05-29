@@ -40,21 +40,15 @@ pip install empyrial
 
 ## Usage 
 ```py
-from empyrial import returns, empyrial
-import pandas as pd
+from empyrial import empyrial
 
-#define your portfolio
-portfolio = ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"]
-wts = [0.2, 0.2, 0.2, 0.2, 0.2]
-
-#calculate the portfolio returns
-port_ret = returns(portfolio, wts, period="1y", plot=False)
-
-#calculate benchmark returns
-bench = returns(["SPY"], period="1y", plot=False)
-
-#execute
-empyrial(port_ret,bench)
+portfolio = Beibo(    
+                  start_date= "2020-06-09", 
+                  end_date = "2021-01-01", #if you want to put date to today, type "None"
+                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], #the assets you have in your portfolio
+                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #the allocation of capital in your portfolio
+                  benchmark = ["SPY"] 
+)
 ```
 
 Output:
