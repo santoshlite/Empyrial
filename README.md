@@ -51,6 +51,8 @@ portfolio = Beibo(
                   weights = [0.2, 0.2, 0.2, 0.2, 0.2], 
                   benchmark = ["SPY"] 
 )
+
+empyrial(portfolio)
 ```
 
 Output:
