@@ -40,7 +40,7 @@ pip install empyrial
 
 ## Usage 
 ```py
-from empyrial import empyrial
+from empyrial import empyrial, Beibo
 
 portfolio = Beibo(    
                   start_date= "2020-06-09", 
