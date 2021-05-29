@@ -75,6 +75,22 @@ Output:
 
   ![rolling](https://user-images.githubusercontent.com/61618641/120065977-74029e00-c074-11eb-92c6-8d0bee2a6234.png)
  </div>
+ 
+## Download the tearsheet
+
+### On Google Colab
+
+Create another cell in your program and run that:
+
+```py
+!wget -nc https://raw.githubusercontent.com/brpy/colab-pdf/master/colab_pdf.py
+from colab_pdf import colab_pdf
+colab_pdf('name_of_the_actual_file.ipynb')
+```
+
+### On a Jupyter Notebook
+
+
 
  
 
