@@ -44,7 +44,7 @@ from empyrial import empyrial, Beibo
 
 portfolio = Beibo(    
                   start_date= "2020-06-09", 
-                  end_date = "2021-01-01", #if you want to put date to today, type "None"
+                  end_date = None, #None will put today's date
                   #define your portfolio
                   portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
                   #the allocation of capital in your portfolio
