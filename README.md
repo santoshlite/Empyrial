@@ -76,7 +76,7 @@ Output:
   ![rolling](https://user-images.githubusercontent.com/61618641/120065977-74029e00-c074-11eb-92c6-8d0bee2a6234.png)
  </div>
  
-## Download the tearsheet
+## Download the tearsheet (to PDF)
 
 ### On Google Colab
 
