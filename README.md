@@ -90,11 +90,21 @@ colab_pdf('name_of_the_actual_file.ipynb')
 
 ### On a Jupyter Notebook
 
+Create another cell in your program and run:
 
+```py
+pip install nbconvert
+```
 
- 
+Go to Files > Download as > HTML or PDF via LaTeX
 
+(For Visual Studio Code: Click on the "export as" icon in the upper right corner)
 
+If you get an error downloading it as a PDF, download it as a HTML file.
+
+Now open that your_notebook_name.html file (click on it). It will be opened in a new tab of your browser.
+
+Now go to print option (right-click on the page). From here you can save this file in pdf file format.
 
 
 
