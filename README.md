@@ -39,7 +39,7 @@ pip install empyrial
 ```py
 from empyrial import empyrial, Beibo
 
-portfolio = Beibo(    
+portfolio = Engine(    
                   start_date= "2020-06-09", 
                   end_date = None, #None will put today's date
                   #define your portfolio
