@@ -14,7 +14,8 @@ Trafalgar is still usable but it will not be maintaned. Empyrial is still in dev
 ![](https://img.shields.io/badge/views-+11k-red)
 ![](https://img.shields.io/badge/activity-8.8/10-yellow)
 ![](https://camo.githubusercontent.com/97d4586afa582b2dcec2fa8ed7c84d02977a21c2dd1578ade6d48ed82296eb10/68747470733a2f2f6261646765732e66726170736f66742e636f6d2f6f732f76312f6f70656e2d736f757263652e7376673f763d313033)
-
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ssantoshp/GetStartedEmpyrial/main?filepath=https%3A%2F%2Fgithub.com%2Fssantoshp%2FGetStartedEmpyrial%2Fblob%2Fmain%2Fget_started_with_empyrial.ipynb)
+  
 <br>
 Featured on
 <br><br>
