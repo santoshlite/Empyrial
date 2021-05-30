@@ -37,7 +37,7 @@ pip install empyrial
 
 ## Usage 
 ```py
-from empyrial import empyrial, Beibo
+from empyrial import empyrial, Engine
 
 portfolio = Engine(    
                   start_date= "2020-06-09", 
