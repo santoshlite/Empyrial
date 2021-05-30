@@ -7,7 +7,7 @@ Trafalgar is still usable but it will not be maintaned. Empyrial is still in dev
 <img src="https://i.ibb.co/RjLg9VV/logo.png"/>
 <br><br><br><br><br><br>
   
-![](https://img.shields.io/badge/Users-1.9k-brightgreen)
+![](https://img.shields.io/badge/Users-2.7k-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-blue)
 ![](https://img.shields.io/badge/flow%20level-A++-brightgreen)
 ![](https://img.shields.io/badge/language-python🐍-blue)
