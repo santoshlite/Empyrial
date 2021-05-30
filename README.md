@@ -1,6 +1,3 @@
-✋ 🛑 **DISCLAIMER: Trafalgar became Empyrial**
-Trafalgar is still usable but it will not be maintaned. Empyrial is still in development, a lot of new stuff is going to come soon!
-
 # By Investors, for Investors.
 <br><br><br><br><br><br>
 <div align="center">
