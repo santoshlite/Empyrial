@@ -41,10 +41,7 @@ from empyrial import empyrial, Engine
 
 portfolio = Engine(    
                   start_date= "2020-06-09", 
-                  #end_date is by default today
-                  #define your portfolio
                   portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
-                  #the allocation of capital in your portfolio
                   weights = [0.2, 0.2, 0.2, 0.2, 0.2], 
                   benchmark = ["SPY"] 
 )
