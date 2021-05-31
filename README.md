@@ -1,13 +1,13 @@
-# By Investors, for Investors.
+# By Investors, For Investors.
 <br><br><br><br><br><br>
 <div align="center">
 <img src="https://i.ibb.co/RjLg9VV/logo.png"/>
 <br><br><br><br><br><br>
   
 ![](https://img.shields.io/badge/Downloads-5.4k-brightgreen)
-![](https://img.shields.io/badge/license-MIT-blue)
-![](https://img.shields.io/badge/flow%20level-A++-brightgreen)
-![](https://img.shields.io/badge/language-python🐍-blue)
+![](https://img.shields.io/badge/license-MIT-orange)
+![](https://img.shields.io/badge/version-0.2.6-fuchsia)
+![](https://img.shields.io/badge/language-python🐍-navy)
 ![](https://img.shields.io/badge/activity-8.8/10-yellow)
 ![](https://camo.githubusercontent.com/97d4586afa582b2dcec2fa8ed7c84d02977a21c2dd1578ade6d48ed82296eb10/68747470733a2f2f6261646765732e66726170736f66742e636f6d2f6f732f76312f6f70656e2d736f757263652e7376673f763d313033)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ssantoshp/GetStartedEmpyrial/main?filepath=get_started_with_empyrial.ipynb)
