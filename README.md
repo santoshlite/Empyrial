@@ -9,7 +9,9 @@
 ![](https://img.shields.io/badge/version-0.2.7-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
 ![](https://img.shields.io/badge/activity-8.8/10-ff69b4)
-![](https://camo.githubusercontent.com/97d4586afa582b2dcec2fa8ed7c84d02977a21c2dd1578ade6d48ed82296eb10/68747470733a2f2f6261646765732e66726170736f66742e636f6d2f6f732f76312f6f70656e2d736f757263652e7376673f763d313033)
+![](https://img.shields.io/badge/Open%20Source-💜-white)	
+
+![](https://img.shields.io/badge/Open-Source-:heartpulse:-ff69b4)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ssantoshp/GetStartedEmpyrial/main?filepath=get_started_with_empyrial.ipynb)
   
  </div>
