@@ -12,20 +12,29 @@
 ![](https://camo.githubusercontent.com/97d4586afa582b2dcec2fa8ed7c84d02977a21c2dd1578ade6d48ed82296eb10/68747470733a2f2f6261646765732e66726170736f66742e636f6d2f6f732f76312f6f70656e2d736f757263652e7376673f763d313033)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ssantoshp/GetStartedEmpyrial/main?filepath=get_started_with_empyrial.ipynb)
   
-<br>
-Featured on
+ </div>
+ 
 <br><br>
 
-<img align="left" src="https://www.libhunt.com/assets/logo/logo-og-12f445719d17ec887b4f67216c07a38850ebfbc93ed81fa8b3bbb338d63a7adb.png" width="200"/>
-<img align="left" src="https://cdn-images-1.medium.com/max/1200/1*NHYVDHC_WbdaUicoYyJFrA.png" width="100"/>
-<img align="left" src="https://cdn-images-1.medium.com/max/1200/1*yAqDFIFA5F_NXalOJKz4TA.png" width="100"/>
-<img align="left"src="https://pychina.org/img/pycon.png" width="100"/><br><br>
-<img align="left"src="https://i.ibb.co/r4ZzyLQ/Capture.jpg" width="200"/>
+  
+Empyrial is a Python-based open source quantitative investment library dedicated to financial institutions and retail investors, officially released in Mars 2021. Already used by thousands of people working in the finance industry, Empyrial aims to become a all-in-one platform for portfolio management, analysis and optimization
+<br><br><br>
+
+
+<div align="center">
+  
+| Feature 📰 | Status |
+| --                      | ------    |
+| Empyrial (backtesting + performance analysis) | :star: [Released](https://colab.research.google.com/drive/1cj40dDqctfWNrVz_nK-FDhdWPay7fVBF?usp=sharing) on May 30, 2021 | 
+| Oracle (prediction lens using several ML models)| :alien: [First Release](https://colab.research.google.com/drive/11rMpQqW9Om82wzh71cr5k3vDQSNMZ4V1?usp=sharing) on Jun 1, 2021 | 
+| Fundamental lens | :smile_cat: In development...  |
+| Risk lens | :smile_cat: In development...  | 
+| Alpha lens | :smile_cat: In development... |
+| Sentiment lens | :smile_cat: In development... | 
+  
 </div>
 
-
-
-<br><br><br><br><br><br>
+<br>
 
 ## Installation 🔥
 
