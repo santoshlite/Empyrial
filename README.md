@@ -45,6 +45,13 @@ pip install empyrial
 ```
 
 ## Usage 
+
+Here are the functions available with Empyrial:
+- ```empyrial``` : quantitative and performance analysis of your portfolio | [See how to use it](https://colab.research.google.com/drive/1cj40dDqctfWNrVz_nK-FDhdWPay7fVBF?usp=sharing)
+- ```oracle``` : prediction generation on your portfolio using several prediction models (Prophet, Auto-ARIMA, Fast Fourier Transform...) | [See how to use it](https://colab.research.google.com/drive/11rMpQqW9Om82wzh71cr5k3vDQSNMZ4V1?usp=sharing)
+- ```get_returns```
+- ```get_pricing```
+- ```get_data```
 ```py
 from empyrial import empyrial, Engine
 
