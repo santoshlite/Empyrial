@@ -17,7 +17,7 @@
 <br><br>
 
   
-Empyrial is a Python-based open source quantitative investment library dedicated to financial institutions and retail investors, officially released in Mars 2021. Already used by thousands of people working in the finance industry, Empyrial aims to become a all-in-one platform for portfolio management, analysis and optimization.
+Empyrial is a Python-based **open source quantitative investment** library dedicated to **financial institutions** and **retail investors**, officially released in Mars 2021. Already used by **thousands of people working in the finance industry**, Empyrial aims to become a all-in-one platform for **portfolio management**, **analysis** and **optimization**.
 <br><br><br>
 
 
