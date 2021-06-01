@@ -126,7 +126,7 @@ vn.py uses Github to host its source code, if you wish to contribute code please
 
 	* If your fork is out of date, you need to manually sync: [Synchronization method](https://help.github.com/articles/syncing-a-fork/)
 
-- If you want to make contributions to ```Empyrial```, please create [pull requests](https://github.com/ssantoshp/Empyrial/pulls). It'll waiting for review, need to continue to improve, or be merged!
+- If you want to make contributions to ```Empyrial```, please create [pull requests](https://github.com/ssantoshp/Empyrial/pulls). It'll waiting for review, checked/modified and be merged!
 
 ## Contact us
 
