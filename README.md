@@ -9,9 +9,7 @@
 ![](https://img.shields.io/badge/version-0.2.7-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
 ![](https://img.shields.io/badge/activity-8.8/10-ff69b4)
-![](https://img.shields.io/badge/Open%20Source-💜-white)	
-
-![](https://img.shields.io/badge/Open-Source-:heartpulse:-ff69b4)
+![](https://img.shields.io/badge/Open%20source-💜-white)	
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ssantoshp/GetStartedEmpyrial/main?filepath=get_started_with_empyrial.ipynb)
   
  </div>
