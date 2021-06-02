@@ -15,8 +15,11 @@ import logging
 import warnings
 from warnings import filterwarnings
 
+# ------------------------------------------------------------------------------------------
 
 today = dt.date.today()
+
+# ------------------------------------------------------------------------------------------
 
 class Engine:
 
@@ -26,7 +29,6 @@ class Engine:
     self.portfolio = portfolio
     self.weights = weights
     self.benchmark = benchmark
-# ------------------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------------------
 def get_returns(stocks,wts, start_date, end_date=today):
