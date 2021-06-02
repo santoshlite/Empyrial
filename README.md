@@ -140,11 +140,12 @@ Now open that your_notebook_name.html file (click on it). It will be opened in a
 
 Now go to print option (right-click on the page). From here you can save this file in pdf file format.
 
-vn.py uses Github to host its source code, if you wish to contribute code please use the PR (Pull Request) process of github:
 
 ## Contribution and Issues
 
-- [Create Issue](https://github.com/ssantoshp/Empyrial/issues/new/choose) - For the larger changes (such as new features, large refactoring, etc.) it is best to first open an issue to discuss, and smaller improvements (such as document improvements, bugfixes, etc.) can be sent directly to PR
+[Create Issue](https://github.com/ssantoshp/Empyrial/issues/new/choose) - For the larger changes (such as new features, large refactoring, etc.) it is best to first open an issue to discuss, and smaller improvements (such as document improvements, bugfixes, etc.) can be sent directly to PR
+
+Empyrial uses Github to host its source code, if you wish to contribute code please use the PR (Pull Request) process of github:
 
 - Fork [Empyrial](https://github.com/ssantoshp/Empyrial) - Click the **Fork** button in the upper right corner
 
