@@ -13,8 +13,6 @@ from sklearn.linear_model import LinearRegression
 from pykalman import KalmanFilter
 from pypfopt import EfficientFrontier, risk_models, expected_returns
 
-
-
 today = datetime.date.today()
 # ------------------------------------------------------------------------------------------
 
