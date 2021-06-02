@@ -29,20 +29,20 @@ With Empyrial, you can easily analyze security or a portfolio with these differe
 
 <div align="center">
   
-| Table of Contents 📰 | 
+| Table of Contents 📖 | 
 | --                     
-| Installation | 
-| Features | 
-| Usage example |
-| Download the tearsheet |
-| Contribution and Issues | 
-| Contact |
-| [License](#license) |
+| 1. [Installation](#installation) | 
+| 2. [Features](#features) | 
+| 3. [Usage example](#usage) |
+| 4. [Download the tearsheet](#download-the-tearsheet) |
+| 5. [Contribution and Issues](#contribution-and-issues) | 
+| 6. [Contact](#contact) |
+| 7. [License](#license) |
 	
 </div>
 
 
-## Installation 🔥
+## Installation
 
 To install Empyrial, you should do:
 
@@ -106,7 +106,9 @@ Output:
   ![rolling](https://user-images.githubusercontent.com/61618641/120065977-74029e00-c074-11eb-92c6-8d0bee2a6234.png)
  </div>
  
-## Download the tearsheet (to PDF)
+## Download the tearsheet
+
+The tearsheet will downloaded as a PDF or a HTML file.
 
 ### On Google Colab
 
