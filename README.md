@@ -57,8 +57,8 @@ pip install empyrial
   
 | Feature 📰 | Status |
 | --                      | ------    |
-| Empyrial (backtesting + performance analysis) | :star: [Released](https://colab.research.google.com/drive/1cj40dDqctfWNrVz_nK-FDhdWPay7fVBF?usp=sharing) on May 30, 2021 | 
-| Oracle (prediction lens using several ML models)| :alien: [First Release](https://colab.research.google.com/drive/11rMpQqW9Om82wzh71cr5k3vDQSNMZ4V1?usp=sharing) on Jun 1, 2021 | 
+| Empyrial (backtesting + performance analysis) | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v0.2.4) on May 30, 2021 | 
+| Oracle (prediction lens using several ML models)| :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/0.2.7) on Jun 1, 2021 | 
 | Fundamental lens | :smile_cat: In development...  |
 | Risk lens | :smile_cat: In development...  | 
 | Alpha lens | :smile_cat: In development... |
