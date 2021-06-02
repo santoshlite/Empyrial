@@ -128,7 +128,7 @@ vn.py uses Github to host its source code, if you wish to contribute code please
 
 - If you want to make contributions to ```Empyrial```, please create [pull requests](https://github.com/ssantoshp/Empyrial/pulls). It'll waiting for review, checked/modified and be merged!
 
-## Contact us
+## Contact
 
 You are welcome to contact us by email at santoshpassoubady@gmail.com or in Empyrial's [discussion space](https://github.com/ssantoshp/Empyrial/discussions)
 
