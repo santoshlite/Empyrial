@@ -152,6 +152,18 @@ vn.py uses Github to host its source code, if you wish to contribute code please
 
 - If you want to make contributions to ```Empyrial```, please create [pull requests](https://github.com/ssantoshp/Empyrial/pulls). It'll waiting for review, checked/modified and be merged!
 
+## Contributors and Acknowledgments
+
+Thanks to the following people/organizations who have contributed to this project:
+
+- [@rslopes](https://github.com/rslopes)
+- [@TonyZhangkz](https://github.com/TonyZhangkz)
+- [@rakeshbhat9](https://github.com/rakeshbhat9)
+- [@Haizzz](https://github.com/Haizzz)
+- [quantstats](https://github.com/ranaroussi/quantstats)
+- [quantopian](https://github.com/quantopian)
+- [unit8co](https://github.com/unit8co)
+
 ## Contact
 
 You are welcome to contact us by email at santoshpassoubady@gmail.com or in Empyrial's [discussion space](https://github.com/ssantoshp/Empyrial/discussions)
