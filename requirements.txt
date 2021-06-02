@@ -1,9 +1,9 @@
 numpy
 matplotlib
-seaborn
-scipy
 pandas_datareader
 datetime
-statsmodels
-pykalman
-sklearn
+empyrical
+quantstats
+yfinance
+darts       
+
