@@ -17,10 +17,30 @@
 <br><br>
 
   
-Empyrial is a Python-based **open source quantitative investment** library dedicated to **financial institutions** and **retail investors**, officially released in Mars 2021. Already used by **thousands of people working in the finance industry**, Empyrial aims to become an all-in-one platform for **portfolio management**, **analysis** and **optimization**.
-<br><br><br>
+Empyrial is a Python-based **open-source quantitative investment** library dedicated to **financial institutions** and **retail investors**, officially released in Mars 2021. Already used by **thousands of people working in the finance industry**, Empyrial aims to become an all-in-one platform for **portfolio management**, **analysis**, and **optimization**.
+
+Empyrial **empowers portfolio management** by bringing different financial approaches such as **risk analysis**, **quantitative analysis**, **fundamental analysis**, **factor analysis** and **prediction making**.
+
+With Empyrial, you can easily analyze security or a portfolio with these different approaches and **get the best insights from it**.
 
 <br>
+
+<br>
+
+<div align="center">
+  
+| Table of Contents 📰 | 
+| --                     
+| Installation | 
+| Features | 
+| Usage example |
+| Download the tearsheet |
+| Contribution and Issues | 
+| Contact |
+| [License](#license) |
+	
+</div>
+
 
 ## Installation 🔥
 
@@ -52,7 +72,7 @@ Here are the functions available with Empyrial:
 - ```oracle``` : prediction generation on your portfolio using several prediction models (Prophet, Auto-ARIMA, Fast Fourier Transform...) | [See how to use it](https://colab.research.google.com/drive/11rMpQqW9Om82wzh71cr5k3vDQSNMZ4V1?usp=sharing)
 
 
-## Example
+## Usage
 
 ```py
 from empyrial import empyrial, Engine
