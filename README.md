@@ -143,9 +143,7 @@ Now go to print option (right-click on the page). From here you can save this fi
 
 ## Contribution and Issues
 
-[Create Issue](https://github.com/ssantoshp/Empyrial/issues/new/choose) - For the larger changes (such as new features, large refactoring, etc.) it is best to first open an issue to discuss, and smaller improvements (such as document improvements, bugfixes, etc.) can be sent directly to PR
-
-Empyrial uses Github to host its source code, if you wish to contribute code please use the PR (Pull Request) process of github:
+- [Create Issue](https://github.com/ssantoshp/Empyrial/issues/new/choose) - For the larger changes (such as new features, large refactoring, etc.) it is best to first open an issue to discuss, and smaller improvements (such as document improvements, bugfixes, etc.) can be sent directly to PR
 
 - Fork [Empyrial](https://github.com/ssantoshp/Empyrial) - Click the **Fork** button in the upper right corner
 
@@ -153,7 +151,7 @@ Empyrial uses Github to host its source code, if you wish to contribute code ple
 
 	* If your fork is out of date, you need to manually sync: [Synchronization method](https://help.github.com/articles/syncing-a-fork/)
 
-- If you want to make contributions to ```Empyrial```, please create [pull requests](https://github.com/ssantoshp/Empyrial/pulls). It'll waiting for review, checked/modified and be merged!
+- Empyrial uses Github to host its source code, if you wish to contribute code please use the PR (Pull Request) process of github: [pull requests](https://github.com/ssantoshp/Empyrial/pulls). It'll waiting for review, checked/modified and be merged!
 
 ## Contributors and Acknowledgments
 
