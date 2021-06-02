@@ -36,8 +36,9 @@ With Empyrial, you can easily analyze security or a portfolio with these differe
 | 3. [Usage example](#usage) |
 | 4. [Download the tearsheet](#download-the-tearsheet) |
 | 5. [Contribution and Issues](#contribution-and-issues) | 
-| 6. [Contact](#contact) |
-| 7. [License](#license) |
+| 6. [Contributors and Acknowledgments](#contributors-and-acknowledgments) |
+| 7. [Contact](#contact) |
+| 8. [License](#license) |
 	
 </div>
 
