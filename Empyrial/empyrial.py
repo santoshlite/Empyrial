@@ -23,7 +23,7 @@ today = dt.date.today()
 
 class Engine:
 
-  def __init__(self,start_date, portfolio, weights, benchmark, end_date=today):
+  def __init__(self,start_date, portfolio, weights, benchmark=['SPY'], end_date=today):
     self.start_date = start_date
     self.end_date = end_date
     self.portfolio = portfolio
@@ -300,7 +300,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
   return qs.plots.returns(returns,benchmark, cumulative=True), qs.plots.monthly_heatmap(returns), qs.plots.drawdown(returns), qs.plots.drawdowns_periods(returns), qs.plots.rolling_volatility(returns), qs.plots.rolling_sharpe(returns), qs.plots.rolling_beta(returns, benchmark)
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def oracle(my_portfolio, prediction_days=30, based_on='Adj Close'):
+def oracle(my_portfolio, prediction_days=None, based_on='Adj Close'):
   logger = logging.getLogger()
   warnings.simplefilter(action='ignore', category=FutureWarning)
   filterwarnings('ignore')
@@ -318,6 +318,17 @@ def oracle(my_portfolio, prediction_days=30, based_on='Adj Close'):
   for asset in my_portfolio.portfolio:
 
     result = pd.DataFrame()
+
+    df = web.DataReader(asset, data_source='yahoo', start = my_portfolio.start_date, end= my_portfolio.end_date)
+    df = pd.DataFrame(df)
+    df.reset_index(level=0, inplace=True)
+
+    if prediction_days==None:
+      x = 1
+      while x/(len(df)+x) < 0.3:
+        x+=1
+        prediction_days = x
+
     def eval_model(model):
       model.fit(train)
       forecast = model.predict(len(val))
@@ -333,11 +344,6 @@ def oracle(my_portfolio, prediction_days=30, based_on='Adj Close'):
       b = [words for segments in b for words in segments.split()]
       b = float(b[2])
       prediction[model] = [str(round(((b-start_value)/start_value)*100,3))+' %']
-
-
-    df = web.DataReader(asset, data_source='yahoo', start = my_portfolio.start_date, end= my_portfolio.end_date)
-    df = pd.DataFrame(df)
-    df.reset_index(level=0, inplace=True)
 
     series = TimeSeries.from_dataframe(df, 'Date', based_on, freq='D')
     series = fill_missing_values(series)
@@ -406,7 +412,7 @@ def oracle(my_portfolio, prediction_days=30, based_on='Adj Close'):
     portfolio_pred[column] = portfolio_pred[column].sum()
 
   print("\n")
-  print("Portfolio returns prediction for the next"+str(prediction_days)+" days")
+  print("Portfolio returns prediction for the next "+str(prediction_days)+" days")
   display(portfolio_pred.iloc[0])
   
 
