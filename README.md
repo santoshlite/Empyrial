@@ -4,7 +4,7 @@
 <img src="https://i.ibb.co/RjLg9VV/logo.png"/>
 <br><br><br><br><br><br>
   
-![](https://img.shields.io/badge/Downloads-6.3k-brightgreen)
+![](https://img.shields.io/badge/Downloads-6.8k-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
 ![](https://img.shields.io/badge/version-0.2.7-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
