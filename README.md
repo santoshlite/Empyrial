@@ -60,8 +60,8 @@ pip install empyrial
 | --                      | ------    |
 | Empyrial (backtesting + performance analysis) | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v0.2.4) on May 30, 2021 |
 | Oracle (prediction lens using several ML models)| :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/0.2.7) on Jun 1, 2021 | 
-| Fundamental lens | :smile_cat: In development...  |
-| Risk lens | :smile_cat: In development...  | 
+| Fundamental lens | :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/0.3.1) on Jun 6, 2021 |
+| Risk factors lens | :smile_cat: In development...  | 
 | Alpha lens | :smile_cat: In development... |
 | Sentiment lens | :smile_cat: In development... | 
   
@@ -70,10 +70,12 @@ pip install empyrial
 <br />
 
 Here are the functions available with Empyrial:
-- ```empyrial``` : quantitative and performance analysis of your portfolio | [Quickstart](https://colab.research.google.com/drive/1cj40dDqctfWNrVz_nK-FDhdWPay7fVBF?usp=sharing) | [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Engine)
 
-- ```oracle``` : prediction generation on your portfolio using several prediction models (Prophet, Auto-ARIMA, Fast Fourier Transform...) | [Quickstart](https://colab.research.google.com/drive/11rMpQqW9Om82wzh71cr5k3vDQSNMZ4V1?usp=sharing)| [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
+- ```empyrial``` : quantitative and performance analysis of your portfolio | [Quickstart](https://colab.research.google.com/drive/1cj40dDqctfWNrVz_nK-FDhdWPay7fVBF?usp=sharing) | [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
 
+- ```oracle``` : prediction generation on your portfolio using several prediction models (Prophet, Auto-ARIMA, Fast Fourier Transform...) | [Quickstart](https://colab.research.google.com/drive/11rMpQqW9Om82wzh71cr5k3vDQSNMZ4V1?usp=sharing) | [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
+
+- ```fundlens``` : fundamental analysis of each of the assets in your portfolio | [Quickstart](https://colab.research.google.com/drive/1t2RfYwIJDZ3YN1z5MbS41unRGxGf0dif?usp=sharing) | [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Fundlens)
 
 ## Usage
 
