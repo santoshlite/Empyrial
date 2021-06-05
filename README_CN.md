@@ -59,8 +59,8 @@ pip install empyrial
 | 特征 📰 | 状态 |
 | -- | ------ |
 | Empyrial (回溯测试+性能分析) | :star: [已发布](https://github.com/ssantoshp/Empyrial/releases/tag/v0.2.4) 2021年5月30日 |  
-| Oracle (使用几个ML模型的预测镜头)| :外星人: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/0.2.7) 于2021年6月1日 | 
-| Fundamental lens | :smile_cat: 正在开发中...  |
+| Oracle (使用几个ML模型的预测镜头)| :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/0.2.7) 于2021年6月1日 | 
+| Fundamental lens | :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/0.3.1) 于2021年6月6日 |
 | Risk lens | :smile_cat: 在发展中...  | 
 | Alpha lens | :smile_cat: 正在开发中... |
 | Sentiment lens | :smile_cat: 正在开发中... | 
@@ -70,8 +70,12 @@ pip install empyrial
 <br />
 
 以下是Empyrial的可用功能。
-- ``empyrial'``：对您的投资组合进行定量和性能分析 | [查看如何使用它](https://colab.research.google.com/drive/1cj40dDqctfWNrVz_nK-FDhdWPay7fVBF?usp=sharing)
-- ``oracle``：使用几种预测模型（预言家、Auto-ARIMA、快速傅里叶变换...）对您的投资组合进行预测| [见如何使用它](https://colab.research.google.com/drive/11rMpQqW9Om82wzh71cr5k3vDQSNMZ4V1?usp=sharing)
+
+- ``empyrial``：对你的投资组合进行定量和性能分析 | [快速入门](https://colab.research.google.com/drive/1cj40dDqctfWNrVz_nK-FDhdWPay7fVBF?usp=sharing) | [文档](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
+
+- ``oracle``：使用几种预测模型（Prophet, Auto-ARIMA, Fast Fourier Transform...）对你的投资组合进行预测| [快速启动](https://colab.research.google.com/drive/11rMpQqW9Om82wzh71cr5k3vDQSNMZ4V1?usp=sharing) | [文档](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
+
+- ``fundlens``：对你的投资组合中的每一项资产进行基本面分析 | [快速入门](https://colab.research.google.com/drive/1t2RfYwIJDZ3YN1z5MbS41unRGxGf0dif?usp=sharing) | [文档](https://github.com/ssantoshp/Empyrial/wiki/Fundlens)
 
 
 ## 用法
