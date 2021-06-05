@@ -58,7 +58,7 @@ pip install empyrial
   
 | 特征 📰 | 状态 |
 | -- | ------ |
-| Empyrial (回溯测试+性能分析) | :star: [已发布](https://github.com/ssantoshp/Empyrial/releases/tag/v0.2.4) 2021年5月30日 |  
+| Empyrial (回溯测试+性能分析) | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v0.2.4) 2021年5月30日 |  
 | Oracle (使用几个ML模型的预测镜头)| :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/0.2.7) 于2021年6月1日 | 
 | Fundamental lens | :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/0.3.1) 于2021年6月6日 |
 | Risk lens | :smile_cat: 在发展中...  | 
