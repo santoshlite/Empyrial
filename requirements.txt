@@ -1,9 +1,0 @@
-numpy
-matplotlib
-pandas_datareader
-datetime
-empyrical
-quantstats
-yfinance
-darts       
-
