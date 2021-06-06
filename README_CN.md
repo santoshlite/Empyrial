@@ -1,7 +1,7 @@
 # By Investors, For Investors.
 <br><br><br><br>
 <div align="center">
-<img src="https://i.ibb.co/RjLg9VV/logo.png"/>
+<img src="https://user-images.githubusercontent.com/61618641/120909011-98f8a180-c670-11eb-8844-2d423ba3fa9c.png"/>
 <br><br><br><br><br><br>
   
 ![](https://img.shields.io/badge/Downloads-7.2k-brightgreen)
