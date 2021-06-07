@@ -7,7 +7,7 @@
   
 ![](https://img.shields.io/badge/Downloads-7.3k-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
-![](https://img.shields.io/badge/version-0.3.1-blueviolet)
+![](https://img.shields.io/badge/version-1.3.6-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
 ![](https://img.shields.io/badge/activity-8.8/10-ff69b4)
 ![](https://img.shields.io/badge/Open%20source-💜-white)	
@@ -59,11 +59,11 @@ pip install empyrial
   
 | Feature 📰 | Status |
 | --                      | ------    |
-| Empyrial (backtesting + performance analysis) | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v0.2.4) on May 30, 2021 |
-| Oracle (prediction lens using several ML models)| :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/0.2.7) on Jun 1, 2021 | 
-| Fundamental lens | :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/0.3.1) on Jun 6, 2021 |
+| Empyrial (backtesting + performance analysis) | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.2.4) on May 30, 2021 |
+| Oracle (prediction lens using several ML models)| :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/1.2.7) on Jun 1, 2021 | 
+| Fundamental lens | :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/1.3.1) on Jun 6, 2021 |
+| Optimizer | :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/1.3.6) on Jun 7, 2021 |
 | Risk factors lens | :smile_cat: In development...  | 
-| Alpha lens | :smile_cat: In development... |
 | Sentiment lens | :smile_cat: In development... | 
   
 </div>
