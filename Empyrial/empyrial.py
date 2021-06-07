@@ -12,6 +12,7 @@ from darts import TimeSeries
 from darts.utils.missing_values import fill_missing_values
 from darts.metrics import mape, mase
 import logging
+from pypfopt import EfficientFrontier, risk_models, expected_returns, HRPOpt, objective_functions
 import yahoo_fin.stock_info as si
 from yahoofinancials import YahooFinancials
 import warnings
@@ -563,3 +564,139 @@ def fundlens(my_portfolio, period="annual"):
   appended_data = pd.DataFrame(appended_data)
   display(appended_data)
  
+#--------------------------------------------------------------------------------
+def flatten(seq):
+    l = []
+    for elt in seq:
+        t = type(elt)
+        if t is tuple or t is list:
+            for elt2 in flatten(elt):
+                l.append(elt2)
+        else:
+            l.append(elt)
+    return l
+#-------------------------------------------------------------------------------
+
+def graph_opt(my_portfolio, my_weights):
+  fig1, ax1 = plt.subplots()
+  ax1.pie(my_weights, labels=my_portfolio.portfolio, autopct='%1.1f%%',
+          shadow=False)
+  ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+  plt.title("Portfolio's allocation")
+  plt.show()
+
+#--------------------------------------------------------------------------
+def equal_weighting(my_portfolio):
+  return [1.0/len(my_portfolio.portfolio)]*len(my_portfolio.portfolio)
+#------------------------------------------------------------------------
+def efficient_frontier(my_portfolio, periods="max"):
+
+  ohlc = yf.download(my_portfolio.portfolio, period=periods, progress=False)
+  prices = ohlc["Adj Close"].dropna(how="all")
+  df = prices.filter(my_portfolio.portfolio)
+
+  mu = expected_returns.mean_historical_return(df)
+  S = risk_models.sample_cov(df)
+
+  #optimize for max sharpe ratio
+  ef = EfficientFrontier(mu, S)
+  weights = ef.max_sharpe()
+  cleaned_weights = ef.clean_weights()
+  wts = cleaned_weights.items()
+
+  result = []
+  for val in wts:
+    a, b = map(list, zip(*[val]))
+    result.append(b)
+
+  ef.portfolio_performance(verbose=True);
+  
+  return flatten(result)
+#-------------------------------------------------------------------------------
+def hrp(my_portfolio, periods="max"):
+
+  ohlc = yf.download(my_portfolio.portfolio, period=periods, progress=False)
+  prices = ohlc["Adj Close"].dropna(how="all")
+  prices = prices.filter(my_portfolio.portfolio)
+
+  rets = expected_returns.returns_from_prices(prices)
+  hrp = HRPOpt(rets)
+  hrp.optimize()
+  weights = hrp.clean_weights()
+
+  wts = weights.items()
+
+  result = []
+  for val in wts:
+    a, b = map(list, zip(*[val]))
+    result.append(b)
+
+  hrp.portfolio_performance(verbose=True);
+  
+
+  return flatten(result)
+#-----------------------------------------------------------------------------
+def mean_var(my_portfolio, vol_max, periods="max"):
+  
+  ohlc = yf.download(my_portfolio.portfolio, period=periods, progress=False)
+  prices = ohlc["Adj Close"].dropna(how="all")
+  prices = prices.filter(my_portfolio.portfolio)
+
+  mu = expected_returns.capm_return(prices)
+  S = risk_models.CovarianceShrinkage(prices).ledoit_wolf()
+
+  ef = EfficientFrontier(mu, S)
+  ef.add_objective(objective_functions.L2_reg, gamma=0.1) 
+  ef.efficient_risk(vol_max)
+  weights = ef.clean_weights()
+
+  wts = weights.items()
+
+  result = []
+  for val in wts:
+    a, b = map(list, zip(*[val]))
+    result.append(b)
+  
+  ef.portfolio_performance(verbose=True);
+
+  return flatten(result)
+#--------------------------------------------------------------------------------
+def optimizer(my_portfolio, method, vol_max=0.15, periods="max"):
+
+  returns1 = get_returns(my_portfolio.portfolio, my_portfolio.weights, start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
+  creturns1 = (returns1 + 1).cumprod()
+
+  if method == "EF":
+    wts = efficient_frontier(my_portfolio, periods)
+  
+  if method == "HRP":
+    wts = hrp(my_portfolio, periods)
+
+  if method == "MV":
+    wts = mean_var(my_portfolio, vol_max, periods)
+
+  if method == "EW":
+    wts = equal_weighting(my_portfolio)
+
+  print(wts)
+  print("\n")
+
+  graph_opt(my_portfolio, wts)
+
+  print("\n")
+
+  returns2 = get_returns(my_portfolio.portfolio, wts, start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
+  creturns2 = (returns2 + 1).cumprod()
+
+  plt.figure(figsize=(12,5))
+  plt.xlabel("Portfolio's cumulative return")
+
+  ax1 = creturns1.plot(color='blue', label='Without optimization')
+  ax2 = creturns2.plot(color='red', label='With optimization')
+
+  h1, l1 = ax1.get_legend_handles_labels()
+  h2, l2 = ax2.get_legend_handles_labels()
+
+
+  plt.legend(l1+l2, loc=2)
+  plt.show()
