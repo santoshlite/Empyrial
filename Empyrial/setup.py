@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf8") as fh:
 
 setup(
     name='empyrial',
-    version='0.3.1',
+    version='1.3.6',
     description='AI and data-driven quantitative portfolio management library for portfolio risk and performance analysis 投资组合管理',
     py_modules=['empyrial'],
     package_dir={'': 'src'},
@@ -27,7 +27,8 @@ setup(
         'yahoo-fin',
         'yahoofinancials',
         'prompt-toolkit==3.0.18',
-        'ipython==7.22.0'
+        'ipython==7.22.0',
+        'pyportfolioopt'
 
     ],
 )
