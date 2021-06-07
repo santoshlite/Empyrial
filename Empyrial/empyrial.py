@@ -10,11 +10,11 @@ import quantstats as qs
 from darts.models import*
 from darts import TimeSeries
 from darts.utils.missing_values import fill_missing_values
-from darts.metrics import mape, mase
-import logging
-from pypfopt import EfficientFrontier, risk_models, expected_returns, HRPOpt, objective_functions
+from darts.metrics import mape
 import yahoo_fin.stock_info as si
 from yahoofinancials import YahooFinancials
+from pypfopt import EfficientFrontier, risk_models, expected_returns, HRPOpt, objective_functions
+import logging
 import warnings
 from warnings import filterwarnings
 
@@ -26,13 +26,27 @@ today = dt.date.today()
 
 class Engine:
 
-  def __init__(self,start_date, portfolio, weights, benchmark=['SPY'], end_date=today):
+
+  def __init__(self,start_date, portfolio, weights=None, benchmark=['SPY'], end_date=today, optimizer=None, max_vol=0.15):
     self.start_date = start_date
     self.end_date = end_date
     self.portfolio = portfolio
     self.weights = weights
     self.benchmark = benchmark
+    self.optimizer = optimizer
+    self.max_vol = max_vol
 
+    if self.weights==None:
+      self.weights = [1.0/len(self.portfolio)]*len(self.portfolio)
+
+    if self.optimizer=="EF":
+      self.weights = efficient_frontier(self, perf="False")
+
+    if self.optimizer=="MV":
+      self.weights = mean_var(self, vol_max=max_vol, perf="False")
+
+    if self.optimizer=="HRP":
+      self.weights = hrp(self, perf="False")
 #-------------------------------------------------------------------------------------------
 def get_returns(stocks,wts, start_date, end_date=today):
   if len(stocks) > 1:
@@ -168,7 +182,7 @@ def information_ratio(returns, benchmark_returns, days=252):
 def graph_allocation(my_portfolio):
   fig1, ax1 = plt.subplots()
   ax1.pie(my_portfolio.weights, labels=my_portfolio.portfolio, autopct='%1.1f%%',
-          shadow=False, startangle=90)
+          shadow=False)
   ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
   plt.title("Portfolio's allocation")
   plt.show()
@@ -326,12 +340,6 @@ def oracle(my_portfolio, prediction_days=None, based_on='Adj Close'):
     df = pd.DataFrame(df)
     df.reset_index(level=0, inplace=True)
 
-    if prediction_days==None:
-      x = 1
-      while x/(len(df)+x) < 0.3:
-        x+=1
-        prediction_days = x
-
     def eval_model(model):
       model.fit(train)
       forecast = model.predict(len(val))
@@ -350,6 +358,12 @@ def oracle(my_portfolio, prediction_days=None, based_on='Adj Close'):
 
     series = TimeSeries.from_dataframe(df, 'Date', based_on, freq='D')
     series = fill_missing_values(series)
+
+    if prediction_days==None:
+      x = 1
+      while x/(len(series)+x) < 0.3:
+        x+=1
+        prediction_days = x
 
     train_index = round(len(df.index)*0.7)
     train_date = df.loc[[train_index]]['Date'].values
@@ -396,7 +410,7 @@ def oracle(my_portfolio, prediction_days=None, based_on='Adj Close'):
     print(mape_df.iloc[:-1,:])
   mape_df = pd.DataFrame(mape_df.iloc[:-1,:])
   print("\n")
-  print("Assets returns prediction for the next "+str(prediction_days)+" days")
+  print("Assets returns prediction for the next "+str(prediction_days)+" days (in %)")
   with pd.option_context('display.max_rows', None, 'display.max_columns', None) and pd.option_context('expand_frame_repr', False):
     print(final_df.iloc[:-1,:])
   final_df = pd.DataFrame(final_df.iloc[:-1,:])
@@ -415,13 +429,13 @@ def oracle(my_portfolio, prediction_days=None, based_on='Adj Close'):
     portfolio_pred[column] = portfolio_pred[column].sum()
 
   print("\n")
-  print("Portfolio returns prediction for the next "+str(prediction_days)+" days")
+  print("Portfolio returns prediction for the next "+str(prediction_days)+" days  (in %)")
   display(portfolio_pred.iloc[0])
   
 
   logger.disabled = False
 
-#--------------------------------------FUNDLENS-----------------------------------------------
+#---------------------------------------------------------------------
 millnames = ['','k','M','B','T']
 
 def millify(n):
@@ -563,7 +577,7 @@ def fundlens(my_portfolio, period="annual"):
 
   appended_data = pd.DataFrame(appended_data)
   display(appended_data)
- 
+
 #--------------------------------------------------------------------------------
 def flatten(seq):
     l = []
@@ -589,7 +603,7 @@ def graph_opt(my_portfolio, my_weights):
 def equal_weighting(my_portfolio):
   return [1.0/len(my_portfolio.portfolio)]*len(my_portfolio.portfolio)
 #------------------------------------------------------------------------
-def efficient_frontier(my_portfolio, periods="max"):
+def efficient_frontier(my_portfolio, periods="max", perf=True):
 
   ohlc = yf.download(my_portfolio.portfolio, period=periods, progress=False)
   prices = ohlc["Adj Close"].dropna(how="all")
@@ -608,12 +622,14 @@ def efficient_frontier(my_portfolio, periods="max"):
   for val in wts:
     a, b = map(list, zip(*[val]))
     result.append(b)
+  
 
-  ef.portfolio_performance(verbose=True);
+  if perf==True:
+    pred = ef.portfolio_performance(verbose=True);
   
   return flatten(result)
 #-------------------------------------------------------------------------------
-def hrp(my_portfolio, periods="max"):
+def hrp(my_portfolio, periods="max", perf=True):
 
   ohlc = yf.download(my_portfolio.portfolio, period=periods, progress=False)
   prices = ohlc["Adj Close"].dropna(how="all")
@@ -630,13 +646,13 @@ def hrp(my_portfolio, periods="max"):
   for val in wts:
     a, b = map(list, zip(*[val]))
     result.append(b)
-
-  hrp.portfolio_performance(verbose=True);
   
+  if perf==True:
+    hrp.portfolio_performance(verbose=True);
 
   return flatten(result)
 #-----------------------------------------------------------------------------
-def mean_var(my_portfolio, vol_max, periods="max"):
+def mean_var(my_portfolio, vol_max=0.15, periods="max", perf=True):
   
   ohlc = yf.download(my_portfolio.portfolio, period=periods, progress=False)
   prices = ohlc["Adj Close"].dropna(how="all")
@@ -656,8 +672,9 @@ def mean_var(my_portfolio, vol_max, periods="max"):
   for val in wts:
     a, b = map(list, zip(*[val]))
     result.append(b)
-  
-  ef.portfolio_performance(verbose=True);
+
+  if perf==True:
+    ef.portfolio_performance(verbose=True);
 
   return flatten(result)
 #--------------------------------------------------------------------------------
@@ -675,8 +692,8 @@ def optimizer(my_portfolio, method, vol_max=0.15, periods="max"):
   if method == "MV":
     wts = mean_var(my_portfolio, vol_max, periods)
 
-  if method == "EW":
-    wts = equal_weighting(my_portfolio)
+  if optimizer== "EW":
+    wts = equal_weighting(my_portfolio, periods)
 
   print(wts)
   print("\n")
