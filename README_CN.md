@@ -159,6 +159,16 @@ Output:
 
 **Optimizer**
 
+有3个优化器可用。
+
+- ````"EF"````: **全球有效前沿**
+
+- ```"MV"```: **平均波动率** （在这种情况下，你必须定义一个你不想超过的最大波动率）。
+
+- ```"HRP"```: **分层风险平价**。
+
+注意：默认的优化器是**平等权重**。
+
 有两种方法来使用Empyrial的优化器。
 
 1) 直接用引擎优化分配
@@ -170,6 +180,10 @@ portfolio = Engine(
       start_date = "2018-01-01",
       portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"],
       optimizer = "EF"
+      
+      #for Mean Variance
+      #optimizer = "MV"
+      #max_vol = 0.15   
 )
 
 portfolio.weights
@@ -192,6 +206,9 @@ portfolio = Engine(
 )
 
 optimizer(portfolio, "EF")
+
+#for mean variance
+optimizer(portfolio, "MV", vol_max=0.15)
 ```
 
 Output:
