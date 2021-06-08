@@ -96,7 +96,12 @@ portfolio = Engine(
 
 empyrial(portfolio)
 ```
-[See the output](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
+
+Output:
+
+<img src="https://user-images.githubusercontent.com/61618641/120065794-8203ef00-c073-11eb-84a8-8dda6908da4c.png"/>
+
+[>> See the full output](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
 
 <br />
 
@@ -108,14 +113,22 @@ from empyrial import oracle, Engine
 portfolio = Engine(    
                   start_date= "2020-06-09", 
                   portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
-                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #equal weighting by default
-                  benchmark = ["SPY"] #optionnal
+                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], 
+                  benchmark = ["SPY"] 
 )
 
 oracle(portfolio)
 ```
 
-[See the output](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
+Output:
+
+<div align="center">
+	
+![2021-06-08_22h39_56](https://user-images.githubusercontent.com/61618641/121254539-aa2cf280-c8aa-11eb-809e-e20174f5e742.png)
+
+</div>
+
+[Learn how to nterpret these predictions](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
 
 <br />
 
@@ -134,7 +147,13 @@ portfolio = Engine(
 fundlens(portfolio)
 ```
 
-[See the output](https://github.com/ssantoshp/Empyrial/wiki/Fundlens)
+Output:
+
+<div align="center"/>
+
+<img src="https://camo.githubusercontent.com/7cfaebabf9280c7f13ebd9af98585841aaf14e9e34e118a6b434ed45e23acb47/68747470733a2f2f692e6962622e636f2f51486259316e332f323032312d30362d30362d30316831382d34382e706e67"/>
+
+</div>
 
 <br />
 
