@@ -72,13 +72,17 @@ pip install empyrial
 
 Here are the functions available with Empyrial:
 
-- ```empyrial``` : quantitative portfolio analytics | [Quickstart](https://colab.research.google.com/drive/1cj40dDqctfWNrVz_nK-FDhdWPay7fVBF?usp=sharing) | [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
+- ```empyrial``` : **quantitative portfolio analytics** | [Quickstart](https://colab.research.google.com/drive/1cj40dDqctfWNrVz_nK-FDhdWPay7fVBF?usp=sharing) | [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
 
-- ```oracle``` : prediction generation on your portfolio using several prediction models (Prophet, Auto-ARIMA, Fast Fourier Transform...) | [Quickstart](https://colab.research.google.com/drive/11rMpQqW9Om82wzh71cr5k3vDQSNMZ4V1?usp=sharing) | [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
+- ```oracle``` : **prediction generation** on your portfolio using several prediction models (Prophet, Auto-ARIMA, Fast Fourier Transform...) | [Quickstart](https://colab.research.google.com/drive/11rMpQqW9Om82wzh71cr5k3vDQSNMZ4V1?usp=sharing) | [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
 
-- ```fundlens``` : fundamental analysis of each of the assets in your portfolio | [Quickstart](https://colab.research.google.com/drive/1t2RfYwIJDZ3YN1z5MbS41unRGxGf0dif?usp=sharing) | [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Fundlens)
+- ```fundlens``` : **fundamental analysis** of each of the assets in your portfolio | [Quickstart](https://colab.research.google.com/drive/1t2RfYwIJDZ3YN1z5MbS41unRGxGf0dif?usp=sharing) | [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Fundlens)
+
+- ```optimizer``` : **optimize the asset's allocation** in your portfolio | [Quickstart](https://colab.research.google.com/drive/12CfYznbdabSDYUbtSwamqyILOIwR7Sje?usp=sharing)
 
 ## Usage
+
+**Empyrial**
 
 ```py
 from empyrial import empyrial, Engine
@@ -86,63 +90,102 @@ from empyrial import empyrial, Engine
 portfolio = Engine(    
                   start_date= "2020-06-09", 
                   portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
-                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], 
+                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #equal weighting by default
                   benchmark = ["SPY"] 
 )
 
 empyrial(portfolio)
 ```
+[See the output](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
+
+<br />
+
+**Oracle**
+
+```py
+from empyrial import oracle, Engine
+
+portfolio = Engine(    
+                  start_date= "2020-06-09", 
+                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
+                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #equal weighting by default
+                  benchmark = ["SPY"] #optionnal
+)
+
+oracle(portfolio)
+```
+
+[See the output](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
+
+<br />
+
+**Fundlens**
+
+```py
+from empyrial import fundlens, Engine
+
+portfolio = Engine(    
+                  start_date= "2020-06-09", 
+                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
+                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #optional
+                  benchmark = ["SPY"] #optional
+)
+
+fundlens(portfolio)
+```
+
+[See the output](https://github.com/ssantoshp/Empyrial/wiki/Fundlens)
+
+<br />
+
+**Optimizer**
+
+There is two ways to use the Empyrial's optimizer :
+
+1) Optimize allocation directly with Engine
+```py
+from empyrial import*
+
+portfolio = Engine(
+      start_date = "2018-01-01",
+      portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"],
+      optimizer = "EF"
+)
+
+portfolio.weights
+```
 
 Output:
 
-![report](https://user-images.githubusercontent.com/61618641/120065794-8203ef00-c073-11eb-84a8-8dda6908da4c.png)<br/><br /><br />
+```
+[0.31409, 0.0, 0.03472, 0.00046, 0.0, 0.0, 0.069, 0.08831, 0.00854, 0.48489]
+```
+
+2) See the performance of an optimizer
+```py
+from empyrial import*
+
+portfolio = Engine(
+      start_date = "2018-01-01",
+      portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"]
+)
+
+optimizer(portfolio, "EF")
+```
+
+Output:
 
 <div align="center">
-  
-  ![return](https://user-images.githubusercontent.com/61618641/120065822-afe93380-c073-11eb-915d-8b8b27c6fd38.png)<br /><br /><br />
+	
+![2021-06-08_22h15_09](https://user-images.githubusercontent.com/61618641/121251316-04c44f80-c8a7-11eb-9451-e96b9fd7eff5.png)
 
-  ![creturn](https://user-images.githubusercontent.com/61618641/120065881-ea52d080-c073-11eb-84a5-11da5dbf0bcb.png)<br /><br /><br />
+</div>
 
-  ![heatmap](https://user-images.githubusercontent.com/61618641/120065930-2ab24e80-c074-11eb-8861-e1996a950774.png)<br /><br /><br />
+<br />
 
-  ![drawdonw](https://user-images.githubusercontent.com/61618641/120065973-6cdb9000-c074-11eb-99cb-f3ee8110576f.png)<br /><br /><br />
-
-  ![top](https://user-images.githubusercontent.com/61618641/120065975-6fd68080-c074-11eb-93f9-cbb3f2dd859d.png)<br /><br /><br />
-
-  ![rolling](https://user-images.githubusercontent.com/61618641/120065977-74029e00-c074-11eb-92c6-8d0bee2a6234.png)
- </div>
- 
 ## Download the tearsheet
 
-The tearsheet will downloaded as a PDF or a HTML file.
-
-### On Google Colab
-
-Create another cell in your program and run that:
-
-```py
-!wget -nc https://raw.githubusercontent.com/brpy/colab-pdf/master/colab_pdf.py
-from colab_pdf import colab_pdf
-colab_pdf('name_of_the_actual_file.ipynb')
-```
-
-### On a Jupyter Notebook
-
-Create another cell in your program and run:
-
-```py
-pip install nbconvert
-```
-
-Go to Files > Download as > HTML or PDF via LaTeX
-
-(For Visual Studio Code: Click on the "export as" icon in the upper right corner)
-
-If you get an error downloading it as a PDF, download it as a HTML file.
-
-Now open that your_notebook_name.html file (click on it). It will be opened in a new tab of your browser.
-
-Now go to print option (right-click on the page). From here you can save this file in pdf file format.
+Want to download of a tearsheet of the analysis as a PDF or a HTML file? You can check the [documentation](https://github.com/ssantoshp/Empyrial/wiki/Downloading-the-generated-tearsheet) to see how to do it :)
 
 
 ## Contribution and Issues
