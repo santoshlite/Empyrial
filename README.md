@@ -128,7 +128,7 @@ Output:
 
 </div>
 
-[Learn how to nterpret these predictions](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
+[Learn how to interpret these predictions](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
 
 <br />
 
