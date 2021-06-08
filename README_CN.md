@@ -72,11 +72,171 @@ pip install empyrial
 
 以下是Empyrial的可用功能。
 
-- ``empyrial```` : **量化投资组合分析** | [快速入门](https://colab.research.google.com/drive/1cj40dDqctfWNrVz_nK-FDhdWPay7fVBF?usp=sharing) | [文档](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
+- ```empyrial``` : **量化投资组合分析** | [Demo](https://colab.research.google.com/drive/1cj40dDqctfWNrVz_nK-FDhdWPay7fVBF?usp=sharing) | [文档](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
 
-- ``oracle'`` : **预测生成**对你的投资组合使用几种预测模型（先知，自动-ARIMA，快速傅里叶变换...） | [快速入门](https://colab.research.google.com/drive/11rMpQqW9Om82wzh71cr5k3vDQSNMZ4V1?usp=sharing) | [文档](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
+- ```oracle``` : **预测生成**对你的投资组合使用几种预测模型（先知，自动-ARIMA，快速傅里叶变换...） | [Demo](https://colab.research.google.com/drive/11rMpQqW9Om82wzh71cr5k3vDQSNMZ4V1?usp=sharing) | [文档](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
 
-- ``fundlens``` : **对您的投资组合中的每一项资产进行**基本面分析 | [快速入门](https://colab.research.google.com/drive/1t2RfYwIJDZ3YN1z5MbS41unRGxGf0dif?usp=sharing) | [文档](https://github.com/ssantoshp/Empyrial/wiki/Fundlens)
+- ```fundlens``` : **对您的投资组合中的每一项资产进行**基本面分析 | [Demo](https://colab.research.google.com/drive/1t2RfYwIJDZ3YN1z5MbS41unRGxGf0dif?usp=sharing) | [文档](https://github.com/ssantoshp/Empyrial/wiki/Fundlens)
 
-- ``优化器'``。**优化你的投资组合中的资产配置** | [快速入门](https://colab.research.google.com/drive/12CfYznbdabSDYUbtSwamqyILOIwR7Sje?usp=sharing)
+- ```optimizer```。**优化你的投资组合中的资产配置** | [Demo](https://colab.research.google.com/drive/12CfYznbdabSDYUbtSwamqyILOIwR7Sje?usp=sharing)
 
+## 使用方法
+
+**Empyrial**
+
+```py
+from empyrial import empyrial, Engine
+
+portfolio = Engine(    
+                  start_date= "2020-06-09", 
+                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
+                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #默认情况下是等权重
+                  benchmark = ["SPY"] 
+)
+
+empyrial(portfolio)
+```
+
+Output:
+
+<img src="https://user-images.githubusercontent.com/61618641/120065794-8203ef00-c073-11eb-84a8-8dda6908da4c.png"/>
+
+[>> See the full output](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
+
+<br />
+
+**Oracle**
+
+```py
+from empyrial import oracle, Engine
+
+portfolio = Engine(    
+                  start_date= "2020-06-09", 
+                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
+                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], 
+                  benchmark = ["SPY"] 
+)
+
+oracle(portfolio)
+```
+
+Output:
+
+<div align="center">
+	
+![2021-06-08_22h39_56](https://user-images.githubusercontent.com/61618641/121254539-aa2cf280-c8aa-11eb-809e-e20174f5e742.png)
+
+</div>
+
+[了解如何解释这些预测](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
+
+<br />
+
+**Fundlens**
+
+```py
+from empyrial import fundlens, Engine
+
+portfolio = Engine(    
+                  start_date= "2020-06-09", 
+                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
+                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], # 可选
+                  benchmark = ["SPY"] # 可选
+)
+
+fundlens(portfolio)
+```
+
+Output:
+
+<div align="center"/>
+
+<img src="https://camo.githubusercontent.com/7cfaebabf9280c7f13ebd9af98585841aaf14e9e34e118a6b434ed45e23acb47/68747470733a2f2f692e6962622e636f2f51486259316e332f323032312d30362d30362d30316831382d34382e706e67"/>
+
+</div>
+
+<br />
+
+**Optimizer**
+
+有两种方法来使用Empyrial的优化器。
+
+1) 直接用引擎优化分配
+
+```py
+from empyrial import*
+
+portfolio = Engine(
+      start_date = "2018-01-01",
+      portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"],
+      optimizer = "EF"
+)
+
+portfolio.weights
+```
+
+Output:
+
+```
+[0.31409, 0.0, 0.03472, 0.00046, 0.0, 0.0, 0.069, 0.08831, 0.00854, 0.48489]
+```
+
+2) 查看一个优化器的性能
+
+```py
+from empyrial import*
+
+portfolio = Engine(
+      start_date = "2018-01-01",
+      portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"]
+)
+
+optimizer(portfolio, "EF")
+```
+
+Output:
+
+<div align="center">
+	
+![2021-06-08_22h15_09](https://user-images.githubusercontent.com/61618641/121251316-04c44f80-c8a7-11eb-9451-e96b9fd7eff5.png)
+
+</div>
+
+<br />
+
+##下载泪水表
+
+想以PDF或HTML文件的形式下载分析报告的泪页吗？你可以查看[文档](https://github.com/ssantoshp/Empyrial/wiki/Downloading-the-generated-tearsheet)，看看如何做到这一点 :)
+
+
+## 贡献和问题
+
+- [Create Issue](https://github.com/ssantoshp/Empyrial/issues/new/choose) - 对于较大的改动（如新功能、大型重构等），最好先开一个问题来讨论，而较小的改进（如文档改进、bug修复等）可以直接发送到PR。
+
+- Fork [Empyrial](https://github.com/ssantoshp/Empyrial) - 点击右上角的**Fork**按钮
+
+- 克隆你自己的分叉: ```git clone https://github.com/ssantoshp/Empyrial.git```。
+
+	*如果你的分叉已经过期，你需要手动同步。[同步方法](https://help.github.com/articles/syncing-a-fork/)
+
+- Empyrial使用Github来托管其源代码，如果您想贡献代码，请使用github的PR（拉动请求）程序。[pull requests](https://github.com/ssantoshp/Empyrial/pulls)。它将等待审查、检查/修改和合并!
+
+## 贡献者和鸣谢
+
+感谢以下为这个项目做出贡献的人/组织。
+
+- [@rslopes](https://github.com/rslopes)
+- [@TonyZhangkz](https://github.com/TonyZhangkz)
+- [@rakeshbhat9](https://github.com/rakeshbhat9)
+- [@Haizzz](https://github.com/Haizzz)
+- [quantstats](https://github.com/ranaroussi/quantstats)
+- [quantopian](https://github.com/quantopian)
+- [unit8co](https://github.com/unit8co)
+
+## 联系
+
+欢迎通过电子邮件（santoshpassoubady@gmail.com）或在Empyrial的[讨论空间](https://github.com/ssantoshp/Empyrial/discussions)联系我们。
+
+## 许可证
+
+MIT
