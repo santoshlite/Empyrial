@@ -159,6 +159,16 @@ Output:
 
 **Optimizer**
 
+There are 3 optimizers available:
+
+- ```"EF"```: **Global Efficient Frontier**
+
+- ```"MV"```: **Mean-Variance** (in this case, you'll have to define a max volatility that you don't want to exceed)
+
+- ```"HRP"```: **Hierarchical Risk Parity**
+
+Note: the default optimizer is **equal weighting**
+
 There is two ways to use the Empyrial's optimizer :
 
 1) Optimize allocation directly with Engine
@@ -169,6 +179,10 @@ portfolio = Engine(
       start_date = "2018-01-01",
       portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"],
       optimizer = "EF"
+      
+      #for Mean Variance
+      #optimizer = "MV"
+      #max_vol = 0.15    
 )
 
 portfolio.weights
@@ -190,6 +204,9 @@ portfolio = Engine(
 )
 
 optimizer(portfolio, "EF")
+
+#for mean variance
+optimizer(portfolio, "MV", vol_max=0.15)
 ```
 
 Output:
