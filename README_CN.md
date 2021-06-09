@@ -53,6 +53,10 @@ Empyrial通过带来不同的金融方法，如**风险分析**、**定量分析
 pip install empyrial
 ```
 
+目前，**强烈建议在jupyter notebook/google colab**中使用Empyrial。
+
+注意：安装时，它可能要求你重新启动运行时。我们建议你这样做，因为有时不这样做会导致莫名其妙的错误......
+	
 ## 功能
 
 <div align="center">
