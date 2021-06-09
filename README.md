@@ -47,7 +47,9 @@ With Empyrial, you can easily analyze security or a portfolio with these differe
 
 ## Installation
 
-To install Empyrial, you should do:
+We recommend to first setup a clean Python environment for your project with at least Python 3.7 using your favorite tool (conda, venv, virtualenv with or without virtualenvwrapper). You don't need this if you are on Google colab.
+
+Once your environment is set up you can install Empyrial using pip:
 
 ```
 pip install empyrial
