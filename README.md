@@ -55,6 +55,10 @@ Once your environment is set up you can install Empyrial using pip:
 pip install empyrial
 ```
 
+For the moment, it is **strongly advised to use Empyrial in a jupyter notebook/google colab**.
+
+Note: when installed, it might ask you to restart the runtime. We advise you to do it because sometimes, not doing it can result in an inexplicable bug…
+
 ## Features
 
 <div align="center">
