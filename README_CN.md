@@ -47,7 +47,7 @@ Empyrial通过带来不同的金融方法，如**风险分析**、**定量分析
 
 ## 安装
 
-要安装Empyrial，你应该这样做。
+我们建议首先使用你喜欢的工具（[conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html "conda-env"), [venv](https://docs.python.org/3/library/venv.html), [virtualenv](https://virtualenv.pypa.io/en/latest/) with or without [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/)）为你的项目设置一个干净的Python环境，至少Python 3.7。如果你是在Google colab上，你就不需要这个。
 
 ```
 pip install empyrial
