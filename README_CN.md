@@ -3,7 +3,7 @@
 <br><br><br><br>
 <div align="center">
 <img src="https://user-images.githubusercontent.com/61618641/120909011-98f8a180-c670-11eb-8844-2d423ba3fa9c.png"/>
-<br><br><br><br><br><br><br><br
+<br><br><br><br><br><br><br><br>
   
 ![](https://img.shields.io/badge/Downloads-8.5k/month-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
