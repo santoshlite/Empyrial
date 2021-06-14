@@ -5,9 +5,9 @@
 <img src="https://user-images.githubusercontent.com/61618641/120909011-98f8a180-c670-11eb-8844-2d423ba3fa9c.png"/>
 <br><br><br><br><br><br><br><br>
   
-![](https://img.shields.io/badge/Downloads-8.5k/month-brightgreen)
+![](https://img.shields.io/badge/Downloads-9k/month-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
-![](https://img.shields.io/badge/version-1.3.6-blueviolet)
+![](https://img.shields.io/badge/version-1.4.2-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
 ![](https://img.shields.io/badge/activity-8.8/10-ff69b4)
 ![](https://img.shields.io/badge/Open%20source-💜-白色)	
