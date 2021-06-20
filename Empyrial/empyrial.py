@@ -17,6 +17,9 @@ from pypfopt import EfficientFrontier, risk_models, expected_returns, HRPOpt, ob
 import logging
 import warnings
 from warnings import filterwarnings
+from IPython.display import display
+import copy
+
 
 # ------------------------------------------------------------------------------------------
 
@@ -478,35 +481,62 @@ def fundlens(my_portfolio, period="annual"):
       FCF = "NaN"
 
     #profit margins
-    profit_margins = data['Value'].iloc[31]
+    try:
+      profit_margins = data['Value'].iloc[31]
+    except KeyError:
+      profit_margins = None
 
     #book value
-    book_value = yahoo_financials.get_book_value() 
+    try:
+      book_value = yahoo_financials.get_book_value() 
+    except KeyError:
+      book_value = None
 
     #operating income
-    operating_income = yahoo_financials.get_operating_income()
+    try:
+      operating_income = yahoo_financials.get_operating_income()
+    except KeyError:
+      operating_income=None
 
     #net income
-    net_income = yahoo_financials.get_net_income()
+    try:
+      net_income = yahoo_financials.get_net_income()
+    except KeyError:
+      net_income = None
 
     #D/E ratio
-    debt_to_equity = data['Value'].iloc[46]
+    try:
+      debt_to_equity = data['Value'].iloc[46]
+    except KeyError:
+      debt_to_equity = None
 
 
     #total current liabilities
     tot_c_liab = df.iloc[:,0]['totalCurrentLiabilities']
 
     #total current assets
-    tot_c_assets = df.iloc[:,0]['totalCurrentAssets']
+    try:
+      tot_c_assets = df.iloc[:,0]['totalCurrentAssets']
+    except KeyError:
+      tot_c_assets = None   
 
     #inventory
-    inventory = df.iloc[:,0]['inventory']
+    try:
+      inventory = df.iloc[:,0]['inventory']
+    except KeyError:
+      inventory = None
 
     #total liabilities
-    tot_liab = df.iloc[:,0]['totalLiab']
+    try:
+      tot_liab = df.iloc[:,0]['totalLiab']
+    except KeyError:
+      tot_liab = None
   
     #total assets
-    tot_assets = df.iloc[:,0]['totalAssets']
+    try:
+      tot_assets = df.iloc[:,0]['totalAssets']
+    except KeyError:
+      tot_assets = None
 
     #quick ratio
     try:
@@ -516,7 +546,17 @@ def fundlens(my_portfolio, period="annual"):
     
     #total debts
     try:
-      tot_debt = df.iloc[:,0]['shortLongTermDebt'] + df.iloc[:,0]['longTermDebt']
+      shortlongtermdebt = df.iloc[:,0]['shortLongTermDebt']
+    except KeyError:
+      shortlongtermdebt = None
+      
+    try:
+      longtermdebt = df.iloc[:,0]['longTermDebt']
+    except KeyError:
+      longtermdebt = None
+
+    try:
+      tot_debt = shortlongtermdebt + longtermdebt
     except TypeError:
       tot_debt = "None"
 
@@ -548,12 +588,28 @@ def fundlens(my_portfolio, period="annual"):
 
     try:
       controversy = ticker.sustainability.iloc[:,0]['highestControversy']
+    except TypeError:
+      controversy = "None"
+
+    try:
       social_score = ticker.sustainability.iloc[:,0]['socialScore']
+    except TypeError:
+      social_score = "None"
+
+    try:
       env_score = ticker.sustainability.iloc[:,0]['environmentScore']
+    except TypeError:
+      env_score = "None"
+
+    try:
       gov_score = ticker.sustainability.iloc[:,0]['governanceScore']
+    except TypeError:
+      gov_score = "None"
+    
+    try:
       esg_perf = ticker.sustainability.iloc[:,0]['esgPerformance']
-    except AttributeError:
-      pass
+    except TypeError:
+      esg_perf = "None"
 
     datax = [ ['Market cap', market_cap], ['Current ratio', data['Value'].iloc[47]], ['Quick ratio', quick_ratio], ['Debt ratio', tot_liab/tot_assets],
                                                                                       
@@ -591,14 +647,15 @@ def flatten(seq):
     return l
 #-------------------------------------------------------------------------------
 
-def graph_opt(my_portfolio, my_weights):
+def graph_opt(my_portfolio, my_weights, pie_size, font_size):
   fig1, ax1 = plt.subplots()
-  ax1.pie(my_weights, labels=my_portfolio.portfolio, autopct='%1.1f%%',
+  fig1.set_size_inches(pie_size, pie_size)
+  ax1.pie(my_weights, labels=my_portfolio, autopct='%1.1f%%',
           shadow=False)
   ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+  plt.rcParams['font.size'] = font_size
   plt.title("Portfolio's allocation")
   plt.show()
-
 #--------------------------------------------------------------------------
 def equal_weighting(my_portfolio):
   return [1.0/len(my_portfolio.portfolio)]*len(my_portfolio.portfolio)
@@ -678,10 +735,12 @@ def mean_var(my_portfolio, vol_max=0.15, periods="max", perf=True):
 
   return flatten(result)
 #--------------------------------------------------------------------------------
-def optimizer(my_portfolio, method, vol_max=0.15, periods="max"):
+def optimizer(my_portfolio, method, vol_max=0.15, periods="max", pie_size=5, font_size=14):
 
   returns1 = get_returns(my_portfolio.portfolio, my_portfolio.weights, start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
   creturns1 = (returns1 + 1).cumprod()
+
+  port = copy.deepcopy(my_portfolio.portfolio)
 
   if method == "EF":
     wts = efficient_frontier(my_portfolio, periods)
@@ -698,14 +757,24 @@ def optimizer(my_portfolio, method, vol_max=0.15, periods="max"):
   print(wts)
   print("\n")
 
-  graph_opt(my_portfolio, wts)
+  indices = [i for i, x in enumerate(wts) if x == 0.0]
+
+  while 0.0 in wts: wts.remove(0.0)
+
+
+
+  for i in sorted(indices, reverse=True):
+    del port[i]
+
+    
+  graph_opt(port, wts, pie_size, font_size)
 
   print("\n")
 
-  returns2 = get_returns(my_portfolio.portfolio, wts, start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
+  returns2 = get_returns(port, wts, start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
   creturns2 = (returns2 + 1).cumprod()
 
-  plt.figure(figsize=(12,5))
+  plt.figure(figsize=(20,10))
   plt.xlabel("Portfolio's cumulative return")
 
   ax1 = creturns1.plot(color='blue', label='Without optimization')
@@ -717,3 +786,4 @@ def optimizer(my_portfolio, method, vol_max=0.15, periods="max"):
 
   plt.legend(l1+l2, loc=2)
   plt.show()
+
