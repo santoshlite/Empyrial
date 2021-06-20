@@ -5,13 +5,13 @@
 <img src="https://user-images.githubusercontent.com/61618641/120909011-98f8a180-c670-11eb-8844-2d423ba3fa9c.png"/>
 <br><br><br><br><br><br>
   
-![](https://img.shields.io/badge/Downloads-9k/month-brightgreen)
+![](https://img.shields.io/badge/Downloads-10k/month-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
 ![](https://img.shields.io/badge/version-1.4.2-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
 ![](https://img.shields.io/badge/activity-8.8/10-ff69b4)
 ![](https://img.shields.io/badge/Open%20source-💜-white)	
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ssantoshp/GetStartedEmpyrial/main?filepath=get_started_with_empyrial.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1NqTkkP2u1p1g8W8erU-Y-rSSVbPUDvq2?usp=sharing)
   
  </div>
  
@@ -103,11 +103,7 @@ portfolio = Engine(
 empyrial(portfolio)
 ```
 
-Output:
-
-<img src="https://user-images.githubusercontent.com/61618641/120065794-8203ef00-c073-11eb-84a8-8dda6908da4c.png"/>
-
-[>> See the full output](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
+[>> See the output](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
 
 <br />
 
@@ -126,15 +122,7 @@ portfolio = Engine(
 oracle(portfolio)
 ```
 
-Output:
-
-<div align="center">
-	
-![2021-06-08_22h39_56](https://user-images.githubusercontent.com/61618641/121254539-aa2cf280-c8aa-11eb-809e-e20174f5e742.png)
-
-</div>
-
-[Learn how to interpret these predictions](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
+[>> See the output](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
 
 <br />
 
@@ -153,13 +141,7 @@ portfolio = Engine(
 fundlens(portfolio)
 ```
 
-Output:
-
-<div align="center"/>
-
-<img src="https://camo.githubusercontent.com/7cfaebabf9280c7f13ebd9af98585841aaf14e9e34e118a6b434ed45e23acb47/68747470733a2f2f692e6962622e636f2f51486259316e332f323032312d30362d30362d30316831382d34382e706e67"/>
-
-</div>
+[>> See the output](https://github.com/ssantoshp/Empyrial/wiki/Fundlens)
 
 <br />
 
@@ -184,11 +166,7 @@ from empyrial import*
 portfolio = Engine(
       start_date = "2018-01-01",
       portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"],
-      optimizer = "EF"
-      
-      #for Mean Variance
-      #optimizer = "MV"
-      #max_vol = 0.15    
+      optimizer = "EF" 
 )
 
 portfolio.weights
@@ -209,19 +187,16 @@ portfolio = Engine(
       portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"]
 )
 
+#for efficient frontier
 optimizer(portfolio, "EF")
+
+#for hierarchical risk parity
+optimizer(portfolio, "HRP")
 
 #for mean variance
 optimizer(portfolio, "MV", vol_max=0.15)
+
 ```
-
-Output:
-
-<div align="center">
-	
-![2021-06-08_22h15_09](https://user-images.githubusercontent.com/61618641/121251316-04c44f80-c8a7-11eb-9451-e96b9fd7eff5.png)
-
-</div>
 
 <br />
 
