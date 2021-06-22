@@ -155,11 +155,12 @@ There are 3 optimizers available:
 
 - ```"HRP"```: **Hierarchical Risk Parity**
 
-Note: the default optimizer is **equal weighting**
+_Note: the default optimizer is **equal weighting**_
 
 There is two ways to use the Empyrial's optimizer :
 
 1) Optimize allocation directly with Engine
+
 ```py
 from empyrial import*
 
@@ -177,6 +178,7 @@ Output:
 ```
 [0.31409, 0.0, 0.03472, 0.00046, 0.0, 0.0, 0.069, 0.08831, 0.00854, 0.48489]
 ```
+
 
 2) See the performance of an optimizer
 ```py
@@ -223,17 +225,32 @@ Want to download of a tearsheet of the analysis as a PDF or a HTML file? You can
 
 - Empyrial uses Github to host its source code, if you wish to contribute code please use the PR (Pull Request) process of github: [pull requests](https://github.com/ssantoshp/Empyrial/pulls). It'll waiting for review, checked/modified and be merged!
 
-## Contributors and Acknowledgments
+## Contributors ✨
 
-Thanks to the following people/organizations who have contributed to this project:
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
-- [@rslopes](https://github.com/rslopes)
-- [@TonyZhangkz](https://github.com/TonyZhangkz)
-- [@rakeshbhat9](https://github.com/rakeshbhat9)
-- [@Haizzz](https://github.com/Haizzz)
-- [quantstats](https://github.com/ranaroussi/quantstats)
-- [quantopian](https://github.com/quantopian)
-- [unit8co](https://github.com/unit8co)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
+
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/rslopes"><img src="https://avatars.githubusercontent.com/u/24928343?v=4" width="100px;" alt=""/><br /><sub><b>Renan Lopes</b></sub></a><br /><a title="Code">💻</a> <a title="Bug report">🐛</a></td>
+    <td align="center"><a href="https://github.com/rakeshbhat9"><img src="https://avatars.githubusercontent.com/u/11472305?v=4" width="100px;" alt=""/><br /><sub><b>Rakesh Bhat</b></sub></a><br /><a title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Haizzz"><img src="https://avatars.githubusercontent.com/u/5275680?v=4" width="100px;" alt=""/><br /><sub><b>Anh Le</b></sub></a><br /><a title="Bug report">🐛</a></td>
+    <td align="center"><a href="https://github.com/TonyZhangkz"><img src="https://avatars.githubusercontent.com/u/65281213?v=4" width="100px;" alt=""/><br /><sub><b>Tony Zhang</b></sub></a><br /><a title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/diegodalvarez"><img src="https://avatars.githubusercontent.com/u/48641554?v=4" width="100px;" alt=""/><br /><sub><b>Diego Alvarez</b></sub></a><br /><a title="Code">💻</a></td>
+   
+  </tr>
+</table>
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. **Contributions of any kind are welcome!**
+
 
 ## Contact
 
