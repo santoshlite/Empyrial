@@ -588,27 +588,27 @@ def fundlens(my_portfolio, period="annual"):
 
     try:
       controversy = ticker.sustainability.iloc[:,0]['highestControversy']
-    except TypeError:
+    except Exception as e:
       controversy = "None"
 
     try:
       social_score = ticker.sustainability.iloc[:,0]['socialScore']
-    except TypeError:
+    except Exception as e:
       social_score = "None"
 
     try:
       env_score = ticker.sustainability.iloc[:,0]['environmentScore']
-    except TypeError:
+    except Exception as e:
       env_score = "None"
 
     try:
       gov_score = ticker.sustainability.iloc[:,0]['governanceScore']
-    except TypeError:
+    except Exception as e:
       gov_score = "None"
     
     try:
       esg_perf = ticker.sustainability.iloc[:,0]['esgPerformance']
-    except TypeError:
+    except Exception as e:
       esg_perf = "None"
 
     datax = [ ['Market cap', market_cap], ['Current ratio', data['Value'].iloc[47]], ['Quick ratio', quick_ratio], ['Debt ratio', tot_liab/tot_assets],
