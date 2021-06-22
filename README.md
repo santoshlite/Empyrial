@@ -198,12 +198,18 @@ optimizer(portfolio, "MV", vol_max=0.15)
 
 ```
 
-<br />
 
 ## Download the tearsheet
 
 Want to download of a tearsheet of the analysis as a PDF or a HTML file? You can check the [documentation](https://github.com/ssantoshp/Empyrial/wiki/Downloading-the-generated-tearsheet) to see how to do it :)
 
+## Stargazers over time
+
+<div align="center"<
+	
+[![Stargazers over time](https://starchart.cc/ssantoshp/empyrial.svg)](https://starchart.cc/ssantoshp/empyrial)
+	
+</div>
 
 ## Contribution and Issues
 
