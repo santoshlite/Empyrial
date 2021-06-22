@@ -122,7 +122,7 @@ portfolio = Engine(
 oracle(portfolio)
 ```
 
-[>> See the output](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
+[>> See the output](https://camo.githubusercontent.com/bd2efb1afccb5454aec60f21cbd3bdd1e1ea55b2e5905e8eeb2db3c8a7f363c9/68747470733a2f2f692e6962622e636f2f5750386e6b316d2f323032312d30362d30322d32326831372d30382e706e67)
 
 <br />
 
@@ -141,9 +141,8 @@ portfolio = Engine(
 fundlens(portfolio)
 ```
 
-[>> See the output](https://github.com/ssantoshp/Empyrial/wiki/Fundlens)
+[>> See the output](https://camo.githubusercontent.com/7cfaebabf9280c7f13ebd9af98585841aaf14e9e34e118a6b434ed45e23acb47/68747470733a2f2f692e6962622e636f2f51486259316e332f323032312d30362d30362d30316831382d34382e706e67)
 
-<br />
 
 **Optimizer**
 
@@ -199,7 +198,7 @@ optimizer(portfolio, "HRP")
 optimizer(portfolio, "MV", vol_max=0.15)
 
 ```
-
+[>> See the output](https://user-images.githubusercontent.com/61618641/121251316-04c44f80-c8a7-11eb-9451-e96b9fd7eff5.png)
 
 ## Download the tearsheet
 
