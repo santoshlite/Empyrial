@@ -206,9 +206,9 @@ Want to download of a tearsheet of the analysis as a PDF or a HTML file? You can
 
 ## Stargazers over time
 
-<div align="center"<
+<div align="center">
 	
-[![Stargazers over time](https://starchart.cc/ssantoshp/empyrial.svg)](https://starchart.cc/ssantoshp/empyrial)
+![Stargazers over time](https://starchart.cc/ssantoshp/empyrial.svg)
 	
 </div>
 
