@@ -848,7 +848,7 @@ def optimizer(my_portfolio, method, vol_max=0.15, pie_size=5, font_size=14):
 def check_schedule(rebalance):
     
     #this is the list of acceptable rebalancing schedules
-    acceptable_schedules = ["6mo","1y","2y"]
+    acceptable_schedules = ["6mo","1y","2y", "quarterly", "monthly"]
     
     #we want to loop through the acceptable schedules to see if the user inputted the right rebalance
     for i in acceptable_schedules:
@@ -891,6 +891,12 @@ def valid_range(start_date, end_date, rebalance):
         raise KeyError("Date Range does not encompass rebalancing interval")
         
     if rebalance == "2y" and days <= int(365 * 2):
+        raise KeyError("Date Range does not encompass rebalancing interval")
+        
+    if rebalance == "quarterly" and days <= int(365 / 4):
+        raise KeyError("Date Range does not encompass rebalancing interval")
+        
+    if rebalance == "monthyl" and days <= int(30):
         raise KeyError("Date Range does not encompass rebalancing interval")
         
     #we will needs these dates later on so we'll return them back
@@ -946,6 +952,42 @@ def get_date_range(start_date, end_date, rebalance):
         
             #this gives us the future date
             input_date = input_date + dt.timedelta(days = 365 * 2)
+            
+            #then we want to compare dates
+            if input_date < end_date:
+                
+                #if the dates are less than the final date we put that into our date list 
+                rebalance_dates.append(input_date)
+              
+            #when the rebalance date is greater than our final date
+            else:
+                break
+            
+    if rebalance == "quarterly":
+        
+        #run for an arbitrarily large number we'll resolve this by breaking when we break the equality
+        for i in range(1000):
+        
+            #this gives us the future date
+            input_date = input_date + dt.timedelta(days = 365 / 4)
+            
+            #then we want to compare dates
+            if input_date < end_date:
+                
+                #if the dates are less than the final date we put that into our date list 
+                rebalance_dates.append(input_date)
+              
+            #when the rebalance date is greater than our final date
+            else:
+                break
+            
+    if rebalance == "monthly":
+        
+        #run for an arbitrarily large number we'll resolve this by breaking when we break the equality
+        for i in range(1000):
+        
+            #this gives us the future date
+            input_date = input_date + dt.timedelta(days = 30)
             
             #then we want to compare dates
             if input_date < end_date:
