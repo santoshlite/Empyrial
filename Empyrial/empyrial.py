@@ -7,18 +7,12 @@ from pandas_datareader import data as web
 import datetime as dt
 from empyrical import*
 import quantstats as qs
-from darts.models import*
-from darts import TimeSeries
-from darts.utils.missing_values import fill_missing_values
-from darts.metrics import mape
-import yahoo_fin.stock_info as si
-from yahoofinancials import YahooFinancials
 from pypfopt import EfficientFrontier, risk_models, expected_returns, HRPOpt, objective_functions
-import logging
-import warnings
-from warnings import filterwarnings
 from IPython.display import display
+from pypfopt import EfficientFrontier, risk_models, expected_returns, HRPOpt, objective_functions
+import matplotlib.pyplot as plt
 import copy
+import yfinance as yf
 
 
 # ------------------------------------------------------------------------------------------
@@ -237,6 +231,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
           
           #then append those returns
           returns = returns.append(add_returns)
+  
 
   benchmark = get_returns(my_portfolio.benchmark, wts=[1], start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
 
@@ -244,6 +239,8 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
   CAGR = round(CAGR,2)
   CAGR = CAGR.tolist()
   CAGR = str(round(CAGR*100,2)) + '%'
+
+
 
   CUM = cum_returns(returns, starting_value=0, out=None)*100
   CUM = CUM.iloc[-1]
@@ -255,13 +252,18 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
   VOL = VOL.tolist()
   VOL = str(round(VOL*100,2))+' %'
 
+
   SR = sharpe_ratio(returns, risk_free=rf, period=DAILY)
   SR = np.round(SR, decimals=2)
   SR = str(SR)
 
+  empyrial.SR = SR
+
   CR =  qs.stats.calmar(returns)
   CR = CR.tolist()
   CR = str(round(CR,2))
+
+  empyrial.CR = CR
 
   STABILITY = stability_of_timeseries(returns)
   STABILITY = round(STABILITY,2)
@@ -337,13 +339,11 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
         'Backtest':[CAGR, CUM, VOL,f'{win_ratio}%', SR, CR, IR, STABILITY, MD, SOR, SK, KU, TA, CSR, VAR, AL, BTA]}
 
   # Create DataFrame
-
   df = pd.DataFrame(data)
   df.set_index('', inplace=True)
   df.style.set_properties(**{'background-color': 'white',
                            'color': 'black',
-                           'border-color':'black'})
-
+                          'border-color':'black'})
   display(df)
   
   if rebalance == True:
@@ -361,324 +361,29 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
   plt.vlines(x=returns.index, ymin=0, ymax=arr, color=my_color, alpha=0.4)
   plt.title('Returns')
 
+  empyrial.returns = returns
+  empyrial.benchmark = benchmark
+  empyrial.CAGR = CAGR
+  empyrial.CUM = CUM
+  empyrial.VOL = VOL
+  empyrial.SR = SR
+  empyrial.win_ratio = win_ratio
+  empyrial.CR = CR
+  empyrial.IR = IR
+  empyrial.STABILITY = STABILITY
+  empyrial.MD = MD
+  empyrial.SOR = SOR
+  empyrial.SK = SK
+  empyrial.KU = KU
+  empyrial.TA = TA
+  empyrial.CSR = CSR
+  empyrial.VAR = VAR
+  empyrial.AL = AL
+  empyrial.BTA = BTA
+
 
   return qs.plots.returns(returns,benchmark, cumulative=True), qs.plots.monthly_heatmap(returns), qs.plots.drawdown(returns), qs.plots.drawdowns_periods(returns), qs.plots.rolling_volatility(returns), qs.plots.rolling_sharpe(returns), qs.plots.rolling_beta(returns, benchmark)
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-def oracle(my_portfolio, prediction_days=None, based_on='Adj Close'):
-  logger = logging.getLogger()
-  warnings.simplefilter(action='ignore', category=FutureWarning)
-  filterwarnings('ignore')
-  
-  logging.disable(logging.INFO)
-
-  mape_df = pd.DataFrame()
-  mape_df = mape_df.append({'Exponential smoothing' : 0, 'Prophet' : 0, 'Auto-ARIMA' :  0, 'Theta(2)':0, 'ARIMA' : 0, 'FFT' : 0, 'FourTheta' :  0, 'NaiveDrift':0, 'NaiveMean' :  0, 'NaiveSeasonal':0 }, 
-                ignore_index = True)
-
-  final_df = pd.DataFrame()
-  final_df = final_df.append({'Exponential smoothing' : 0, 'Prophet' : 0, 'Auto-ARIMA' :  0, 'Theta(2)':0, 'ARIMA' : 0, 'FFT' : 0, 'FourTheta' :  0, 'NaiveDrift':0, 'NaiveMean' :  0, 'NaiveSeasonal':0 },
-                ignore_index = True)
-
-  for asset in my_portfolio.portfolio:
-
-    result = pd.DataFrame()
-
-    df = web.DataReader(asset, data_source='yahoo', start = my_portfolio.start_date, end= my_portfolio.end_date)
-    df = pd.DataFrame(df)
-    df.reset_index(level=0, inplace=True)
-
-    def eval_model(model):
-      model.fit(train)
-      forecast = model.predict(len(val))
-      result[model] = [mape(val, forecast)]
-
-    prediction = pd.DataFrame()
-    def predict(model):
-      model.fit(train)
-      forecast = model.predict(len(val))
-      pred = model.predict(prediction_days)
-
-      b = [str(pred[-1])]
-      b = [words for segments in b for words in segments.split()]
-      b = float(b[2])
-      prediction[model] = [str(round(((b-start_value)/start_value)*100,3))+' %']
-
-    series = TimeSeries.from_dataframe(df, 'Date', based_on, freq='D')
-    series = fill_missing_values(series)
-
-    if prediction_days==None:
-      x = 1
-      while x/(len(series)+x) < 0.3:
-        x+=1
-        prediction_days = x
-
-    train_index = round(len(df.index)*0.7)
-    train_date = df.loc[[train_index]]['Date'].values
-    date = str(train_date[0])[:10]
-    date = date.replace('-', '') 
-    timestamp = date+'000000'
-    train, val = series.split_before(pd.Timestamp(timestamp))
-    eval_model(ExponentialSmoothing())
-    eval_model(Prophet())
-    eval_model(AutoARIMA())
-    eval_model(Theta())
-    eval_model(ARIMA())
-    eval_model(FFT())
-    eval_model(FourTheta())
-    eval_model(NaiveDrift())
-    eval_model(NaiveMean())
-    eval_model(NaiveSeasonal())
-    result.columns = ['Exponential smoothing','Prophet', 'Auto-ARIMA', 'Theta(2)', 'ARIMA', 'FFT','FourTheta','NaiveDrift','NaiveMean', 'NaiveSeasonal']
-    result.index = [asset]
-    mape_df = pd.concat([result, mape_df])
-    start_pred = str(df["Date"].iloc[-2])[:10]
-    start_value = df[based_on].iloc[-2]
-    start_pred = start_pred.replace('-', '') 
-    timestamp = start_pred+'000000'
-    train, val = series.split_before(pd.Timestamp(timestamp))
-
-    predict(ExponentialSmoothing())
-    predict(Prophet())
-    predict(AutoARIMA())
-    predict(Theta())
-    predict(ARIMA())
-    predict(FFT())
-    predict(FourTheta())
-    predict(NaiveDrift())
-    predict(NaiveMean())
-    predict(NaiveSeasonal())
-
-    prediction.columns = ['Exponential smoothing','Prophet', 'Auto-ARIMA', 'Theta(2)', 'ARIMA', 'FFT','FourTheta','NaiveDrift','NaiveMean', 'NaiveSeasonal']
-    prediction.index = [asset]
-    final_df = pd.concat([prediction, final_df])
-
-  print("Assets MAPE (accuracy score)")
-  with pd.option_context('display.max_rows', None, 'display.max_columns', None) and pd.option_context('expand_frame_repr', False):
-    print(mape_df.iloc[:-1,:])
-  mape_df = pd.DataFrame(mape_df.iloc[:-1,:])
-  print("\n")
-  print("Assets returns prediction for the next "+str(prediction_days)+" days (in %)")
-  with pd.option_context('display.max_rows', None, 'display.max_columns', None) and pd.option_context('expand_frame_repr', False):
-    print(final_df.iloc[:-1,:])
-  final_df = pd.DataFrame(final_df.iloc[:-1,:])
-  
-  portfolio_pred = pd.DataFrame()
-
-  for column in final_df.columns:
-    rets = []
-    for index in final_df.index:
-      place = my_portfolio.portfolio.index(index)
-      returns = float(final_df[column][index][:-1])
-      wts = my_portfolio.weights[my_portfolio.portfolio.index(index)]
-      ret = (returns*wts)
-      rets.append(ret)
-    portfolio_pred[column] = rets
-    portfolio_pred[column] = portfolio_pred[column].sum()
-
-  print("\n")
-  print("Portfolio returns prediction for the next "+str(prediction_days)+" days  (in %)")
-  display(portfolio_pred.iloc[0])
-  
-
-  logger.disabled = False
-
-#---------------------------------------------------------------------
-millnames = ['','k','M','B','T']
-
-def millify(n):
-    n = float(n)
-    millidx = max(0,min(len(millnames)-1,
-                        int(math.floor(0 if n == 0 else math.log10(abs(n))/3))))
-
-    return '{:.0f}{}'.format(n / 10**(3 * millidx), millnames[millidx])
-#-------------------------------------------------------------------------
-def fundlens(my_portfolio, period="annual"):
-
-  appended_data = pd.DataFrame()
-
-  for symbol in my_portfolio.portfolio:
-
-    #loading datas from different sources
-    yahoo_financials = YahooFinancials(symbol)
-    ticker = yf.Ticker(symbol)
-    data= si.get_stats(symbol)
-    datas= si.get_financials(symbol)
-    financial = yahoo_financials.get_financial_stmts(period, 'balance')
-    stats = yahoo_financials.get_key_statistics_data()
-    full = yahoo_financials.get_financial_stmts(period, 'cash')
-
-
-    #tuning functions called depending on which period the user used : quarterly or annual
-    if period=="annual":
-      name = 'cashflowStatementHistory'
-      df = datas['yearly_balance_sheet'] 
-    if period=="quaterly":
-      name = 'cashflowStatementHistoryQuarterly'
-      df = datas['quarterly_balance_sheet']
-
-    #FCF
-    try:
-      cash_operating = list(full[name][symbol][0].values())[0]['totalCashFromOperatingActivities']
-      capx = list(full[name][symbol][0].values())[0]['capitalExpenditures']
-      FCF = cash_operating - capx
-    except TypeError and KeyError:
-      FCF = "NaN"
-
-    #profit margins
-    try:
-      profit_margins = data['Value'].iloc[31]
-    except KeyError:
-      profit_margins = None
-
-    #book value
-    try:
-      book_value = yahoo_financials.get_book_value() 
-    except KeyError:
-      book_value = None
-
-    #operating income
-    try:
-      operating_income = yahoo_financials.get_operating_income()
-    except KeyError:
-      operating_income=None
-
-    #net income
-    try:
-      net_income = yahoo_financials.get_net_income()
-    except KeyError:
-      net_income = None
-
-    #D/E ratio
-    try:
-      debt_to_equity = data['Value'].iloc[46]
-    except KeyError:
-      debt_to_equity = None
-
-
-    #total current liabilities
-    tot_c_liab = df.iloc[:,0]['totalCurrentLiabilities']
-
-    #total current assets
-    try:
-      tot_c_assets = df.iloc[:,0]['totalCurrentAssets']
-    except KeyError:
-      tot_c_assets = None   
-
-    #inventory
-    try:
-      inventory = df.iloc[:,0]['inventory']
-    except KeyError:
-      inventory = None
-
-    #total liabilities
-    try:
-      tot_liab = df.iloc[:,0]['totalLiab']
-    except KeyError:
-      tot_liab = None
-  
-    #total assets
-    try:
-      tot_assets = df.iloc[:,0]['totalAssets']
-    except KeyError:
-      tot_assets = None
-
-    #quick ratio
-    try:
-      quick_ratio = (tot_c_assets-inventory)/tot_c_liab
-    except TypeError:
-      quick_ratio = "None"
-    
-    #total debts
-    try:
-      shortlongtermdebt = df.iloc[:,0]['shortLongTermDebt']
-    except KeyError:
-      shortlongtermdebt = None
-      
-    try:
-      longtermdebt = df.iloc[:,0]['longTermDebt']
-    except KeyError:
-      longtermdebt = None
-
-    try:
-      tot_debt = shortlongtermdebt + longtermdebt
-    except TypeError:
-      tot_debt = "None"
-
-    #debt to asset ratio
-    try:
-      debt_asset_ratio = tot_debt/tot_assets
-    except:
-      debt_asset_ratio = "None"
-
-    #working capital
-    try:
-      working_capital = tot_c_assets - tot_c_liab
-    except TypeError:
-      working_capital = "None"
-
-    #liquidation
-    try:
-      liquidation = tot_assets - tot_liab
-    except TypeError:
-      liquidation = "None"
-    
-    #market cap
-    try:
-      s = web.get_quote_yahoo(symbol)['marketCap']
-      list(s)
-      market_cap = millify(s[0])
-    except Exception as e:
-      market_cap = "None"
-
-    try:
-      controversy = ticker.sustainability.iloc[:,0]['highestControversy']
-    except TypeError:
-      controversy = "None"
-
-    try:
-      social_score = ticker.sustainability.iloc[:,0]['socialScore']
-    except TypeError:
-      social_score = "None"
-
-    try:
-      env_score = ticker.sustainability.iloc[:,0]['environmentScore']
-    except TypeError:
-      env_score = "None"
-
-    try:
-      gov_score = ticker.sustainability.iloc[:,0]['governanceScore']
-    except TypeError:
-      gov_score = "None"
-    
-    try:
-      esg_perf = ticker.sustainability.iloc[:,0]['esgPerformance']
-    except TypeError:
-      esg_perf = "None"
-
-    datax = [ ['Market cap', market_cap], ['Current ratio', data['Value'].iloc[47]], ['Quick ratio', quick_ratio], ['Debt ratio', tot_liab/tot_assets],
-                                                                                      
-            ['Earnings per share', yahoo_financials.get_earnings_per_share()], ['P/E ratio', yahoo_financials.get_pe_ratio()], ['P/B ratio', stats[symbol]['priceToBook']], 
-            
-            ['P/S ratio', yahoo_financials.get_price_to_sales()], ['Free cash flow ', FCF],
-
-            ['PEG ratio', stats[symbol]['pegRatio']], ['Return on Equity', data['Value'].iloc[34]], ['Return on Asset', data['Value'].iloc[33]], ['EBIT', millify(yahoo_financials.get_ebit())], ['EBITDA', data['Value'].iloc[39]], 
-             
-            ['Profit margins' , data['Value'].iloc[31]], ['Book value', millify(yahoo_financials.get_book_value())], ['Book value per share' , data['Value'].iloc[48]], ['Debt-to-equity ratio', debt_to_equity], 
-             
-            ['Debt-to-asset ratio', debt_asset_ratio], ['Net income', millify(net_income)], ['Operating income', millify(operating_income) ], ['Working capital', millify(working_capital) ], ['Liquidation', millify(liquidation) ], 
-             
-            ['Dividend yield', yahoo_financials.get_dividend_yield()], ['Payout ratio', yahoo_financials.get_payout_ratio()], ['Controversy', controversy], ['Social score', social_score], 
-             
-            ['Environmental score', env_score], ['Governance score', gov_score], ['ESG perf', esg_perf ]
-               
-            ]
-    dfs = pd.DataFrame(datax, columns=['Attribute', symbol])
-    appended_data = pd.concat([appended_data, dfs], axis=1, join='outer')
-
-  appended_data = pd.DataFrame(appended_data)
-  display(appended_data)
-
 #--------------------------------------------------------------------------------
 def flatten(seq):
     l = []
@@ -794,6 +499,7 @@ def mean_var(my_portfolio, vol_max=0.15, perf=True):
 #--------------------------------------------------------------------------------
 def optimizer(my_portfolio, method, vol_max=0.15, pie_size=5, font_size=14):
 
+  
   returns1 = get_returns(my_portfolio.portfolio, my_portfolio.weights, start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
   creturns1 = (returns1 + 1).cumprod()
 
@@ -843,8 +549,8 @@ def optimizer(my_portfolio, method, vol_max=0.15, pie_size=5, font_size=14):
 
   plt.legend(l1+l2, loc=2)
   plt.show()
+#-------------------------------------------------------------------------------------------------
 
-#--------------------------------------------------------------------------------
 def check_schedule(rebalance):
     
     #this is the list of acceptable rebalancing schedules
