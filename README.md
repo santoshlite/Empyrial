@@ -222,7 +222,7 @@ Want to download of a tearsheet of the analysis as a PDF or a HTML file? You can
 
 	* If your fork is out of date, you need to manually sync: [Synchronization method](https://help.github.com/articles/syncing-a-fork/)
 
-- Empyrial uses Github to host its source code, if you wish to contribute code please use the PR (Pull Request) process of github: [pull requests](https://github.com/ssantoshp/Empyrial/pulls). It'll waiting for review, checked/modified and be merged!
+- Empyrial uses GitHub to host its source code, if you wish to contribute code please use the PR (Pull Request) process of GitHub: [pull requests](https://github.com/ssantoshp/Empyrial/pulls). It'll waiting for review, checked/modified and be merged!
 
 ## Contributors ✨
 
