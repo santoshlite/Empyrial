@@ -214,15 +214,15 @@ optimizer(portfolio, "MV", vol_max=0.15)
 ```
 [>> See the output](https://user-images.githubusercontent.com/61618641/121251316-04c44f80-c8a7-11eb-9451-e96b9fd7eff5.png)
 
-## Download the tearsheet
+## 下载泪水表
 
-Want to download of a tearsheet of the analysis as a PDF or a HTML file? You can check the [documentation](https://github.com/ssantoshp/Empyrial/wiki/Downloading-the-generated-tearsheet) to see how to do it :)
+想以PDF或HTML文件的形式下载分析的泪水表吗？你可以查看[文档](https://github.com/ssantoshp/Empyrial/wiki/Downloading-the-generated-tearsheet)来了解如何做。
 
-## Stargazers over time
+## 观星者随时间推移
 
 <div align="center">
 	
-![Stargazers over time](https://starchart.cc/ssantoshp/empyrial.svg)
+![追星族的时间](https://starchart.cc/ssantoshp/empyrial.svg)
 	
 </div>
 
