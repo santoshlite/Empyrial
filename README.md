@@ -102,11 +102,8 @@ empyrial(portfolio)
 
 [>> See the output](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
 
-<br />
+If you want to add **rebalancing** (calendar-based) to your strategy you can do that:
 
-**Rebalancing (Calendar-based)**
-
-Time period available for rebalancing are ```2y```,```1y```,```6mo```,```quarterly```,```monthly```
 ```py
 from empyrial import empyrial, Engine
 
@@ -120,6 +117,9 @@ portfolio = Engine(
 
 empyrial(portfolio)
 ```
+
+Time periods available for rebalancing are ```2y```,```1y```,```6mo```,```quarterly```,```monthly```
+
 <br/>
 
 **Fundlens**
