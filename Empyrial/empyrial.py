@@ -337,7 +337,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
 
   ],
         'Backtest':[CAGR, CUM, VOL,f'{win_ratio}%', SR, CR, IR, STABILITY, MD, SOR, SK, KU, TA, CSR, VAR, AL, BTA]}
-
+  
   # Create DataFrame
   df = pd.DataFrame(data)
   df.set_index('', inplace=True)
@@ -345,6 +345,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
                            'color': 'black',
                           'border-color':'black'})
   display(df)
+  empyrial.df = data
   
   if rebalance == True:
       df
