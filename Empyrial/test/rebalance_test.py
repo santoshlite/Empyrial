@@ -1,4 +1,4 @@
-from empyrial import *
+from empyrial import empyrial, Engine
 
 tickers = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"]
 
