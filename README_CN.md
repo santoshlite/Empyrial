@@ -10,7 +10,7 @@
 ![](https://img.shields.io/badge/version-1.5.2-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
 ![](https://img.shields.io/badge/activity-8.8/10-ff69b4)
-![](https://img.shields.io/badge/Open%20source-💜-白色)	
+![](https://img.shields.io/badge/Open%20source-💜-white)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1NqTkkP2u1p1g8W8erU-Y-rSSVbPUDvq2?usp=sharing)
   
  </div>
