@@ -5,8 +5,6 @@ datetime
 empyrical
 quantstats
 yfinance
-darts   
 yahoo-fin
 yahoofinancials
 pyportfolioopt
-
