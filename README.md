@@ -7,7 +7,7 @@
   
 ![](https://img.shields.io/badge/Downloads-11k/month-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
-![](https://img.shields.io/badge/version-1.4.6-blueviolet)
+![](https://img.shields.io/badge/version-1.5.0-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
 ![](https://img.shields.io/badge/activity-8.8/10-ff69b4)
 ![](https://img.shields.io/badge/Open%20source-💜-white)	
@@ -38,7 +38,7 @@ With Empyrial, you can easily analyze security or a portfolio with these differe
 | 3. [Usage example](#usage) |
 | 4. [Download the tearsheet](#download-the-tearsheet) |
 | 5. [Contribution and Issues](#contribution-and-issues) | 
-| 6. [Contributors and Acknowledgments](#contributors-and-acknowledgments) |
+| 6. [Contributors](#contributors) |
 | 7. [Contact](#contact) |
 | 8. [License](#license) |
 	
@@ -47,17 +47,13 @@ With Empyrial, you can easily analyze security or a portfolio with these differe
 
 ## Installation
 
-We recommend to first setup a clean Python environment for your project with at least Python 3.7 using your favorite tool ([conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html "conda-env"), [venv](https://docs.python.org/3/library/venv.html), [virtualenv](https://virtualenv.pypa.io/en/latest/) with or without [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/)).. You don't need this if you are on Google colab.
-
-Once your environment is set up you can install Empyrial using pip:
+You can install Empyrial using pip:
 
 ```
 pip install empyrial
 ```
 
-For the moment, it is **strongly advised to use Empyrial in a jupyter notebook/google colab**.
-
-Note: when installed, it might ask you to restart the runtime. We advise you to do it because sometimes, not doing it can result in an inexplicable bug…
+For a better experience, **we advise you to use Empyrial on a notebook** (Jupyter, Google Colab...)
 
 ## Features
 
@@ -68,7 +64,8 @@ Note: when installed, it might ask you to restart the runtime. We advise you to 
 | Empyrial (backtesting + performance analysis) | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.2.4) on May 30, 2021 |
 | Oracle (prediction lens using several ML models)| :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/1.2.7) on Jun 1, 2021 | 
 | Fundamental lens | :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/1.3.1) on Jun 6, 2021 |
-| Optimizer | :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/1.3.6) on Jun 7, 2021 |
+| Optimizer | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.3.6) on Jun 7, 2021 |
+| Rebalancing | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.5.0) on Jun 27, 2021 |
 | Risk factors lens | :smile_cat: In development...  | 
 | Sentiment lens | :smile_cat: In development... | 
   
@@ -94,10 +91,10 @@ Here are the functions available with Empyrial:
 from empyrial import empyrial, Engine
 
 portfolio = Engine(    
-                  start_date= "2020-06-09", 
+                  start_date= "2018-06-09", 
                   portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
                   weights = [0.2, 0.2, 0.2, 0.2, 0.2], #equal weighting by default
-                  benchmark = ["SPY"] 
+                  benchmark = ["SPY"] #SPY by default
 )
 
 empyrial(portfolio)
@@ -106,6 +103,41 @@ empyrial(portfolio)
 [>> See the output](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
 
 <br />
+
+**Rebalancing (Calendar-based)**
+
+Time period available for rebalancing are ```2y```,```1y```,```6mo```,```quarterly```,```monthly```
+```py
+from empyrial import empyrial, Engine
+
+portfolio = Engine(    
+                  start_date= "2018-06-09", 
+                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
+                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #equal weighting by default
+                  benchmark = ["SPY"] #SPY by default
+		  rebalance = "1y"
+)
+
+empyrial(portfolio)
+```
+<br/>
+
+**Fundlens**
+
+```py
+from empyrial import fundlens, Engine
+
+portfolio = Engine(    
+                  start_date= "2020-06-09", 
+                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
+                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #optional
+                  benchmark = ["SPY"] #optional
+)
+
+fundlens(portfolio)
+```
+
+[>> See the output](https://camo.githubusercontent.com/7cfaebabf9280c7f13ebd9af98585841aaf14e9e34e118a6b434ed45e23acb47/68747470733a2f2f692e6962622e636f2f51486259316e332f323032312d30362d30362d30316831382d34382e706e67)
 
 **Oracle**
 
@@ -125,24 +157,6 @@ oracle(portfolio)
 [>> See the output](https://camo.githubusercontent.com/bd2efb1afccb5454aec60f21cbd3bdd1e1ea55b2e5905e8eeb2db3c8a7f363c9/68747470733a2f2f692e6962622e636f2f5750386e6b316d2f323032312d30362d30322d32326831372d30382e706e67)
 
 <br />
-
-**Fundlens**
-
-```py
-from empyrial import fundlens, Engine
-
-portfolio = Engine(    
-                  start_date= "2020-06-09", 
-                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
-                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #optional
-                  benchmark = ["SPY"] #optional
-)
-
-fundlens(portfolio)
-```
-
-[>> See the output](https://camo.githubusercontent.com/7cfaebabf9280c7f13ebd9af98585841aaf14e9e34e118a6b434ed45e23acb47/68747470733a2f2f692e6962622e636f2f51486259316e332f323032312d30362d30362d30316831382d34382e706e67)
-
 
 **Optimizer**
 
@@ -224,7 +238,7 @@ Want to download of a tearsheet of the analysis as a PDF or a HTML file? You can
 
 - Empyrial uses GitHub to host its source code, if you wish to contribute code please use the PR (Pull Request) process of GitHub: [pull requests](https://github.com/ssantoshp/Empyrial/pulls). It'll waiting for review, checked/modified and be merged!
 
-## Contributors ✨
+## Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
