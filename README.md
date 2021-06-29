@@ -110,7 +110,7 @@ from empyrial import empyrial, Engine
 portfolio = Engine(    
                   start_date= "2018-06-09", 
                   portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
-                  benchmark = ["SPY"] #SPY by default
+                  benchmark = ["SPY"], #SPY by default
 		  optimizer = "EF",
 		  rebalance = "1y"
 )
@@ -164,9 +164,13 @@ There are 3 optimizers available:
 
 - ```"EF"```: **Global Efficient Frontier**
 
-- ```"MV"```: **Mean-Variance** (in this case, you'll have to define a max volatility that you don't want to exceed)
+- ```"MEANVAR"```: **Mean-Variance** (in this case, you'll have to define a max volatility that you don't want to exceed)
 
 - ```"HRP"```: **Hierarchical Risk Parity**
+
+- ```"MINVAR"```: **Minimum-Variance**
+
+- ```"BL"```: **Black Litterman**
 
 _Note: the default optimizer is **equal weighting**_
 
