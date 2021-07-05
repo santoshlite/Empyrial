@@ -3,7 +3,6 @@ import pandas as pd
 import math
 import matplotlib.pyplot as plt
 import yfinance as yf
-from pandas_datareader import data as web
 import datetime as dt
 from empyrical import*
 import quantstats as qs
@@ -120,9 +119,6 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
       
       #then our rebalancing dates into that list 
       dates = dates + rebalance_schedule.columns.to_list()
-
-      print(rebalance_schedule)
-
 
       datess = []
       for date in dates:
