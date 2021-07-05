@@ -18,13 +18,10 @@ setup(
     install_requires=[
         'numpy',
         'matplotlib',
-        'pandas_datareader',
         'datetime',
         'empyrical',
         'quantstats',
         'yfinance',
-        'yahoo-fin',
-        'yahoofinancials',
         'pyportfolioopt',
         'ipython'
 
