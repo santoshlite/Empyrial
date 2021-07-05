@@ -7,12 +7,14 @@ from pandas_datareader import data as web
 import datetime as dt
 from empyrical import*
 import quantstats as qs
-from pypfopt import EfficientFrontier, risk_models, expected_returns, HRPOpt, objective_functions
+from pypfopt import EfficientFrontier, risk_models, expected_returns, HRPOpt, objective_functions, black_litterman, BlackLittermanModel
 from IPython.display import display
-from pypfopt import EfficientFrontier, risk_models, expected_returns, HRPOpt, objective_functions
 import matplotlib.pyplot as plt
 import copy
 import yfinance as yf
+import warnings
+
+warnings.filterwarnings("ignore")
 
 
 # ------------------------------------------------------------------------------------------
@@ -20,19 +22,24 @@ import yfinance as yf
 today = dt.date.today()
 
 # ------------------------------------------------------------------------------------------
-
 class Engine:
 
 
-  def __init__(self,start_date, portfolio, weights=None, rebalance=None, benchmark=['SPY'], end_date=today, optimizer=None, max_vol=0.15):
+  def __init__(self,start_date, portfolio, weights=None, rebalance=None, benchmark=['SPY'], end_date=today, optimizer=None, max_vol=0.15, diversification=1,confidences=None, view=None, min_weights=None, max_weights=None, risk_manager=None):
     self.start_date = start_date
     self.end_date = end_date
     self.portfolio = portfolio
     self.weights = weights
     self.benchmark = benchmark
     self.optimizer = optimizer
-    self.max_vol = max_vol
     self.rebalance = rebalance
+    self.risk_manager = risk_manager
+    self.max_vol = max_vol
+    self.diversification = diversification
+    self.view = view
+    self.confidences = confidences
+    self.min_weights = min_weights
+    self.max_weights = max_weights
 
     if self.weights==None:
       self.weights = [1.0/len(self.portfolio)]*len(self.portfolio)
@@ -40,143 +47,34 @@ class Engine:
     if self.optimizer=="EF":
       self.weights = efficient_frontier(self, perf="False")
 
-    if self.optimizer=="MV":
+    if self.optimizer=="MEANVAR":
       self.weights = mean_var(self, vol_max=max_vol, perf="False")
 
     if self.optimizer=="HRP":
       self.weights = hrp(self, perf="False")
+
+    if self.optimizer=="MINVAR":
+      self.weights = min_var(self, perf="False")
+
+    if self.optimizer== "BL":
+      self.weights = bl(self, perf="False")
       
-    if self.rebalance!=None:
-      self.rebalance = make_rebalance(self.start_date, self.end_date, self.optimizer, self.portfolio, self.rebalance)
-    
+    if self.rebalance != None:
+      self.rebalance = make_rebalance(self.start_date, self.end_date, self.optimizer, self.portfolio, self.rebalance, self.weights, self.max_vol, self.diversification, self.min_weights, self.max_weights)
 #-------------------------------------------------------------------------------------------
 def get_returns(stocks,wts, start_date, end_date=today):
     
   if len(stocks) > 1:
-    assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+    assets = yf.download(stocks, start=start_date, end=end_date, progress=False)['Adj Close']
+    assets = assets.filter(stocks)
     ret_data = assets.pct_change()[1:]
     returns = (ret_data * wts).sum(axis = 1)
     return returns
   else:
-    df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)['Adj Close']
+    df = yf.download(stocks, start=start_date, end=end_date, progress=False)['Adj Close']
     df = pd.DataFrame(df)
     returns = df.pct_change()
     return returns
-# ------------------------------------------------------------------------------------------
-def get_pricing(stocks, start_date, end_date=today, pricing="Adj Close", wts=1):
-    
-  if len(stocks) > 1:
-    assets = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)[pricing]
-    return assets
-  else:
-    df = web.DataReader(stocks, data_source='yahoo', start = start_date, end= end_date)[pricing]
-    return df
-# ------------------------------------------------------------------------------------------
-
-def get_data(stocks, period="max", trading_year_days=252):
-
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1mo' : math.ceil(trading_year_days/12),
-      '3mo' : math.ceil(trading_year_days/4),
-      '6mo' : math.ceil(trading_year_days/2),
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      '20y' : 20*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
-    }
-
-  df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)
-  df = pd.DataFrame(df)
-  df = df.tail(years[period])
-  df = pd.DataFrame(df)
-  df = df.drop(['Adj Close'], axis=1)
-  df = df[["Open", "High", "Low", "Close", "Volume"]]
-  return df
-
-# ------------------------------------------------------------------------------------------
-
-#reformat
-def creturns(stocks,wts=1, period="max", benchmark= None, plot=True, pricing="Adj Close", trading_year_days=252, end_date = today):
-  p = {"period": period}
-  for stock in stocks:
-    years = {
-      '1mo' : math.ceil(trading_year_days/12),
-      '3mo' : math.ceil(trading_year_days/4),
-      '6mo' : math.ceil(trading_year_days/2),
-      '1y': trading_year_days,
-      '2y' : 2*trading_year_days,
-      '5y' : 5*trading_year_days,
-      '10y' : 10*trading_year_days,
-      '20y' : 20*trading_year_days,
-      'max' : len(yf.Ticker(stock).history(**p)['Close'].pct_change())
-    }
-
-  if len(stocks) > 1:
-    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= end_date)[pricing]
-    if benchmark != None:
-      df2 = web.DataReader(benchmark, data_source='yahoo', start = "1980-01-01", end= end_date)[pricing]
-      df = pd.DataFrame(df)
-      df = df.tail(years[period])
-      df2 = df2.tail(years[period])
-      return_df2 = df2.pct_change()[1:]
-      ret_data = df.pct_change()[1:]
-      ret_data = (ret_data + 1).cumprod()
-      port_ret = (ret_data * wts).sum(axis = 1)
-      return_df2 = (return_df2 + 1).cumprod()
-      ret_data['Portfolio'] = port_ret
-      ret_data['Benchmark'] = return_df2
-      ret_data = pd.DataFrame(ret_data)
-    else:
-      df = pd.DataFrame(df)
-      df = df.tail(years[period])
-      ret_data = df.pct_change()[1:]
-      ret_data = (ret_data + 1).cumprod()
-      port_ret = (ret_data * wts).sum(axis = 1)
-      ret_data['Portfolio'] = port_ret
-      ret_data = pd.DataFrame(ret_data)
-
-    if plot==True:
-      ret_data.plot(figsize=(20,10))
-      plt.xlabel('Date')
-      plt.ylabel('Returns')
-      plt.title(period + 'Portfolio Cumulative Returns')
-    else:
-      return ret_data
-  else:
-    df = web.DataReader(stocks, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
-    if benchmark != None:
-      df2 = web.DataReader(benchmark, data_source='yahoo', start = "1980-01-01", end= today)[pricing]
-      return_df2 = df2.pct_change()[1:]
-      df = pd.DataFrame(df)
-      df = df.tail(years[period])
-      df2 = df2.tail(years[period])
-      return_df2 = df2.pct_change()[1:]
-      returns = df.pct_change()
-      returns = (returns + 1).cumprod()
-      return_df2 = (return_df2 + 1).cumprod()
-      returns["benchmark"] = return_df2
-      returns = pd.DataFrame(returns)
-    else:
-      df = pd.DataFrame(df)
-      df = df.tail(years[period])
-      returns = df.pct_change()
-      returns = (returns + 1).cumprod()
-      returns = pd.DataFrame(returns)
-
-    if plot==True:
-        returns.plot(figsize=(20,10))
-        plt.axvline(x=1)
-        plt.xlabel('Date')
-        plt.ylabel('Returns')
-        plt.title(stocks[0] +' Cumulative Returns (Period : '+ period+')')
-
-    else:
-        return returns
-
 # ------------------------------------------------------------------------------------------
 def information_ratio(returns, benchmark_returns, days=252):
  return_difference = returns - benchmark_returns
@@ -210,19 +108,35 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
       
       #we want to get the dataframe with the dates and weights
       rebalance_schedule = my_portfolio.rebalance
+
+      columns = []
+      for date in rebalance_schedule.columns:
+            date = date[0:10]
+            columns.append(date)
+      rebalance_schedule.columns = columns
       
       #then want to make a list of the dates and start with our first date
       dates = [my_portfolio.start_date]
       
       #then our rebalancing dates into that list 
       dates = dates + rebalance_schedule.columns.to_list()
-      
+
+      print(rebalance_schedule)
+
+
+      datess = []
+      for date in dates:
+          date = date[0:10]
+          datess.append(date)
+      dates = datess
       #this will hold returns
       returns = pd.Series()
       
+  
       #then we want to be able to call the dates like tuples
       for i in range(len(dates) - 1):
           
+
           #get our weights
           weights = rebalance_schedule[str(dates[i+1])]
           
@@ -231,7 +145,73 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
           
           #then append those returns
           returns = returns.append(add_returns)
+
+  creturns = (returns + 1).cumprod()
+
+  #risk manager
+  try:
+    if list(my_portfolio.risk_manager.keys())[0] == "Stop Loss":
+
+      values = []
+      for r in creturns:
+        if r <= 1+my_portfolio.risk_manager['Stop Loss']:
+          values.append(r)
+        else:
+          pass
+
+      try:
+        date = creturns[creturns == values[0]].index[0]
+        date = str(date.to_pydatetime())
+        my_portfolio.end_date = date[0:10]
+        returns = returns[:my_portfolio.end_date]
+
+      except Exception as e:
+        pass
+
+    if list(my_portfolio.risk_manager.keys())[0] == "Take Profit":
+
+      values = []
+      for r in creturns:
+        if r >= 1+my_portfolio.risk_manager['Take Profit']:
+          values.append(r)
+        else:
+          pass
+      
+      try:
+        date = creturns[creturns == values[0]].index[0]
+        date = str(date.to_pydatetime())
+        my_portfolio.end_date = date[0:10]
+        returns = returns[:my_portfolio.end_date]
+
+      except Exception as e:
+        pass
+
+    if list(my_portfolio.risk_manager.keys())[0] == "Max Drawdown":
+
+      drawdown = qs.stats.to_drawdown_series(returns)
+
+      values = []
+      for r in drawdown:
+        if r <= my_portfolio.risk_manager['Max Drawdown']:
+          values.append(r)
+        else:
+          pass
+
+      try:
+        date = drawdown[drawdown == values[0]].index[0]
+        date = str(date.to_pydatetime())
+        my_portfolio.end_date = date[0:10]
+        returns = returns[:my_portfolio.end_date]
+
+      except Exception as e:
+        pass
+
+  except Exception as e:
+      pass
+      
   
+  print("Start date: " + str(my_portfolio.start_date))
+  print("End date: " + str(my_portfolio.end_date))
 
   benchmark = get_returns(my_portfolio.benchmark, wts=[1], start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
 
@@ -253,7 +233,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
   VOL = str(round(VOL*100,2))+' %'
 
 
-  SR = sharpe_ratio(returns, risk_free=rf, period=DAILY)
+  SR = qs.stats.sharpe(returns, rf=rf)
   SR = np.round(SR, decimals=2)
   SR = str(SR)
 
@@ -271,7 +251,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
 
 
   MD = max_drawdown(returns, out=None)
-  MD = str(round(MD,2))+' %'
+  MD = str(round(MD*100,2))+' %'
 
   
   '''OR = omega_ratio(returns, risk_free=0.0, required_return=0.0)
@@ -337,7 +317,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
 
   ],
         'Backtest':[CAGR, CUM, VOL,f'{win_ratio}%', SR, CR, IR, STABILITY, MD, SOR, SK, KU, TA, CSR, VAR, AL, BTA]}
-  
+
   # Create DataFrame
   df = pd.DataFrame(data)
   df.set_index('', inplace=True)
@@ -345,8 +325,9 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
                            'color': 'black',
                           'border-color':'black'})
   display(df)
+
   empyrial.df = data
-  
+
   if rebalance == True:
       df
 
@@ -363,6 +344,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
   plt.title('Returns')
 
   empyrial.returns = returns
+  empyrial.creturns = creturns
   empyrial.benchmark = benchmark
   empyrial.CAGR = CAGR
   empyrial.CUM = CUM
@@ -382,10 +364,18 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
   empyrial.AL = AL
   empyrial.BTA = BTA
 
+  try:
+    empyrial.orderbook = make_rebalance.output
+  except Exception as e:
+    OrderBook = pd.DataFrame(
+        {'Assets': my_portfolio.portfolio,
+        'Allocation': my_portfolio.weights,
+        })
 
-  return qs.plots.returns(returns,benchmark, cumulative=True), qs.plots.monthly_heatmap(returns), qs.plots.drawdown(returns), qs.plots.drawdowns_periods(returns), qs.plots.rolling_volatility(returns), qs.plots.rolling_sharpe(returns), qs.plots.rolling_beta(returns, benchmark)
+    empyrial.orderbook = OrderBook.T
+
+  return qs.plots.returns(returns,benchmark, cumulative=True), qs.plots.monthly_heatmap(returns), qs.plots.drawdown(returns), qs.plots.drawdowns_periods(returns), qs.plots.rolling_volatility(returns), qs.plots.rolling_sharpe(returns), qs.plots.rolling_beta(returns, benchmark), graph_opt(my_portfolio.portfolio, my_portfolio.weights, pie_size=7, font_size=14)
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------
-#--------------------------------------------------------------------------------
 def flatten(seq):
     l = []
     for elt in seq:
@@ -397,15 +387,14 @@ def flatten(seq):
             l.append(elt)
     return l
 #-------------------------------------------------------------------------------
-
 def graph_opt(my_portfolio, my_weights, pie_size, font_size):
   fig1, ax1 = plt.subplots()
   fig1.set_size_inches(pie_size, pie_size)
+  cs= ['#ff9999','#66b3ff','#99ff99','#ffcc99', '#f6c9ff', '#a6fff6', '#fffeb8', '#ffe1d4', '#cccdff', '#fad6ff']
   ax1.pie(my_weights, labels=my_portfolio, autopct='%1.1f%%',
-          shadow=False)
+          shadow=False, colors=cs)
   ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
   plt.rcParams['font.size'] = font_size
-  plt.title("Portfolio's allocation")
   plt.show()
 #--------------------------------------------------------------------------
 def equal_weighting(my_portfolio):
@@ -426,6 +415,11 @@ def efficient_frontier(my_portfolio, perf=True):
 
   #optimize for max sharpe ratio
   ef = EfficientFrontier(mu, S)
+
+  if my_portfolio.min_weights != None:
+    ef.add_constraint(lambda x : x >= my_portfolio.min_weights)
+  if my_portfolio.max_weights != None:
+    ef.add_constraint(lambda x : x <= my_portfolio.max_weights)
   weights = ef.max_sharpe()
   cleaned_weights = ef.clean_weights()
   wts = cleaned_weights.items()
@@ -441,9 +435,56 @@ def efficient_frontier(my_portfolio, perf=True):
   
   return flatten(result)
 #-------------------------------------------------------------------------------
+def bl(my_portfolio, perf=True):
+
+
+  ohlc = yf.download(my_portfolio.portfolio, start = my_portfolio.start_date, end = my_portfolio.end_date, progress=False)
+  market_prices = yf.download("SPY",start = my_portfolio.start_date, end = my_portfolio.end_date, progress=False)["Adj Close"]
+  prices = ohlc["Adj Close"]
+
+  df = prices.filter(my_portfolio.portfolio)
+
+  mcaps = {}
+  for t in my_portfolio.portfolio:
+      stock = yf.Ticker(t)
+      mcaps[t] = stock.info["marketCap"]
+  S = risk_models.CovarianceShrinkage(prices).ledoit_wolf()
+
+  delta = black_litterman.market_implied_risk_aversion(market_prices)
+
+  market_prior = black_litterman.market_implied_prior_returns(mcaps, delta, S)
+
+  bl = BlackLittermanModel(S, pi="market", market_caps=mcaps, risk_aversion=delta,
+                        absolute_views=my_portfolio.view, omega="idzorek", view_confidences= my_portfolio.confidences)
+  
+  ret_bl = bl.bl_returns()
+  S_bl = bl.bl_cov()
+  
+  ef = EfficientFrontier(ret_bl, S_bl)
+  if my_portfolio.min_weights != None:
+    ef.add_constraint(lambda x : x >= my_portfolio.min_weights)
+  if my_portfolio.max_weights != None:
+    ef.add_constraint(lambda x : x <= my_portfolio.max_weights)
+  ef.max_sharpe()
+  weights = ef.clean_weights()
+  lists = dict(weights)
+  wts = weights.items()
+
+
+  wei = []
+  for a in my_portfolio.portfolio:
+    value = lists[a]
+    wei.append(value)
+
+  if perf==True:
+    pred = ef.portfolio_performance(verbose=True);
+  
+  return wei
+#-------------------------------------------------------------------------------
 def hrp(my_portfolio, perf=True):
 
   #changed to take in desired timeline, the problem is that it would use all historical data
+
   ohlc = yf.download(my_portfolio.portfolio, start = my_portfolio.start_date, end = my_portfolio.end_date, progress=False)
   prices = ohlc["Adj Close"].dropna(how="all")
   prices = prices.filter(my_portfolio.portfolio)
@@ -471,6 +512,7 @@ def hrp(my_portfolio, perf=True):
 def mean_var(my_portfolio, vol_max=0.15, perf=True):
   
   #changed to take in desired timeline, the problem is that it would use all historical data
+
   ohlc = yf.download(my_portfolio.portfolio, start = my_portfolio.start_date, end = my_portfolio.end_date, progress=False)
   prices = ohlc["Adj Close"].dropna(how="all")
   prices = prices.filter(my_portfolio.portfolio)
@@ -482,7 +524,11 @@ def mean_var(my_portfolio, vol_max=0.15, perf=True):
   S = risk_models.CovarianceShrinkage(prices).ledoit_wolf()
 
   ef = EfficientFrontier(mu, S)
-  ef.add_objective(objective_functions.L2_reg, gamma=0.1) 
+  ef.add_objective(objective_functions.L2_reg, gamma=my_portfolio.diversification)
+  if my_portfolio.min_weights != None:
+    ef.add_constraint(lambda x : x >= my_portfolio.min_weights)
+  if my_portfolio.max_weights != None:
+    ef.add_constraint(lambda x : x <= my_portfolio.max_weights)
   ef.efficient_risk(vol_max)
   weights = ef.clean_weights()
 
@@ -498,8 +544,38 @@ def mean_var(my_portfolio, vol_max=0.15, perf=True):
 
   return flatten(result)
 #--------------------------------------------------------------------------------
-def optimizer(my_portfolio, method, vol_max=0.15, pie_size=5, font_size=14):
+def min_var(my_portfolio, perf=True):
+  
 
+  ohlc = yf.download(my_portfolio.portfolio, start = my_portfolio.start_date, end = my_portfolio.end_date, progress=False)
+  prices = ohlc["Adj Close"].dropna(how="all")
+  prices = prices.filter(my_portfolio.portfolio)
+
+  mu = expected_returns.capm_return(prices)
+  S = risk_models.CovarianceShrinkage(prices).ledoit_wolf()
+
+  ef = EfficientFrontier(mu, S)
+  ef.add_objective(objective_functions.L2_reg, gamma=my_portfolio.diversification)
+  if my_portfolio.min_weights != None:
+    ef.add_constraint(lambda x : x >= my_portfolio.min_weights)
+  if my_portfolio.max_weights != None:
+    ef.add_constraint(lambda x : x <= my_portfolio.max_weights)
+  ef.min_volatility()
+  weights = ef.clean_weights()
+
+  wts = weights.items()
+
+  result = []
+  for val in wts:
+    a, b = map(list, zip(*[val]))
+    result.append(b)
+
+  if perf==True:
+    ef.portfolio_performance(verbose=True);
+
+  return flatten(result)
+#--------------------------------------------------------------------------------
+def optimizer(my_portfolio, method, vol_max=0.15, pie_size=5, font_size=14):
   
   returns1 = get_returns(my_portfolio.portfolio, my_portfolio.weights, start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
   creturns1 = (returns1 + 1).cumprod()
@@ -512,11 +588,25 @@ def optimizer(my_portfolio, method, vol_max=0.15, pie_size=5, font_size=14):
   if method == "HRP":
     wts = hrp(my_portfolio)
 
-  if method == "MV":
+  if method == "MEANVAR":
     wts = mean_var(my_portfolio, vol_max)
+
+  if method == "MINVAR":
+    wts = min_var(my_portfolio)
 
   if optimizer== "EW":
     wts = equal_weighting(my_portfolio)
+
+  if method == "BL":
+    wts = bl(my_portfolio)
+
+  elif method !="EF" and method != "HRP" and method != "MEANVAR" and method != "MINVAR" and method!="EW" and method!="BL":
+    print("The optimization method you passed doesn't exist, the optimizers available are:")
+    print('>"EF": Efficient Frontier')
+    print('>"MEANVAR": Mean-Variance')
+    print('>"MINVAR": Minimum-Variance')
+    print('>"HRP": Hierarchical Risk Parity')
+    print('>"BL": Black Litterman')
 
   print(wts)
   print("\n")
@@ -524,8 +614,6 @@ def optimizer(my_portfolio, method, vol_max=0.15, pie_size=5, font_size=14):
   indices = [i for i, x in enumerate(wts) if x == 0.0]
 
   while 0.0 in wts: wts.remove(0.0)
-
-
 
   for i in sorted(indices, reverse=True):
     del port[i]
@@ -538,8 +626,9 @@ def optimizer(my_portfolio, method, vol_max=0.15, pie_size=5, font_size=14):
   returns2 = get_returns(port, wts, start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
   creturns2 = (returns2 + 1).cumprod()
 
-  plt.figure(figsize=(20,10))
-  plt.xlabel("Portfolio's cumulative return")
+  plt.rcParams['font.size'] = 13
+  plt.figure(figsize=(30,10))
+  plt.xlabel("Portfolio vs Benchmark")
 
   ax1 = creturns1.plot(color='blue', label='Without optimization')
   ax2 = creturns2.plot(color='red', label='With optimization')
@@ -551,7 +640,6 @@ def optimizer(my_portfolio, method, vol_max=0.15, pie_size=5, font_size=14):
   plt.legend(l1+l2, loc=2)
   plt.show()
 #-------------------------------------------------------------------------------------------------
-
 def check_schedule(rebalance):
     
     #this is the list of acceptable rebalancing schedules
@@ -576,7 +664,6 @@ def check_schedule(rebalance):
          
     #return that back
     return valid_schedule
-
 #--------------------------------------------------------------------------------
 def valid_range(start_date, end_date, rebalance):
     
@@ -708,9 +795,8 @@ def get_date_range(start_date, end_date, rebalance):
     
     #then we want to return those dates
     return rebalance_dates
-
 #--------------------------------------------------------------------------------
-def make_rebalance(start_date, end_date, optimizer, portfolio_input, rebalance):
+def make_rebalance(start_date, end_date, optimizer, portfolio_input, rebalance, allocation, vol_max, div, min,max):
     
     print("")
     print("If failed downloads appear they occur because you are querying for a stock that isn't listed for the desired range, no worries we've worked it out.")
@@ -733,15 +819,20 @@ def make_rebalance(start_date, end_date, optimizer, portfolio_input, rebalance):
     #then make a dataframe with the index being the tickers
     output_df = pd.DataFrame(index = portfolio_input)
     
-    #I don't think I need to make a function to make sure the date we have is a trading day because yfinance will fix that 
-    
     for i in range(len(dates) - 1):
+
+        
         
         portfolio = Engine(
-          start_date = dates[0],
-          end_date = dates[i+1],
-          portfolio = portfolio_input,
-          optimizer = "{}".format(optimizer))
+            start_date = dates[0],
+            end_date = dates[i+1],
+            portfolio = portfolio_input,
+            weights = allocation,
+            optimizer = "{}".format(optimizer),
+            max_vol = vol_max,
+            diversification = div,
+            min_weights = min,
+            max_weights = max)
 
         output_df["{}".format(dates[i+1])] = portfolio.weights
         
@@ -750,8 +841,14 @@ def make_rebalance(start_date, end_date, optimizer, portfolio_input, rebalance):
     portfolio = Engine(
       start_date = dates[0],
       portfolio = portfolio_input,
-      optimizer = "{}".format(optimizer))
+      weights = allocation,
+      optimizer = "{}".format(optimizer),
+      max_vol = vol_max,
+      diversification = div,
+      min_weights = min,
+      max_weights = max)
     
     output_df['{}'.format(today)] = portfolio.weights
     
+    make_rebalance.output = output_df
     return output_df
