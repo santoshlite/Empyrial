@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf8") as fh:
 
 setup(
     name='empyrial',
-    version='1.7.3',
+    version='1.8.2',
     description='AI and data-driven quantitative portfolio management for risk and performance analytics',
     py_modules=['empyrial'],
     package_dir={'': 'src'},
