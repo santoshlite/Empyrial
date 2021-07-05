@@ -5,3 +5,4 @@ empyrical
 quantstats
 yfinance
 pyportfolioopt
+ipython
