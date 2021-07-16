@@ -5,8 +5,8 @@ with open("README.md", "r", encoding="utf8") as fh:
 
 setup(
     name='empyrial',
-    version='1.8.3,',
-    description='AI and data-driven quantitative portfolio management for risk and performance analytics',
+    version='1.8.7',
+    description='An Open Source Portfolio Management Framework for Everyone 投资组合管理',
     py_modules=['empyrial'],
     package_dir={'': 'src'},
     long_description=long_description,
@@ -22,10 +22,11 @@ setup(
         'empyrical',
         'quantstats',
         'yfinance',
-        'pyportfolioopt',
         'ipython',
-        'fpdf'
+        'fpdf',
+        'pyportfolioopt'
 
     ],
 )
+
 
