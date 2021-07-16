@@ -4,13 +4,13 @@ import math
 import datetime as dt
 from empyrical import*
 import quantstats as qs
-from pypfopt import EfficientFrontier, risk_models, expected_returns, HRPOpt, objective_functions, black_litterman, BlackLittermanModel
 from IPython.display import display
 import matplotlib.pyplot as plt
 import copy
 import yfinance as yf
 from fpdf import FPDF
 import warnings
+from pypfopt import EfficientFrontier, risk_models, expected_returns, HRPOpt, objective_functions, black_litterman, BlackLittermanModel
 
 warnings.filterwarnings("ignore")
 
@@ -31,17 +31,18 @@ class Engine:
     self.benchmark = benchmark
     self.optimizer = optimizer
     self.rebalance = rebalance
-    self.risk_manager = risk_manager
     self.max_vol = max_vol
     self.diversification = diversification
+    self.max_weights = max_weights
+    self.min_weights = min_weights
     self.view = view
     self.confidences = confidences
-    self.min_weights = min_weights
-    self.max_weights = max_weights
+    self.risk_manager = risk_manager
+  
 
     if self.weights==None:
       self.weights = [1.0/len(self.portfolio)]*len(self.portfolio)
-
+  
     if self.optimizer=="EF":
       self.weights = efficient_frontier(self, perf="False")
 
@@ -56,6 +57,10 @@ class Engine:
 
     if self.optimizer== "BL":
       self.weights = bl(self, perf="False")
+
+    if self.optimizer != None and self.optimizer != "EF" and self.optimizer !="MEANVAR" and self.optimizer !="HRP" and self.optimizer !="MINVAR" and self.optimizer !="BL":
+      opt = self.optimizer
+      self.weights = opt()
       
     if self.rebalance != None:
       self.rebalance = make_rebalance(self.start_date, self.end_date, self.optimizer, self.portfolio, self.rebalance, self.weights, self.max_vol, self.diversification, self.min_weights, self.max_weights)
@@ -90,8 +95,9 @@ def graph_allocation(my_portfolio):
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------
 #initialize a variable that we be set to false
+#initialize a variable that we be set to false
 def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalance=False):
-
+  
   #standard emyrial output
   if rebalance == False:
       
@@ -100,10 +106,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
       
   #when we want to do the rebalancing
   if rebalance == True:
-      
-      print("")
-      print('rebalance hit')
-      
+
       #we want to get the dataframe with the dates and weights
       rebalance_schedule = my_portfolio.rebalance
 
@@ -118,8 +121,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
       
       #then our rebalancing dates into that list 
       dates = dates + rebalance_schedule.columns.to_list()
-
-
+      
       datess = []
       for date in dates:
           date = date[0:10]
@@ -395,7 +397,7 @@ def graph_opt(my_portfolio, my_weights, pie_size, font_size):
 #--------------------------------------------------------------------------
 def equal_weighting(my_portfolio):
   return [1.0/len(my_portfolio.portfolio)]*len(my_portfolio.portfolio)
-#------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
 def efficient_frontier(my_portfolio, perf=True):
 
   #changed to take in desired timeline, the problem is that it would use all historical data
@@ -541,7 +543,6 @@ def mean_var(my_portfolio, vol_max=0.15, perf=True):
   return flatten(result)
 #--------------------------------------------------------------------------------
 def min_var(my_portfolio, perf=True):
-  
 
   ohlc = yf.download(my_portfolio.portfolio, start = my_portfolio.start_date, end = my_portfolio.end_date, progress=False)
   prices = ohlc["Adj Close"].dropna(how="all")
@@ -570,39 +571,35 @@ def min_var(my_portfolio, perf=True):
     ef.portfolio_performance(verbose=True);
 
   return flatten(result)
-#--------------------------------------------------------------------------------
-def optimizer(my_portfolio, method, vol_max=0.15, pie_size=5, font_size=14):
+#------------------------------------------------------------------------------
+def optimizer(my_portfolio, vol_max=25, pie_size=5, font_size=14):
   
-  returns1 = get_returns(my_portfolio.portfolio, my_portfolio.weights, start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
+  returns1 = get_returns(my_portfolio.portfolio, equal_weighting(my_portfolio), start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
   creturns1 = (returns1 + 1).cumprod()
 
   port = copy.deepcopy(my_portfolio.portfolio)
 
-  if method == "EF":
+  if my_portfolio.optimizer == "EF":
     wts = efficient_frontier(my_portfolio)
   
-  if method == "HRP":
+  if my_portfolio.optimizer == "HRP":
     wts = hrp(my_portfolio)
 
-  if method == "MEANVAR":
-    wts = mean_var(my_portfolio, vol_max)
+  if my_portfolio.optimizer == "MEANVAR":
+    wts = mean_var(my_portfolio, my_portfolio.max_vol)
 
-  if method == "MINVAR":
+  if my_portfolio.optimizer == "MINVAR":
     wts = min_var(my_portfolio)
 
-  if optimizer== "EW":
+  if my_portfolio.optimizer == "EW":
     wts = equal_weighting(my_portfolio)
 
-  if method == "BL":
+  if my_portfolio.optimizer == "BL":
     wts = bl(my_portfolio)
 
-  elif method !="EF" and method != "HRP" and method != "MEANVAR" and method != "MINVAR" and method!="EW" and method!="BL":
-    print("The optimization method you passed doesn't exist, the optimizers available are:")
-    print('>"EF": Efficient Frontier')
-    print('>"MEANVAR": Mean-Variance')
-    print('>"MINVAR": Minimum-Variance')
-    print('>"HRP": Hierarchical Risk Parity')
-    print('>"BL": Black Litterman')
+  if my_portfolio.optimizer != None and my_portfolio.optimizer != "EF" and my_portfolio.optimizer !="MEANVAR" and my_portfolio.optimizer !="HRP" and my_portfolio.optimizer !="MINVAR" and my_portfolio.optimizer !="BL":
+      opt = my_portfolio.optimizer
+      my_portfolio.weights = opt()
 
   print(wts)
   print("\n")
@@ -792,11 +789,8 @@ def get_date_range(start_date, end_date, rebalance):
     #then we want to return those dates
     return rebalance_dates
 #--------------------------------------------------------------------------------
-def make_rebalance(start_date, end_date, optimizer, portfolio_input, rebalance, allocation, vol_max, div, min,max):
-    
-    print("")
-    print("If failed downloads appear they occur because you are querying for a stock that isn't listed for the desired range, no worries we've worked it out.")
-    
+def make_rebalance(start_date, end_date, optimize, portfolio_input, rebalance, allocation,  vol_max, div, min,max):
+
     #makes sure that the value passed through for rebalancing is a valid one
     valid_schedule = check_schedule(rebalance)
         
@@ -816,33 +810,58 @@ def make_rebalance(start_date, end_date, optimizer, portfolio_input, rebalance, 
     output_df = pd.DataFrame(index = portfolio_input)
     
     for i in range(len(dates) - 1):
+      
+        try:
+          portfolio = Engine(
+              start_date = dates[0],
+              end_date = dates[i+1],
+              portfolio = portfolio_input,
+              weights = allocation,
+              optimizer = "{}".format(optimize),
+              max_vol = vol_max,
+              diversification = div,
+              min_weights = min,
+              max_weights = max)
+          
+        except TypeError:
+          portfolio = Engine(
+              start_date = dates[0],
+              end_date = dates[i+1],
+              portfolio = portfolio_input,
+              weights = allocation,
+              optimizer = optimize,
+              max_vol = vol_max,
+              diversification = div,
+              min_weights = min,
+              max_weights = max)
 
-        
-        
-        portfolio = Engine(
-            start_date = dates[0],
-            end_date = dates[i+1],
-            portfolio = portfolio_input,
-            weights = allocation,
-            optimizer = "{}".format(optimizer),
-            max_vol = vol_max,
-            diversification = div,
-            min_weights = min,
-            max_weights = max)
 
         output_df["{}".format(dates[i+1])] = portfolio.weights
         
     
     #we have to run it one more time to get what the optimization is for up to today's date
-    portfolio = Engine(
-      start_date = dates[0],
-      portfolio = portfolio_input,
-      weights = allocation,
-      optimizer = "{}".format(optimizer),
-      max_vol = vol_max,
-      diversification = div,
-      min_weights = min,
-      max_weights = max)
+    try:
+      portfolio = Engine(
+        start_date = dates[0],
+        portfolio = portfolio_input,
+        weights = allocation,
+        optimizer = "{}".format(optimize),
+        max_vol = vol_max,
+        diversification = div,
+        min_weights = min,
+        max_weights = max)
+      
+    except TypeError:
+      portfolio = Engine(
+        start_date = dates[0],
+        portfolio = portfolio_input,
+        weights = allocation,
+        optimizer = optimize,
+        max_vol = vol_max,
+        diversification = div,
+        min_weights = min,
+        max_weights = max)
+
     
     output_df['{}'.format(today)] = portfolio.weights
     
