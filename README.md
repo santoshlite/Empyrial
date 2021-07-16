@@ -5,11 +5,11 @@
 <img src="https://user-images.githubusercontent.com/61618641/120909011-98f8a180-c670-11eb-8844-2d423ba3fa9c.png"/>
 <br><br><br><br><br><br>
   
-![](https://img.shields.io/badge/Downloads-11k/month-brightgreen)
+![](https://img.shields.io/badge/Downloads-16k/month-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
-![](https://img.shields.io/badge/version-1.5.2-blueviolet)
+![](https://img.shields.io/badge/version-1.8.7-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
-![](https://img.shields.io/badge/activity-8.8/10-ff69b4)
+![](https://img.shields.io/badge/activity-9.7/10-ff69b4)
 ![](https://img.shields.io/badge/Open%20source-💜-white)	
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1NqTkkP2u1p1g8W8erU-Y-rSSVbPUDvq2?usp=sharing)
   
@@ -21,9 +21,9 @@ Want to read this in **Chinese**? Click [**here**](README_CN.md)
 
 Empyrial is a Python-based **open-source quantitative investment** library dedicated to **financial institutions** and **retail investors**, officially released in Mars 2021. Already used by **thousands of people working in the finance industry**, Empyrial aims to become an all-in-one platform for **portfolio management**, **analysis**, and **optimization**.
 
-Empyrial **empowers portfolio management** by bringing different financial approaches such as **risk analysis**, **quantitative analysis**, **fundamental analysis**, **factor analysis** and **prediction making**.
+Empyrial **empowers portfolio management** by bringing the best of **performance and risk analysis** in an **easy to understand**, **flexible** and **powerful framework**.
 
-With Empyrial, you can easily analyze security or a portfolio with these different approaches and **get the best insights from it**.
+With Empyrial, you can easily analyze security or a portfolio in order to **get the best insights from it**.
 
 <br>
 
@@ -62,12 +62,9 @@ For a better experience, **we advise you to use Empyrial on a notebook** (Jupyte
 | Feature 📰 | Status |
 | --                      | ------    |
 | Empyrial (backtesting + performance analysis) | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.2.4) on May 30, 2021 |
-| Oracle (prediction lens using several ML models)| :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/1.2.7) on Jun 1, 2021 | 
-| Fundamental lens | :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/1.3.1) on Jun 6, 2021 |
 | Optimizer | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.3.6) on Jun 7, 2021 |
 | Rebalancing | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.5.0) on Jun 27, 2021 |
-| Risk factors lens | :smile_cat: In development...  | 
-| Sentiment lens | :smile_cat: In development... | 
+| Risk manager | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.5.0) on Jun 27, 2021 |
   
 </div>
 
@@ -76,10 +73,6 @@ For a better experience, **we advise you to use Empyrial on a notebook** (Jupyte
 Here are the functions available with Empyrial:
 
 - ```empyrial``` : **quantitative portfolio analytics** | [Quickstart](https://colab.research.google.com/drive/1cj40dDqctfWNrVz_nK-FDhdWPay7fVBF?usp=sharing) | [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
-
-- ```oracle``` : **prediction generation** on your portfolio using several prediction models (Prophet, Auto-ARIMA, Fast Fourier Transform...) | [Quickstart](https://colab.research.google.com/drive/11rMpQqW9Om82wzh71cr5k3vDQSNMZ4V1?usp=sharing) | [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
-
-- ```fundlens``` : **fundamental analysis** of each of the assets in your portfolio | [Quickstart](https://colab.research.google.com/drive/1t2RfYwIJDZ3YN1z5MbS41unRGxGf0dif?usp=sharing) | [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Fundlens)
 
 - ```optimizer``` : **optimize the asset's allocation** in your portfolio | [Quickstart](https://colab.research.google.com/drive/12CfYznbdabSDYUbtSwamqyILOIwR7Sje?usp=sharing)
 
@@ -122,45 +115,9 @@ Time periods available for rebalancing are ```2y```,```1y```,```6mo```,```quarte
 
 <br/>
 
-**Fundlens**
-
-```py
-from empyrial import fundlens, Engine
-
-portfolio = Engine(    
-                  start_date= "2020-06-09", 
-                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
-                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #optional
-                  benchmark = ["SPY"] #optional
-)
-
-fundlens(portfolio)
-```
-
-[>> See the output](https://camo.githubusercontent.com/7cfaebabf9280c7f13ebd9af98585841aaf14e9e34e118a6b434ed45e23acb47/68747470733a2f2f692e6962622e636f2f51486259316e332f323032312d30362d30362d30316831382d34382e706e67)
-
-**Oracle**
-
-```py
-from empyrial import oracle, Engine
-
-portfolio = Engine(    
-                  start_date= "2020-06-09", 
-                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
-                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], 
-                  benchmark = ["SPY"] 
-)
-
-oracle(portfolio)
-```
-
-[>> See the output](https://camo.githubusercontent.com/bd2efb1afccb5454aec60f21cbd3bdd1e1ea55b2e5905e8eeb2db3c8a7f363c9/68747470733a2f2f692e6962622e636f2f5750386e6b316d2f323032312d30362d30322d32326831372d30382e706e67)
-
-<br />
-
 **Optimizer**
 
-There are 3 optimizers available:
+There are 5 optimizers available:
 
 - ```"EF"```: **Global Efficient Frontier**
 
@@ -170,7 +127,7 @@ There are 3 optimizers available:
 
 - ```"MINVAR"```: **Minimum-Variance**
 
-- ```"BL"```: **Black Litterman**
+- ```"BL"```: **Black Litterman** (in this case, you'll have to define you're views and confidences on the assets you invest in)
 
 _Note: the default optimizer is **equal weighting**_
 
