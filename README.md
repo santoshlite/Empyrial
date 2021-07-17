@@ -61,20 +61,13 @@ For a better experience, **we advise you to use Empyrial on a notebook** (Jupyte
   
 | Feature 📰 | Status |
 | --                      | ------    |
-| Empyrial (backtesting + performance analysis) | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.2.4) on May 30, 2021 |
+| Engine (backtesting + performance analysis) | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.2.4) on May 30, 2021 |
 | Optimizer | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.3.6) on Jun 7, 2021 |
 | Rebalancing | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.5.0) on Jun 27, 2021 |
-| Risk manager | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.5.0) on Jun 27, 2021 |
+| Risk manager | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.7.3) on Jul 5, 2021 |
+| Sandbox | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.8.9) on Jul 17, 2021 |
   
 </div>
-
-<br />
-
-Here are the functions available with Empyrial:
-
-- ```empyrial``` : **quantitative portfolio analytics** | [Quickstart](https://colab.research.google.com/drive/1cj40dDqctfWNrVz_nK-FDhdWPay7fVBF?usp=sharing) | [Documentation](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
-
-- ```optimizer``` : **optimize the asset's allocation** in your portfolio | [Quickstart](https://colab.research.google.com/drive/12CfYznbdabSDYUbtSwamqyILOIwR7Sje?usp=sharing)
 
 ## Usage
 
@@ -85,26 +78,25 @@ from empyrial import empyrial, Engine
 
 portfolio = Engine(    
                   start_date= "2018-06-09", 
-                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
+                  portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
                   weights = [0.2, 0.2, 0.2, 0.2, 0.2], #equal weighting by default
                   benchmark = ["SPY"] #SPY by default
 )
 
 empyrial(portfolio)
 ```
+<br>
 
-[>> See the output](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
-
-If you want to add **rebalancing** (calendar-based) to your strategy you can do that:
+**Calendar Rebalancing**
 
 ```py
 from empyrial import empyrial, Engine
 
 portfolio = Engine(    
                   start_date= "2018-06-09", 
-                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
+                  portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
+		  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #equal weighting by default
                   benchmark = ["SPY"], #SPY by default
-		  optimizer = "EF",
 		  rebalance = "1y"
 )
 
@@ -112,6 +104,24 @@ empyrial(portfolio)
 ```
 
 Time periods available for rebalancing are ```2y```,```1y```,```6mo```,```quarterly```,```monthly```
+
+<br/>
+
+**Custom Rebalancing**
+
+```py
+from empyrial import empyrial, Engine
+
+portfolio = Engine(    
+                  start_date= "2018-06-09", 
+                  portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
+		  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #equal weighting by default
+                  benchmark = ["SPY"], #SPY by default
+		  rebalance = ["2018-06-09", "2019-01-01", "2020-01-01", "2021-01-01"]
+)
+
+empyrial(portfolio)
+```
 
 <br/>
 
@@ -131,9 +141,6 @@ There are 5 optimizers available:
 
 _Note: the default optimizer is **equal weighting**_
 
-There is two ways to use the Empyrial's optimizer :
-
-1) Optimize allocation directly with Engine
 
 ```py
 from empyrial import*
@@ -153,27 +160,8 @@ Output:
 [0.31409, 0.0, 0.03472, 0.00046, 0.0, 0.0, 0.069, 0.08831, 0.00854, 0.48489]
 ```
 
+**Risk Manager**
 
-2) See the performance of an optimizer
-```py
-from empyrial import*
-
-portfolio = Engine(
-      start_date = "2018-01-01",
-      portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"]
-)
-
-#for efficient frontier
-optimizer(portfolio, "EF")
-
-#for hierarchical risk parity
-optimizer(portfolio, "HRP")
-
-#for mean variance
-optimizer(portfolio, "MV", vol_max=0.15)
-
-```
-[>> See the output](https://user-images.githubusercontent.com/61618641/121251316-04c44f80-c8a7-11eb-9451-e96b9fd7eff5.png)
 
 ## Download the Tearsheet
 
