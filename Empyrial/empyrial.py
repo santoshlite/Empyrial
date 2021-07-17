@@ -23,7 +23,7 @@ today = dt.date.today()
 class Engine:
 
 
-  def __init__(self,start_date, portfolio, weights=None, rebalance=None, benchmark=['SPY'], end_date=today, optimizer=None, max_vol=0.15, diversification=1,confidences=None, view=None, min_weights=None, max_weights=None, risk_manager=None):
+  def __init__(self,start_date, portfolio, weights=None, rebalance=None, benchmark=['SPY'], end_date=today, optimizer=None, max_vol=0.15, diversification=1,confidences=None, view=None, min_weights=None, max_weights=None, risk_manager=None, data=None):
     self.start_date = start_date
     self.end_date = end_date
     self.portfolio = portfolio
@@ -38,6 +38,8 @@ class Engine:
     self.view = view
     self.confidences = confidences
     self.risk_manager = risk_manager
+    self.data = data
+
   
 
     if self.weights==None:
@@ -79,6 +81,12 @@ def get_returns(stocks,wts, start_date, end_date=today):
     returns = df.pct_change()
     return returns
 # ------------------------------------------------------------------------------------------
+def get_returns_from_data(data, wts):
+  ret_data = data.pct_change()[1:]
+  returns = (ret_data * wts).sum(axis = 1)
+  return returns
+# ------------------------------------------------------------------------------------------
+
 def information_ratio(returns, benchmark_returns, days=252):
  return_difference = returns - benchmark_returns
  volatility = return_difference.std() * np.sqrt(days)
@@ -94,19 +102,9 @@ def graph_allocation(my_portfolio):
   plt.show()
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------
-#initialize a variable that we be set to false
-#initialize a variable that we be set to false
-def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalance=False):
+def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
   
-  #standard emyrial output
-  if rebalance == False:
-      
-      #standard returns calculation
-      returns = get_returns(my_portfolio.portfolio, my_portfolio.weights, start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
-      
-  #when we want to do the rebalancing
-  if rebalance == True:
-
+  try:
       #we want to get the dataframe with the dates and weights
       rebalance_schedule = my_portfolio.rebalance
 
@@ -129,20 +127,25 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
       dates = datess
       #this will hold returns
       returns = pd.Series()
-      
-  
+       
       #then we want to be able to call the dates like tuples
       for i in range(len(dates) - 1):
-          
 
           #get our weights
           weights = rebalance_schedule[str(dates[i+1])]
           
           #then we want to get the returns
+
           add_returns = get_returns(my_portfolio.portfolio, weights, start_date = dates[i], end_date = dates[i+1])
           
           #then append those returns
           returns = returns.append(add_returns)
+
+  except AttributeError:
+      try:
+        returns = get_returns_from_data(my_portfolio.data, my_portfolio.weights)
+      except AttributeError:
+        returns = get_returns(my_portfolio.portfolio, my_portfolio.weights, start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
 
   creturns = (returns + 1).cumprod()
 
@@ -325,9 +328,6 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalan
   display(df)
 
   empyrial.df = data
-
-  if rebalance == True:
-      df
 
   y = []
   for x in returns:
@@ -791,17 +791,23 @@ def get_date_range(start_date, end_date, rebalance):
 #--------------------------------------------------------------------------------
 def make_rebalance(start_date, end_date, optimize, portfolio_input, rebalance, allocation,  vol_max, div, min,max):
 
-    #makes sure that the value passed through for rebalancing is a valid one
-    valid_schedule = check_schedule(rebalance)
-        
-    if valid_schedule == False:
-        raise KeyError("Not an accepted rebalancing schedule")
+    sdate = str(start_date)[:10]
+    if rebalance[0] != sdate:
+
+      #makes sure that the value passed through for rebalancing is a valid one
+      valid_schedule = check_schedule(rebalance)
+          
+      if valid_schedule == False:
+          raise KeyError("Not an accepted rebalancing schedule")
         
     #this checks to make sure that the date range given works for the rebalancing
     start_date, end_date = valid_range(start_date, end_date, rebalance)
     
     #this function will get us the specific dates
-    dates = get_date_range(start_date, end_date, rebalance)
+    if rebalance[0] != sdate:
+      dates = get_date_range(start_date, end_date, rebalance)
+    else:
+      dates = rebalance
     
     #we are going to make columns with the end date and the weights
     columns = ["end_date"] + portfolio_input
@@ -868,20 +874,9 @@ def make_rebalance(start_date, end_date, optimize, portfolio_input, rebalance, a
     make_rebalance.output = output_df
     return output_df
 #--------------------------------------------------------------------------------------------------------
-def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebalance=False):
+def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
 
-  #standard emyrial output
-  if rebalance == False:
-      
-      #standard returns calculation
-      returns = get_returns(my_portfolio.portfolio, my_portfolio.weights, start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
-      
-  #when we want to do the rebalancing
-  if rebalance == True:
-      
-      print("")
-      print('rebalance hit')
-      
+  try:
       #we want to get the dataframe with the dates and weights
       rebalance_schedule = my_portfolio.rebalance
 
@@ -896,7 +891,7 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebal
       
       #then our rebalancing dates into that list 
       dates = dates + rebalance_schedule.columns.to_list()
-
+      
       datess = []
       for date in dates:
           date = date[0:10]
@@ -904,8 +899,7 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebal
       dates = datess
       #this will hold returns
       returns = pd.Series()
-      
-  
+       
       #then we want to be able to call the dates like tuples
       for i in range(len(dates) - 1):
 
@@ -913,10 +907,17 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebal
           weights = rebalance_schedule[str(dates[i+1])]
           
           #then we want to get the returns
+
           add_returns = get_returns(my_portfolio.portfolio, weights, start_date = dates[i], end_date = dates[i+1])
           
           #then append those returns
           returns = returns.append(add_returns)
+
+  except AttributeError:
+      try:
+        returns = get_returns_from_data(my_portfolio.data, my_portfolio.weights)
+      except AttributeError:
+        returns = get_returns(my_portfolio.portfolio, my_portfolio.weights, start_date=my_portfolio.start_date,end_date=my_portfolio.end_date)
 
   creturns = (returns + 1).cumprod()
 
@@ -1115,9 +1116,6 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, rebal
                           'border-color':'black'})
 
   empyrial.df = data
-
-  if rebalance == True:
-      df
 
   y = []
   for x in returns:
