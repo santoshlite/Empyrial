@@ -7,7 +7,7 @@
   
 ![](https://img.shields.io/badge/Downloads-19k/month-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
-![](https://img.shields.io/badge/version-1.8.7-blueviolet)
+![](https://img.shields.io/badge/version-1.8.9-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
 ![](https://img.shields.io/badge/activity-9.7/10-ff69b4)
 ![](https://img.shields.io/badge/Open%20source-💜-white)	
@@ -54,6 +54,10 @@ pip install empyrial
 ```
 
 For a better experience, **we advise you to use Empyrial on a notebook** (Jupyter, Google Colab...)
+
+_Note: macOS users will need to install [Command Line Tools](https://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/)._
+
+_Note: if you are on windows, you first need to installl C++. ([download](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16), [install instructions](https://drive.google.com/file/d/0B4GsMXCRaSSIOWpYQkstajlYZ0tPVkNQSElmTWh1dXFaYkJr/view))_
 
 ## Features
 
@@ -144,7 +148,7 @@ portfolio = Engine(
 empyrial(portfolio)
 ```
 
-You can also use our built-in optimizers.There are 5 optimizers available:
+You can also use our **built-in optimizers**. There are 5 optimizers available:
 
 - ```"EF"```: **Global Efficient Frontier**
 
@@ -164,7 +168,7 @@ from empyrial import empyrial, Engine
 
 portfolio = Engine(
       start_date = "2018-01-01",
-      portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"],
+      portfolio = "BABA", "PDD", "KO", "AMD","^IXIC"],
       optimizer = "EF",
       rebalance = "1y" #rebalance every year
 )
@@ -202,6 +206,22 @@ portfolio = Engine(
 empyrial(portfolio)
 ``` 
 
+**Empyrial output**
+
+<div align="center">
+
+![image](https://user-images.githubusercontent.com/61618641/126879140-ea03ff17-a7c6-481a-bb3e-61c055b31267.png)
+![image](https://user-images.githubusercontent.com/61618641/126879203-4390813c-a4f2-41b9-916b-e03dd8bafffb.png)
+![image](https://user-images.githubusercontent.com/61618641/126879204-01fe1eca-00b8-438e-b489-0213535dd31b.png)
+![image](https://user-images.githubusercontent.com/61618641/126879210-9fd61e2b-01ab-4bfd-b679-3b1867d9302d.png)
+![image](https://user-images.githubusercontent.com/61618641/126879215-e24c929a-55be-4912-8e2c-043e31ff2a95.png)
+![image](https://user-images.githubusercontent.com/61618641/126879221-455b8ffa-c958-4ac9-ae98-d15b4c5f0826.png)
+![image](https://user-images.githubusercontent.com/61618641/126879222-08906643-16db-441e-a099-7ac3b00bdbd7.png)
+![image](https://user-images.githubusercontent.com/61618641/126879223-f1116dc3-cceb-493c-93b3-2d3810cae789.png)
+![image](https://user-images.githubusercontent.com/61618641/126879225-dc879b71-2070-46ed-a8ad-e90880050be8.png)
+![image](https://user-images.githubusercontent.com/61618641/126879297-cb78743a-6d43-465b-8021-d4b62a659828.png)
+
+</div>
 
 ## Download the Tearsheet
 
@@ -220,6 +240,11 @@ portfolio = Engine(
 
 get_report(portfolio)
 ``` 
+
+Output:
+
+![image](https://user-images.githubusercontent.com/61618641/126879406-3ff8eb14-e08b-4103-b46d-02597634d469.png)
+
 
 ## Stargazers over time
 
@@ -272,7 +297,7 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 
 ## Contact
 
-You are welcome to contact us by email at santoshpassoubady@gmail.com or in Empyrial's [discussion space](https://github.com/ssantoshp/Empyrial/discussions)
+You are welcome to contact us by email at **santoshpassoubady@gmail.com** or in Empyrial's [discussion space](https://github.com/ssantoshp/Empyrial/discussions)
 
 ## License
 
