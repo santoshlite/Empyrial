@@ -143,7 +143,7 @@ _Note: the default optimizer is **equal weighting**_
 
 
 ```py
-from empyrial import*
+from empyrial import empyrial, Engine
 
 portfolio = Engine(
       start_date = "2018-01-01",
@@ -161,6 +161,23 @@ Output:
 ```
 
 **Risk Manager**
+
+3 Risk managers are available:
+
+- **Max Drawdown**: ```{"Max Drawdown" : -0.3}```
+- **Take Profit**: ```{"Take Profit" : 0.4}```
+- **Stop Loss**: ```{"Stop Loss" : -0.2}```
+
+```py
+from empyrial import empyrial, Engine
+
+portfolio = Engine(
+      start_date = "2018-01-01",
+      portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"],
+      optimizer = "EF",
+      risk_manager = {"Stop Loss" : -0.2}
+)
+``` 
 
 
 ## Download the Tearsheet
