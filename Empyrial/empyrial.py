@@ -372,7 +372,15 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
 
     empyrial.orderbook = OrderBook.T
 
-  return qs.plots.returns(returns,benchmark, cumulative=True), qs.plots.monthly_heatmap(returns), qs.plots.drawdown(returns), qs.plots.drawdowns_periods(returns), qs.plots.rolling_volatility(returns), qs.plots.rolling_sharpe(returns), qs.plots.rolling_beta(returns, benchmark), graph_opt(my_portfolio.portfolio, my_portfolio.weights, pie_size=7, font_size=14)
+  wts = copy.deepcopy(my_portfolio.weights)
+  indices = [i for i, x in enumerate(wts) if x == 0.0]
+
+  while 0.0 in wts: wts.remove(0.0)
+
+  for i in sorted(indices, reverse=True):
+    del my_portfolio.portfolio[i]
+    
+  return qs.plots.returns(returns,benchmark, cumulative=True), qs.plots.monthly_heatmap(returns), qs.plots.drawdown(returns), qs.plots.drawdowns_periods(returns), qs.plots.rolling_volatility(returns), qs.plots.rolling_sharpe(returns), qs.plots.rolling_beta(returns, benchmark), graph_opt(my_portfolio.portfolio, wts, pie_size=7, font_size=14)
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------
 def flatten(seq):
     l = []
@@ -985,7 +993,17 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
   fig1, ax1 = plt.subplots()
   fig1.set_size_inches(5, 5)
   cs= ['#ff9999','#66b3ff','#99ff99','#ffcc99', '#f6c9ff', '#a6fff6', '#fffeb8', '#ffe1d4', '#cccdff', '#fad6ff']
-  ax1.pie(my_portfolio.weights, labels=my_portfolio.portfolio, autopct='%1.1f%%',
+
+  wts = copy.deepcopy(my_portfolio.weights)
+  port = copy.deepcopy(my_portfolio.portfolio)
+  indices = [i for i, x in enumerate(wts) if x == 0.0]
+
+  while 0.0 in wts: wts.remove(0.0)
+
+  for i in sorted(indices, reverse=True):
+    del port[i]
+
+  ax1.pie(wts, labels=port, autopct='%1.1f%%',
           shadow=False, colors=cs)
   ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
   plt.rcParams['font.size'] = 12
