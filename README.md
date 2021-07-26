@@ -7,7 +7,7 @@
   
 ![](https://img.shields.io/badge/Downloads-19k/month-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
-![](https://img.shields.io/badge/version-1.8.9-blueviolet)
+![](https://img.shields.io/badge/version-1.9.1-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
 ![](https://img.shields.io/badge/activity-9.7/10-ff69b4)
 ![](https://img.shields.io/badge/Open%20source-💜-white)	
@@ -21,7 +21,7 @@ Want to read this in **Chinese**? Click [**here**](README_CN.md)
 
 Empyrial is a Python-based **open-source quantitative investment** library dedicated to **financial institutions** and **retail investors**, officially released in Mars 2021. Already used by **thousands of people working in the finance industry**, Empyrial aims to become an all-in-one platform for **portfolio management**, **analysis**, and **optimization**.
 
-Empyrial **empowers portfolio management** by bringing the best of **performance and risk analysis** in an **easy to understand**, **flexible** and **powerful framework**.
+Empyrial **empowers portfolio management** by bringing the best of **performance and risk analysis** in an **easy-to-understand**, **flexible** and **powerful framework**.
 
 With Empyrial, you can easily analyze security or a portfolio in order to **get the best insights from it**.
 
@@ -57,7 +57,7 @@ For a better experience, **we advise you to use Empyrial on a notebook** (Jupyte
 
 _Note: macOS users will need to install [Command Line Tools](https://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/)._
 
-_Note: if you are on windows, you first need to installl C++. ([download](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16), [install instructions](https://drive.google.com/file/d/0B4GsMXCRaSSIOWpYQkstajlYZ0tPVkNQSElmTWh1dXFaYkJr/view))_
+_Note: if you are on windows, you first need to install C++. ([download](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16), [install instructions](https://drive.google.com/file/d/0B4GsMXCRaSSIOWpYQkstajlYZ0tPVkNQSElmTWh1dXFaYkJr/view))_
 
 ## Features
 
