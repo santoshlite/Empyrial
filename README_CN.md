@@ -252,8 +252,6 @@ get_report(portfolio)
 
 ![image](https://user-images.githubusercontent.com/61618641/126879406-3ff8eb14-e08b-4103-b46d-02597634d469.png)
 
-通过www.DeepL.com/Translator（免费版）翻译
-
 ## 观星者随时间推移
 
 <div align="center">
