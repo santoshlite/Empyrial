@@ -157,11 +157,11 @@ empyrial(portfolio)
 
 - ```"EF"```: **全球有效边际**
 
-- ```"meanvar"```: **平均波动率** (在这种情况下，你必须定义一个你不想超过的最大波动率)
+- ```"MEANVAR"```: **平均波动率** (在这种情况下，你必须定义一个你不想超过的最大波动率)
 
 - ```"HRP"```: **分层风险平价**。
 
-- ```"minvar"```: **最小方差**
+- ```"MINVAR"```: **最小方差**
 
 - ```"BL"```: **Black Litterman**（在这种情况下，你必须定义你对你投资的资产的看法和信任度)
 
@@ -207,7 +207,7 @@ portfolio = Engine(
       portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
       optimizer = "EF",
       rebalance = "1y", #每年重新平衡一次
-      Risk_manager = {"Max Drawdown" : -0.2} #当跌幅超过-20%时停止投资
+      risk_manager = {"Max Drawdown" : -0.2} #当跌幅超过-20%时停止投资
 )
 
 empyrial(portfolio)
