@@ -69,7 +69,7 @@ _Note: if you are on windows, you first need to install C++. ([download](https:/
 | Optimizer | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.3.6) on Jun 7, 2021 |
 | Rebalancing | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.5.0) on Jun 27, 2021 |
 | Risk manager | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.7.3) on Jul 5, 2021 |
-| Sandbox | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.8.9) on Jul 17, 2021 |
+| Sandbox | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.9.1) on Jul 17, 2021 |
   
 </div>
 
@@ -128,6 +128,7 @@ portfolio = Engine(
 
 empyrial(portfolio)
 ```
+⚠️ In that case make sure, that the 1st element of the list corresponds to the ```start_date``` and the last element corresponds to the ```end_date``` which is **today's date** by default.
 
 <br/>
 
@@ -197,7 +198,7 @@ from empyrial import empyrial, Engine
 
 portfolio = Engine(
       start_date = "2018-01-01",
-      portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"],
+      portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
       optimizer = "EF",
       rebalance = "1y", #rebalance every year
       risk_manager = {"Max Drawdown" : -0.2} #Stop the investment when the drawdown becomes superior to -20%
