@@ -5,11 +5,11 @@
 <img src="https://user-images.githubusercontent.com/61618641/120909011-98f8a180-c670-11eb-8844-2d423ba3fa9c.png"/>
 <br><br><br><br><br><br><br><br>
   
-![](https://img.shields.io/badge/Downloads-11k/month-brightgreen)
+![](https://img.shields.io/badge/Downloads-19k/month-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
-![](https://img.shields.io/badge/version-1.5.2-blueviolet)
+![](https://img.shields.io/badge/version-1.9.1-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
-![](https://img.shields.io/badge/activity-8.8/10-ff69b4)
+![](https://img.shields.io/badge/activity-9.7/10-ff69b4)
 ![](https://img.shields.io/badge/Open%20source-💜-white)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1NqTkkP2u1p1g8W8erU-Y-rSSVbPUDvq2?usp=sharing)
   
@@ -21,9 +21,9 @@ Want to read this in [**English**?](README.md)
 
 Empyrial是一个基于Python的**开源量化投资**库，致力于为**金融机构**和**零售投资者**，于2021年正式发布。Empyrial已经被数以千计的金融业从业人员使用，它的目标是成为一个集**投资组合管理、**分析和**优化于一体的平台。
 
-Empyrial通过带来不同的金融方法，如**风险分析**、**定量分析**、**基本面分析**、**因素分析**和**预测**，增强了投资组合管理**的能力。
+Empyrial通过将**业绩和风险分析的精华纳入一个**易于理解的**、**灵活的**和**强大的框架**，使投资组合管理**更加强大**。
 
-有了Empyrial，你可以用这些不同的方法轻松地分析证券或投资组合，并**从中获得最佳的洞察力**。
+通过Empyrial，您可以轻松地分析证券或投资组合，以便**从中获得最佳的洞察力**。
 
 <br>
 
@@ -55,34 +55,26 @@ pip install empyrial
 ```
 
 为了获得更好的体验，**我们建议你在笔记本上使用Empyrial**（Jupyter、Google Colab...）。
+
+_注意：macOS用户需要安装[命令行工具](https://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/)._
+
+_注意：如果你是在windows上，你首先需要安装C++。([下载](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16), [安装说明](https://drive.google.com/file/d/0B4GsMXCRaSSIOWpYQkstajlYZ0tPVkNQSElmTWh1dXFaYkJr/view))_
 	
 ## 功能
 
 <div align="center">
-  
+
 | 特征 📰 | 状态 |
 | -- | ------ |
-| Empyrial (回测+性能分析) | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.2.4)于2021年5月30日 | |
-| Oracle | :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/1.2.7) 2021年6月1日 | 
-| Fundlens | :alien: [Beta](https://github.com/ssantoshp/Empyrial/releases/tag/1.3.1) 2021年6月6日 |
-| 优化器 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.3.6) 2021年6月7日 |
-| 重新平衡 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.5.0) 于2021年6月27日 | | 风险因素镜头
-| 风险因素透镜 | :smile_cat: 正在开发中...  | 
-| 情绪透镜 | :smile_cat: 正在开发中... | 
+| 引擎（回溯测试+性能分析） | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.2.4) 于2021年5月30日 | |
+| 优化器 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.3.6) 于2021年6月7日 | |
+| 重新平衡 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.5.0) 于2021年6月27日 | | 风险管理人
+| 风险管理人 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.7.3)于2021年7月5日 | |沙盒
+| 沙盒 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.9.1) 于2021年7月17日|||||| [发布](https://github.com/ssantoshp/Empyrial/releases/tag/v1.9.1)
 
 </div>
 
 <br />
-
-以下是Empyrial的可用功能。
-
-- ```empyrial``` : **量化投资组合分析** | [Demo](https://colab.research.google.com/drive/1cj40dDqctfWNrVz_nK-FDhdWPay7fVBF?usp=sharing) | [文档](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
-
-- ```oracle``` : **预测生成**对你的投资组合使用几种预测模型（先知，自动-ARIMA，快速傅里叶变换...） | [Demo](https://colab.research.google.com/drive/11rMpQqW9Om82wzh71cr5k3vDQSNMZ4V1?usp=sharing) | [文档](https://github.com/ssantoshp/Empyrial/wiki/Oracle)
-
-- ```fundlens``` : **对您的投资组合中的每一项资产进行**基本面分析 | [Demo](https://colab.research.google.com/drive/1t2RfYwIJDZ3YN1z5MbS41unRGxGf0dif?usp=sharing) | [文档](https://github.com/ssantoshp/Empyrial/wiki/Fundlens)
-
-- ```optimizer```。**优化你的投资组合中的资产配置** | [Demo](https://colab.research.google.com/drive/12CfYznbdabSDYUbtSwamqyILOIwR7Sje?usp=sharing)
 
 ## 使用方法
 
@@ -94,94 +86,96 @@ from empyrial import empyrial, Engine
 portfolio = Engine(    
                   start_date= "2018-06-09", 
                   portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
-                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #equal weighting by default
-                  benchmark = ["SPY"] #SPY by default
+                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #默认情况下是等权重
+                  benchmark = ["SPY"] #SPY是默认设置的
 )
 
 empyrial(portfolio)
 ```
 
-[>>查看输出](https://github.com/ssantoshp/Empyrial/wiki/Empyrial)
-
-如果你想在你的策略中加入**再平衡**（基于日历），你可以这样做。
+**日历的重新平衡**
 
 ```py
 from empyrial import empyrial, Engine
 
 portfolio = Engine(    
                   start_date= "2018-06-09", 
-                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
-                  benchmark = ["SPY"] #SPY by default
-		  optimizer = "EF",
+                  portfolio = ["BABA", "PDD", "KO", "AMD", "^IXIC"], 
+		  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #默认设置为等额加权
+                  benchmark = ["SPY"], #SPY是默认设置的
 		  rebalance = "1y"
 )
 
 empyrial(portfolio)
 ```
 
-可用于重新平衡的时间段是```2y```,```1y```,```6mo```,```季度```,```月```。
-
-<br/>
-
-**资金来源**
-
-```py
-from empyrial import fundlens, Engine
-
-portfolio = Engine(    
-                  start_date= "2020-06-09", 
-                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
-                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #optional
-                  benchmark = ["SPY"] #optional
-)
-
-fundlens(portfolio)
-```
-
-[>> See the output](https://camo.githubusercontent.com/7cfaebabf9280c7f13ebd9af98585841aaf14e9e34e118a6b434ed45e23acb47/68747470733a2f2f692e6962622e636f2f51486259316e332f323032312d30362d30362d30316831382d34382e706e67)
-
-**Oracle**
-
-```py
-from empyrial import oracle, Engine
-
-portfolio = Engine(    
-                  start_date= "2020-06-09", 
-                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
-                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], 
-                  benchmark = ["SPY"] 
-)
-
-oracle(portfolio)
-```
-
-[>> See the output](https://camo.githubusercontent.com/bd2efb1afccb5454aec60f21cbd3bdd1e1ea55b2e5905e8eeb2db3c8a7f363c9/68747470733a2f2f692e6962622e636f2f5750386e6b316d2f323032312d30362d30322d32326831372d30382e706e67)
+可用于重新平衡的时间段是```2y```,```1y```,```6mo```,```quarterly```,```monthly```。
 
 <br />
 
-**优化器**
+**自定义再平衡**
 
-有3个优化器可用。
-
-- ```"EF"```: **全球有效边界**
-
-- ```"MV"```: **平均波动率** （在这种情况下，你必须定义一个你不想超过的最大波动率）。
-
-- ```"HRP"```: **分层风险平价**。
-
-注意：默认的优化器是**平等权重**_。
-
-有两种方法可以使用Empyrial的优化器。
-
-1) 直接用引擎优化分配
+你可以通过这样做来决定自定义的再平衡日期。
 
 ```py
-from empyrial import*
+from empyrial import empyrial, Engine
+
+portfolio = Engine(    
+                  start_date= "2018-06-09", 
+                  portfolio = ["BABA", "PDD", "KO", "AMD", "^IXIC"], 
+		  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #默认情况下是等权重的
+                  benchmark = ["SPY"], #默认为SPY
+		  rebalance = ["2018-06-09", "2019-01-01", "2020-01-01", "2021-01-01"]
+)
+
+empyrial(portfolio)
+```
+⚠️在这种情况下，确保列表的第一个元素对应于```start_date```，最后一个元素对应于```end_date```，默认是**今天的日期。
+
+<br/>
+
+**优化器**
+
+你可以使用自定义权重。
+
+```py
+from empyrial import empyrial, Engine
 
 portfolio = Engine(
       start_date = "2018-01-01",
-      portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"],
-      optimizer = "EF" 
+      portfolio = ["BABA", "PDD", "KO", "AMD", "^IXIC"], 
+      weights = [0.1, 0.3, 0.15, 0.25, 0.2], #自定义权重
+      rebalance = "1y" #每年重新平衡一次
+)
+
+empyrial(portfolio)
+```
+
+<br/>
+
+你也可以使用我们**的内置优化器**。有5个优化器可用。
+
+- ```"EF"```: **全球有效边际**
+
+- ```"meanvar"```: **平均波动率** (在这种情况下，你必须定义一个你不想超过的最大波动率)
+
+- ```"HRP"```: **分层风险平价**。
+
+- ```"minvar"```: **最小方差**
+
+- ```"BL"```: **Black Litterman**（在这种情况下，你必须定义你对你投资的资产的看法和信任度)
+
+_注意：默认的优化器是**平等权重**_。
+
+
+```py
+from empyrial import empyrial, Engine
+
+portfolio = Engine(
+      start_date = "2018-01-01",
+      portfolio = "BABA", "PDD", "KO", "AMD", "^IXIC"】。]
+      optimizer ="EF"。
+      rebalance = "1y" #每年重新平衡一次
 )
 
 portfolio.weights
@@ -193,30 +187,72 @@ portfolio.weights
 [0.31409, 0.0, 0.03472, 0.00046, 0.0, 0.0, 0.069, 0.08831, 0.00854, 0.48489]
 ```
 
+我们可以看到，分配已经被优化。
 
-2) 查看一个优化器的性能
+<br />
+
+**风险经理**
+
+有3个风险经理可供选择。
+
+- **最大缩水**: ```{"Max Drawdown" : -0.3}```
+- **获取利润t**: ```{"Take Profit" : 0.4}```
+- **止损**: ```{"Stop Loss" : -0.2}```
+
 ```py
-from empyrial import*
+from empyrial import empyrial, Engine
 
 portfolio = Engine(
       start_date = "2018-01-01",
-      portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"]
+      portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
+      optimizer = "EF",
+      rebalance = "1y", #每年重新平衡一次
+      Risk_manager = {"Max Drawdown" : -0.2} #当跌幅超过-20%时停止投资
 )
 
-#for efficient frontier
-optimizer(portfolio, "EF")
+empyrial(portfolio)
+``` 
 
-#for hierarchical risk parity
-optimizer(portfolio, "HRP")
+**工业输出**
 
-#for mean variance
-optimizer(portfolio, "MV", vol_max=0.15)
-```
-[>> See the output](https://user-images.githubusercontent.com/61618641/121251316-04c44f80-c8a7-11eb-9451-e96b9fd7eff5.png) 
+<div align="center">
+
+![image](https://user-images.githubusercontent.com/61618641/126879140-ea03ff17-a7c6-481a-bb3e-61c055b31267.png)
+![image](https://user-images.githubusercontent.com/61618641/126879203-4390813c-a4f2-41b9-916b-e03dd8bafffb.png)
+![image](https://user-images.githubusercontent.com/61618641/126879204-01fe1eca-00b8-438e-b489-0213535dd31b.png)
+![image](https://user-images.githubusercontent.com/61618641/126879210-9fd61e2b-01ab-4bfd-b679-3b1867d9302d.png)
+![image](https://user-images.githubusercontent.com/61618641/126879215-e24c929a-55be-4912-8e2c-043e31ff2a95.png)
+![image](https://user-images.githubusercontent.com/61618641/126879221-455b8ffa-c958-4ac9-ae98-d15b4c5f0826.png)
+![image](https://user-images.githubusercontent.com/61618641/126879222-08906643-16db-441e-a099-7ac3b00bdbd7.png)
+![image](https://user-images.githubusercontent.com/61618641/126879223-f1116dc3-cceb-493c-93b3-2d3810cae789.png)
+![image](https://user-images.githubusercontent.com/61618641/126879225-dc879b71-2070-46ed-a8ad-e90880050be8.png)
+![image](https://user-images.githubusercontent.com/61618641/126879297-cb78743a-6d43-465b-8021-d4b62a659828.png)
+
+</div>
 
 ## 下载泪水表
 
-想以PDF或HTML文件的形式下载分析报告的泪页吗？你可以查看[文档](https://github.com/ssantoshp/Empyrial/wiki/Downloading-the-generated-tearsheet)，看看如何做到这一点 :)
+你也可以下载由Empyrial生成的PDF格式的泪水表。
+
+```py
+from empyrial import get_report, Engine
+
+portfolio = Engine(
+      start_date = "2018-01-01",
+      portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM", "JD", "INTU", "NVDA", "DIS", "TSLA"],
+      optimizer = "EF",
+      rebalance = "1y", #每年重新平衡一次
+      risk_manager = {"Stop Loss" : -0.2}
+)
+
+get_report(portfolio)
+``` 
+
+输出。
+
+![image](https://user-images.githubusercontent.com/61618641/126879406-3ff8eb14-e08b-4103-b46d-02597634d469.png)
+
+通过www.DeepL.com/Translator（免费版）翻译
 
 ## 观星者随时间推移
 
