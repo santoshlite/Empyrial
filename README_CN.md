@@ -35,9 +35,9 @@ Empyrial通过将**业绩和风险分析的精华纳入一个**易于理解的**
 | --                     
 | 1. [安装](#安装) |  
 | 2. [功能](#功能) |  
-| 3. [使用实例](#使用方法) | 
-| 4. [下载拆页](#下载泪水表) | 
-| 5. [观星者随时间推移](#观星者随时间推移) | 
+| 3. [文档](#文档) | 
+| 4. [使用实例](#使用方法) | 
+| 5. [下载拆页](#下载泪水表) | 
 | 6. [贡献和问题](#贡献和问题) | 
 | 7. [贡献者和鸣谢](#贡献者) |
 | 8. [联系](#联系) | 
@@ -75,6 +75,12 @@ _注意：如果你是在windows上，你首先需要安装C++。([下载](https
 </div>
 
 <br />
+
+## 文档
+
+[完整文档](https://empyrial.gitbook.io/empyrial/) (网站)
+
+[完整文档](https://github.com/ssantoshp/Empyrial/blob/main/empyrial_documentation.pdf) (PDF)
 
 ## 使用方法
 
@@ -155,13 +161,13 @@ empyrial(portfolio)
 
 你也可以使用我们**的内置优化器**。有4个优化器可用。
 
-- ```"EF"```: **全球有效边际**
+- ```"EF"```: **全球有效边际** [Example](https://empyrial.gitbook.io/empyrial/optimization/global-efficient-frontier)
 
-- ```"MEANVAR"```: **平均波动率** (在这种情况下，你必须定义一个你不想超过的最大波动率)
+- ```"MEANVAR"```: **平均波动率** [Example](https://empyrial.gitbook.io/empyrial/optimization/mean-variance)
 
-- ```"HRP"```: **分层风险平价**。
+- ```"HRP"```: **分层风险平价**。[Example](https://empyrial.gitbook.io/empyrial/optimization/hierarchical-risk-parity)
 
-- ```"MINVAR"```: **最小方差**
+- ```"MINVAR"```: **最小方差** [Example](https://empyrial.gitbook.io/empyrial/optimization/minimum-variance)
 
 _注意：默认的优化器是**平等权重**_。
 
@@ -193,9 +199,9 @@ portfolio.weights
 
 有3个风险经理可供选择。
 
-- **最大缩水**: ```{"Max Drawdown" : -0.3}```
-- **获取利润t**: ```{"Take Profit" : 0.4}```
-- **止损**: ```{"Stop Loss" : -0.2}```
+- **最大缩水**: ```{"Max Drawdown" : -0.3}``` [Example](https://empyrial.gitbook.io/empyrial/risk-management/max-drawdown)
+- **获取利润t**: ```{"Take Profit" : 0.4}``` [Example](https://empyrial.gitbook.io/empyrial/risk-management/take-profit)
+- **止损**: ```{"Stop Loss" : -0.2}``` [Example](https://empyrial.gitbook.io/empyrial/risk-management/stop-loss)
 
 ```py
 from empyrial import empyrial, Engine
