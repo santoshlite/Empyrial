@@ -551,10 +551,7 @@ def optimizer(my_portfolio, vol_max=25, pie_size=5, font_size=14):
   if my_portfolio.optimizer == "EW":
     wts = equal_weighting(my_portfolio)
 
-  if my_portfolio.optimizer == "BL":
-    wts = bl(my_portfolio)
-
-  if my_portfolio.optimizer != None and my_portfolio.optimizer != "EF" and my_portfolio.optimizer !="MEANVAR" and my_portfolio.optimizer !="HRP" and my_portfolio.optimizer !="MINVAR" and my_portfolio.optimizer !="BL":
+  if my_portfolio.optimizer != None and my_portfolio.optimizer != "EF" and my_portfolio.optimizer !="MEANVAR" and my_portfolio.optimizer !="HRP" and my_portfolio.optimizer !="MINVAR":
       opt = my_portfolio.optimizer
       my_portfolio.weights = opt()
 
