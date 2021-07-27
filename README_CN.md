@@ -243,7 +243,7 @@ from empyrial import get_report, Engine
 
 portfolio = Engine(
       start_date = "2018-01-01",
-      portfolio = ["BLK", "BAC", "AAPL", "TM", "JPM", "JD", "INTU", "NVDA", "DIS", "TSLA"],
+      portfolio = ["BABA", "PDD", "KO", "AMD", "^IXIC"],
       optimizer = "EF",
       rebalance = "1y", #每年重新平衡一次
       risk_manager = {"Stop Loss" : -0.2}
