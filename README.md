@@ -35,12 +35,13 @@ With Empyrial, you can easily analyze security or a portfolio in order to **get 
 | --                     
 | 1. [Installation](#installation) | 
 | 2. [Features](#features) | 
-| 3. [Usage example](#usage) |
-| 4. [Download the tearsheet](#download-the-tearsheet) |
-| 5. [Contribution and Issues](#contribution-and-issues) | 
-| 6. [Contributors](#contributors) |
-| 7. [Contact](#contact) |
-| 8. [License](#license) |
+| 3. [Documentation](#documentation) | 
+| 4. [Usage example](#usage) |
+| 5. [Download the tearsheet](#download-the-tearsheet) |
+| 6. [Contribution and Issues](#contribution-and-issues) | 
+| 7. [Contributors](#contributors) |
+| 8. [Contact](#contact) |
+| 9. [License](#license) |
 	
 </div>
 
@@ -72,6 +73,13 @@ _Note: if you are on windows, you first need to install C++. ([download](https:/
 | Sandbox | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.9.1) on Jul 17, 2021 |
   
 </div>
+
+## Documentation
+
+[Full documentation](https://empyrial.gitbook.io/empyrial/) (website)
+
+[Full documentation](https://github.com/ssantoshp/Empyrial/blob/main/empyrial_documentation.pdf) (PDF)
+
 
 ## Usage
 
@@ -151,13 +159,13 @@ empyrial(portfolio)
 
 You can also use our **built-in optimizers**. There are 4 optimizers available:
 
-- ```"EF"```: **Global Efficient Frontier**
+- ```"EF"```: **Global Efficient Frontier** [Example](https://empyrial.gitbook.io/empyrial/optimization/global-efficient-frontier)
 
-- ```"MEANVAR"```: **Mean-Variance** (in this case, you'll have to define a max volatility that you don't want to exceed)
+- ```"MEANVAR"```: **Mean-Variance** [Example](https://empyrial.gitbook.io/empyrial/optimization/mean-variance)
 
-- ```"HRP"```: **Hierarchical Risk Parity**
+- ```"HRP"```: **Hierarchical Risk Parity** [Example](https://empyrial.gitbook.io/empyrial/optimization/hierarchical-risk-parity)
 
-- ```"MINVAR"```: **Minimum-Variance**
+- ```"MINVAR"```: **Minimum-Variance** [Example](https://empyrial.gitbook.io/empyrial/optimization/minimum-variance)
 
 _Note: the default optimizer is **equal weighting**_
 
@@ -187,9 +195,9 @@ We can see that the allocation has been optimized.
 
 3 Risk managers are available:
 
-- **Max Drawdown**: ```{"Max Drawdown" : -0.3}```
-- **Take Profit**: ```{"Take Profit" : 0.4}```
-- **Stop Loss**: ```{"Stop Loss" : -0.2}```
+- **Max Drawdown**: ```{"Max Drawdown" : -0.3}``` [Example](https://empyrial.gitbook.io/empyrial/risk-management/max-drawdown)
+- **Take Profit**: ```{"Take Profit" : 0.4}``` [Example](https://empyrial.gitbook.io/empyrial/risk-management/take-profit)
+- **Stop Loss**: ```{"Stop Loss" : -0.2}``` [Example](https://empyrial.gitbook.io/empyrial/risk-management/stop-loss)
 
 ```py
 from empyrial import empyrial, Engine
