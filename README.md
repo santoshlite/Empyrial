@@ -149,7 +149,7 @@ portfolio = Engine(
 empyrial(portfolio)
 ```
 
-You can also use our **built-in optimizers**. There are 5 optimizers available:
+You can also use our **built-in optimizers**. There are 4 optimizers available:
 
 - ```"EF"```: **Global Efficient Frontier**
 
@@ -158,8 +158,6 @@ You can also use our **built-in optimizers**. There are 5 optimizers available:
 - ```"HRP"```: **Hierarchical Risk Parity**
 
 - ```"MINVAR"```: **Minimum-Variance**
-
-- ```"BL"```: **Black Litterman** (in this case, you'll have to define you're views and confidences on the assets you invest in)
 
 _Note: the default optimizer is **equal weighting**_
 
