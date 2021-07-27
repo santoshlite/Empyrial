@@ -35,8 +35,6 @@ class Engine:
     self.diversification = diversification
     self.max_weights = max_weights
     self.min_weights = min_weights
-    self.view = view
-    self.confidences = confidences
     self.risk_manager = risk_manager
     self.data = data
 
@@ -56,9 +54,6 @@ class Engine:
 
     if self.optimizer=="MINVAR":
       self.weights = min_var(self, perf="False")
-
-    if self.optimizer== "BL":
-      self.weights = bl(self, perf="False")
 
     if self.optimizer != None and self.optimizer != "EF" and self.optimizer !="MEANVAR" and self.optimizer !="HRP" and self.optimizer !="MINVAR" and self.optimizer !="BL":
       opt = self.optimizer
@@ -440,52 +435,6 @@ def efficient_frontier(my_portfolio, perf=True):
     pred = ef.portfolio_performance(verbose=True);
   
   return flatten(result)
-#-------------------------------------------------------------------------------
-def bl(my_portfolio, perf=True):
-
-
-  ohlc = yf.download(my_portfolio.portfolio, start = my_portfolio.start_date, end = my_portfolio.end_date, progress=False)
-  market_prices = yf.download("SPY",start = my_portfolio.start_date, end = my_portfolio.end_date, progress=False)["Adj Close"]
-  prices = ohlc["Adj Close"]
-
-  df = prices.filter(my_portfolio.portfolio)
-
-  mcaps = {}
-  for t in my_portfolio.portfolio:
-      stock = yf.Ticker(t)
-      mcaps[t] = stock.info["marketCap"]
-  S = risk_models.CovarianceShrinkage(prices).ledoit_wolf()
-
-  delta = black_litterman.market_implied_risk_aversion(market_prices)
-
-  market_prior = black_litterman.market_implied_prior_returns(mcaps, delta, S)
-
-  bl = BlackLittermanModel(S, pi="market", market_caps=mcaps, risk_aversion=delta,
-                        absolute_views=my_portfolio.view, omega="idzorek", view_confidences= my_portfolio.confidences)
-  
-  ret_bl = bl.bl_returns()
-  S_bl = bl.bl_cov()
-  
-  ef = EfficientFrontier(ret_bl, S_bl)
-  if my_portfolio.min_weights != None:
-    ef.add_constraint(lambda x : x >= my_portfolio.min_weights)
-  if my_portfolio.max_weights != None:
-    ef.add_constraint(lambda x : x <= my_portfolio.max_weights)
-  ef.max_sharpe()
-  weights = ef.clean_weights()
-  lists = dict(weights)
-  wts = weights.items()
-
-
-  wei = []
-  for a in my_portfolio.portfolio:
-    value = lists[a]
-    wei.append(value)
-
-  if perf==True:
-    pred = ef.portfolio_performance(verbose=True);
-  
-  return wei
 #-------------------------------------------------------------------------------
 def hrp(my_portfolio, perf=True):
 
