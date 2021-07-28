@@ -54,11 +54,11 @@ You can install Empyrial using pip:
 pip install empyrial
 ```
 
-For a better experience, **we advise you to use Empyrial on a notebook** (Jupyter, Google Colab...)
+For a better experience, **we advise you to use Empyrial on a notebook** (e.g., Jupyter, Google Colab)
 
-_Note: macOS users will need to install [Command Line Tools](https://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/)._
+_Note: macOS users will need to install [Xcode Command Line Tools](https://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/)._
 
-_Note: if you are on windows, you first need to install C++. ([download](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16), [install instructions](https://drive.google.com/file/d/0B4GsMXCRaSSIOWpYQkstajlYZ0tPVkNQSElmTWh1dXFaYkJr/view))_
+_Note: Windows users will need to install C++. ([download](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16), [install instructions](https://drive.google.com/file/d/0B4GsMXCRaSSIOWpYQkstajlYZ0tPVkNQSElmTWh1dXFaYkJr/view))_
 
 ## Features
 
@@ -83,137 +83,126 @@ _Note: if you are on windows, you first need to install C++. ([download](https:/
 
 ## Usage
 
-**Empyrial**
-
-```py
-from empyrial import empyrial, Engine
-
-portfolio = Engine(    
-                  start_date= "2018-06-09", 
-                  portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
-                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #equal weighting is set by default
-                  benchmark = ["SPY"] #SPY is set by default
-)
-
-empyrial(portfolio)
-```
-<br>
-
-**Calendar Rebalancing**
-
-```py
-from empyrial import empyrial, Engine
-
-portfolio = Engine(    
-                  start_date= "2018-06-09", 
-                  portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
-		  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #equal weighting is set by default
-                  benchmark = ["SPY"], #SPY is set by default
-		  rebalance = "1y"
-)
-
-empyrial(portfolio)
-```
-
-Time periods available for rebalancing are ```2y```,```1y```,```6mo```,```quarterly```,```monthly```
-
-<br/>
-
-**Custom Rebalancing**
-
-You can decide custom dates for rebalancing, by doing this:
-
-```py
-from empyrial import empyrial, Engine
-
-portfolio = Engine(    
-                  start_date= "2018-06-09", 
-                  portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
-		  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #equal weighting by default
-                  benchmark = ["SPY"], #SPY by default
-		  rebalance = ["2018-06-09", "2019-01-01", "2020-01-01", "2021-01-01"]
-)
-
-empyrial(portfolio)
-```
-⚠️ In that case make sure, that the 1st element of the list corresponds to the ```start_date``` and the last element corresponds to the ```end_date``` which is **today's date** by default.
-
-<br/>
-
-**Optimizer**
-
-You can use custom weights:
+### Empyrial Engine
 
 ```py
 from empyrial import empyrial, Engine
 
 portfolio = Engine(
-      start_date = "2018-01-01",
-      portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
-      weights = [0.1, 0.3, 0.15, 0.25, 0.2], #custom weights
-      rebalance = "1y" #rebalance every year
+    start_date = "2018-06-09", 
+    portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"], 
+    weights = [0.2, 0.2, 0.2, 0.2, 0.2],  # equal weighting is set by default
+    benchmark = ["SPY"]  # SPY is set by default
 )
 
 empyrial(portfolio)
 ```
 
-You can also use our **built-in optimizers**. There are 4 optimizers available:
+### Calendar Rebalancing
+A portfolio can be rebalanced for either a specific time period or for specific dates using the ```rebalance``` option.
 
-- ```"EF"```: **Global Efficient Frontier** [Example](https://empyrial.gitbook.io/empyrial/optimization/global-efficient-frontier)
+#### Rebalance for Time Period
+Time periods available for rebalancing are 
+ ```2y```, ```1y```, ```6mo```, ```quarterly```, ```monthly```  
 
-- ```"MEANVAR"```: **Mean-Variance** [Example](https://empyrial.gitbook.io/empyrial/optimization/mean-variance)
+```py
+from empyrial import empyrial, Engine
 
-- ```"HRP"```: **Hierarchical Risk Parity** [Example](https://empyrial.gitbook.io/empyrial/optimization/hierarchical-risk-parity)
+portfolio = Engine(
+    start_date = "2018-06-09", 
+    portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"], 
+    weights = [0.2, 0.2, 0.2, 0.2, 0.2],  # equal weighting is set by default
+    benchmark = ["SPY"],  # SPY is set by default
+    rebalance = "1y"
+)
 
-- ```"MINVAR"```: **Minimum-Variance** [Example](https://empyrial.gitbook.io/empyrial/optimization/minimum-variance)
+empyrial(portfolio)
+```
 
-_Note: the default optimizer is **equal weighting**_
+#### Rebalance for Custom Dates
+You can rebalance a portfolio by specifying a list of custom dates.  
+⚠️ When using custom dates, the first date of the list must correspond with the ```start_date``` and the last element should correspond to the ```end_date``` which is **today's date** by default.
+
+```py
+from empyrial import empyrial, Engine
+
+portfolio = Engine(
+    start_date = "2018-06-09", 
+    portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"], 
+    weights = [0.2, 0.2, 0.2, 0.2, 0.2],  # equal weighting is set by default
+    benchmark = ["SPY"],  # SPY is set by default
+    rebalance = ["2018-06-09", "2019-01-01", "2020-01-01", "2021-01-01"]
+)
+
+empyrial(portfolio)
+```
+
+### Optimizer
+The default optimizer is **equal weighting**. You can specify custom weights, if desired.
+
+```py
+from empyrial import empyrial, Engine
+
+portfolio = Engine(
+    start_date = "2018-01-01",
+    portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"], 
+    weights = [0.1, 0.3, 0.15, 0.25, 0.2],   # custom weights
+    rebalance = "1y"  # rebalance every year
+)
+
+empyrial(portfolio)
+```
+
+You can also use the **built-in optimizers**. There are 4 optimizers available:  
+
+- ```"EF"```: **Global Efficient Frontier**  [Example](https://empyrial.gitbook.io/empyrial/optimization/global-efficient-frontier)
+- ```"MEANVAR"```: **Mean-Variance**  [Example](https://empyrial.gitbook.io/empyrial/optimization/mean-variance)
+- ```"HRP"```: **Hierarchical Risk Parity**  [Example](https://empyrial.gitbook.io/empyrial/optimization/hierarchical-risk-parity)
+- ```"MINVAR"```: **Minimum-Variance**  [Example](https://empyrial.gitbook.io/empyrial/optimization/minimum-variance)
 
 
 ```py
 from empyrial import empyrial, Engine
 
 portfolio = Engine(
-      start_date = "2018-01-01",
-      portfolio = "BABA", "PDD", "KO", "AMD","^IXIC"],
-      optimizer = "EF",
-      rebalance = "1y" #rebalance every year
+    start_date = "2018-01-01",
+    portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"],
+    optimizer = "EF",
+    rebalance = "1y"  # rebalance every year
 )
 
 portfolio.weights
 ```
 
-Output:
+> Output:
 
 ```
-[0.31409, 0.0, 0.03472, 0.00046, 0.0, 0.0, 0.069, 0.08831, 0.00854, 0.48489]
-```
-
+[0.0, 0.0, 0.0348, 0.9652, 0.0]
+```  
 We can see that the allocation has been optimized.
 
-**Risk Manager**
+### Risk Manager
+3 Risk Managers are available:
 
-3 Risk managers are available:
-
-- **Max Drawdown**: ```{"Max Drawdown" : -0.3}``` [Example](https://empyrial.gitbook.io/empyrial/risk-management/max-drawdown)
-- **Take Profit**: ```{"Take Profit" : 0.4}``` [Example](https://empyrial.gitbook.io/empyrial/risk-management/take-profit)
-- **Stop Loss**: ```{"Stop Loss" : -0.2}``` [Example](https://empyrial.gitbook.io/empyrial/risk-management/stop-loss)
+- **Max Drawdown**: ```{"Max Drawdown" : -0.3}```  [Example](https://empyrial.gitbook.io/empyrial/risk-management/max-drawdown)
+- **Take Profit**: ```{"Take Profit" : 0.4}```  [Example](https://empyrial.gitbook.io/empyrial/risk-management/take-profit)
+- **Stop Loss**: ```{"Stop Loss" : -0.2}```  [Example](https://empyrial.gitbook.io/empyrial/risk-management/stop-loss)
 
 ```py
 from empyrial import empyrial, Engine
 
 portfolio = Engine(
-      start_date = "2018-01-01",
-      portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
-      optimizer = "EF",
-      rebalance = "1y", #rebalance every year
-      risk_manager = {"Max Drawdown" : -0.2} #Stop the investment when the drawdown becomes superior to -20%
+    start_date = "2018-01-01",
+    portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
+    optimizer = "EF",
+    rebalance = "1y",  # rebalance every year
+    risk_manager = {"Max Drawdown" : -0.2}  # Stop the investment when the drawdown becomes superior to -20%
 )
 
 empyrial(portfolio)
 ``` 
 
-**Empyrial output**
+### Empyrial Outputs
 
 <div align="center">
 
@@ -231,8 +220,7 @@ empyrial(portfolio)
 </div>
 
 ## Download the Tearsheet
-
-You can also download the tearsheet generated by Empyrial in a PDF format:
+You can use the ```get_report()``` function of Empyrial to generate a tearsheet, and then download this as a PDF document.
 
 ```py
 from empyrial import get_report, Engine
@@ -248,7 +236,7 @@ portfolio = Engine(
 get_report(portfolio)
 ``` 
 
-Output:
+> Output:
 
 ![image](https://user-images.githubusercontent.com/61618641/126879406-3ff8eb14-e08b-4103-b46d-02597634d469.png)
 
@@ -262,16 +250,22 @@ Output:
 </div>
 
 ## Contribution and Issues
+Empyrial uses GitHub to host its source code.  *Learn more about the [Github flow](https://docs.github.com/en/get-started/quickstart/github-flow).*  
 
-- [Create Issue](https://github.com/ssantoshp/Empyrial/issues/new/choose) - For the larger changes (such as new features, large refactoring, etc.) it is best to first open an issue to discuss, and smaller improvements (such as document improvements, bugfixes, etc.) can be sent directly to PR
+For larger changes (e.g., new feature request, large refactoring), please open an issue to discuss first.  
 
-- Fork [Empyrial](https://github.com/ssantoshp/Empyrial) - Click the **Fork** button in the upper right corner
+* If you wish to create a new Issue, then [click here to create a new issue](https://github.com/ssantoshp/Empyrial/issues/new/choose).  
 
-- Clone your own fork: ```git clone https://github.com/ssantoshp/Empyrial.git```
+Smaller improvements (e.g., document improvements, bugfixes) can be handled by the Pull Request process of GitHub: [pull requests](https://github.com/ssantoshp/Empyrial/pulls).  
 
-	* If your fork is out of date, you need to manually sync: [Synchronization method](https://help.github.com/articles/syncing-a-fork/)
+* To contribute to the code, you will need to do the following:  
 
-- Empyrial uses GitHub to host its source code, if you wish to contribute code please use the PR (Pull Request) process of GitHub: [pull requests](https://github.com/ssantoshp/Empyrial/pulls). It'll waiting for review, checked/modified and be merged!
+ * [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo#forking-a-repository) [Empyrial](https://github.com/ssantoshp/Empyrial) - Click the **Fork** button at the upper right corner of this page. 
+ * [Clone your own fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository).  E.g., ```git clone https://github.com/ssantoshp/Empyrial.git```  
+  *If your fork is out of date, then will you need to manually sync your fork: [Synchronization method](https://help.github.com/articles/syncing-a-fork/)*
+ * [Create a Pull Request](https://github.com/ssantoshp/Empyrial/pulls) using **your fork** as the `compare head repository`. 
+
+You contributions will be reviewed, potentially modified, and hopefully merged into Empyrial.  
 
 ## Contributors
 
