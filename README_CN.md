@@ -280,7 +280,7 @@ get_report(portfolio)
 
 感谢这些优秀的人（[表情符号键](https://allcontributors.org/docs/en/emoji-key)）。
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
 
 <table>
   <tr>
@@ -291,6 +291,7 @@ get_report(portfolio)
     <td align="center"><a href="https://github.com/TonyZhangkz"><img src="https://avatars.githubusercontent.com/u/65281213?v=4" width="100px;" alt=""<br /><sub><b>Tony Zhang</b></sub></a><br /><a title="代码">💻</a></td>
     <td align="center"><a href="https://github.com/eltociear"><img src="https://avatars.githubusercontent.com/u/22633385?v=4" width="100px;" alt=""<br /><sub><b>Ikko Ashimine</b></sub></a><br /><a title="代码">✒️</a></td>
     <td align="center"><a href="https://www.youtube.com/watch?v=-4qx3tbtTgs"><img src="https://avatars.githubusercontent.com/u/50767660?v=4" width="100px;" alt=""<br /><sub><b>QuantNomad</b></sub></a><br /><a title="代码">📹</a></td>
+    <td align="center"><a href="https://github.com/buckleyc"><img src="https://avatars.githubusercontent.com/u/4175900?v=4" width="100px;" alt=""/><br /><sub><b>Buckley</b></sub></a><br /><a title="Code">✒️💻</a></td>
     <td align="center"><a href="https://github.com/agn35"><img src="https://lh3.googleusercontent.com/a-/AOh14GhXGFHHpVQTL2r23oEXFssH0f7RyoGDihrS_HmT=s48" width="100px;" alt=""><br /><sub><b>Adam Nelsson</b></sub></a><br /><a title="代码"></a></td>
   </tr>
 </table>
