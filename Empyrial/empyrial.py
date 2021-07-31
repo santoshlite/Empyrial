@@ -126,8 +126,8 @@ def get_returns_from_data(data, wts):
 def information_ratio(returns, benchmark_returns, days=252):
     return_difference = returns - benchmark_returns
     volatility = return_difference.std() * np.sqrt(days)
-    information_ratio = return_difference.mean() / volatility
-    return information_ratio
+    information_ratio_result = return_difference.mean() / volatility
+    return information_ratio_result
 
 
 def graph_allocation(my_portfolio):
