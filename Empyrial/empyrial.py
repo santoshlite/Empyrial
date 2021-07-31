@@ -69,29 +69,17 @@ class Engine:
         self.risk_manager = risk_manager
         self.data = data
 
-        if self.weights == None:
+        optimizers = {
+            "EF": efficient_frontier(self, perf=False),
+            "MEANVAR": mean_var(self, vol_max=max_vol, perf=False),
+            "HRP": hrp(self, perf=False),
+            "MINVAR": min_var(self, perf=False),
+        }
+        if self.optimizer is None:
             self.weights = [1.0 / len(self.portfolio)] * len(self.portfolio)
-
-        if self.optimizer == "EF":
-            self.weights = efficient_frontier(self, perf="False")
-
-        if self.optimizer == "MEANVAR":
-            self.weights = mean_var(self, vol_max=max_vol, perf="False")
-
-        if self.optimizer == "HRP":
-            self.weights = hrp(self, perf="False")
-
-        if self.optimizer == "MINVAR":
-            self.weights = min_var(self, perf="False")
-
-        if (
-            self.optimizer != None
-            and self.optimizer != "EF"
-            and self.optimizer != "MEANVAR"
-            and self.optimizer != "HRP"
-            and self.optimizer != "MINVAR"
-            and self.optimizer != "BL"
-        ):
+        elif self.optimizer in optimizers.keys():
+            self.weights = optimizers.get(self.optimizer, [1.0 / len(self.portfolio)] * len(self.portfolio))
+        else:
             opt = self.optimizer
             self.weights = opt()
 
