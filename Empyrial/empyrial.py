@@ -663,28 +663,18 @@ def optimizer(my_portfolio, vol_max=25, pie_size=5, font_size=14):
 
     port = copy.deepcopy(my_portfolio.portfolio)
 
-    if my_portfolio.optimizer == "EF":
-        wts = efficient_frontier(my_portfolio)
+    wts = [1.0 / len(my_portfolio.portfolio)] * len(my_portfolio.portfolio)
 
-    if my_portfolio.optimizer == "HRP":
-        wts = hrp(my_portfolio)
-
-    if my_portfolio.optimizer == "MEANVAR":
-        wts = mean_var(my_portfolio, my_portfolio.max_vol)
-
-    if my_portfolio.optimizer == "MINVAR":
-        wts = min_var(my_portfolio)
-
-    if my_portfolio.optimizer == "EW":
-        wts = equal_weighting(my_portfolio)
-
-    if (
-        my_portfolio.optimizer != None
-        and my_portfolio.optimizer != "EF"
-        and my_portfolio.optimizer != "MEANVAR"
-        and my_portfolio.optimizer != "HRP"
-        and my_portfolio.optimizer != "MINVAR"
-    ):
+    optimizers = {
+        "EF": efficient_frontier(my_portfolio),
+        "MEANVAR": mean_var(my_portfolio, my_portfolio.max_vol),
+        "HRP": hrp(my_portfolio),
+        "MINVAR": min_var(my_portfolio),
+    }
+    
+    if my_portfolio.optimizer in optimizers.keys():
+        wts = optimizers.get(my_portfolio.optimizer, [1.0 / len(my_portfolio.portfolio)] * len(my_portfolio.portfolio))
+    else:
         opt = my_portfolio.optimizer
         my_portfolio.weights = opt()
 
