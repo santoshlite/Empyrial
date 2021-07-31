@@ -1061,6 +1061,8 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
 
     fig1, ax1 = plt.subplots()
     fig1.set_size_inches(5, 5)
+    
+    #defining colors for the allocation pie
     cs = [
         "#ff9999",
         "#66b3ff",
