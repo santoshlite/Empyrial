@@ -269,8 +269,8 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     )
 
     CAGR = cagr(returns, period='daily', annualization=None)
-    CAGR = round(CAGR, 2)
-    CAGR = CAGR.tolist()
+    # CAGR = round(CAGR, 2)
+    # CAGR = CAGR.tolist()
     CAGR = str(round(CAGR * 100, 2)) + "%"
 
     CUM = cum_returns(returns, starting_value=0, out=None) * 100
@@ -1151,8 +1151,8 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     )
 
     CAGR = cagr(returns, period='daily', annualization=None)
-    CAGR = round(CAGR, 2)
-    CAGR = CAGR.tolist()
+    # CAGR = round(CAGR, 2)
+    # CAGR = CAGR.tolist()
     CAGR = str(round(CAGR * 100, 2)) + "%"
 
     CUM = cum_returns(returns, starting_value=0, out=None) * 100
