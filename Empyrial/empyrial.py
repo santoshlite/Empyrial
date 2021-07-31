@@ -335,13 +335,9 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     VAR = np.round(VAR, decimals=2)
     VAR = str(VAR * 100) + " %"
 
-    AL = alpha_beta(returns, benchmark, risk_free=rf)
-    AL = AL[0]
-    AL = round(AL, 2)
-
-    BTA = alpha_beta(returns, benchmark, risk_free=rf)
-    BTA = BTA[1]
-    BTA = round(BTA, 2)
+    alpha, beta = alpha_beta(returns, benchmark, risk_free=rf)
+    AL = round(alpha, 2)
+    BTA = round(beta, 2)
 
     def condition(x):
         return x > 0
@@ -1217,13 +1213,9 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     VAR = np.round(VAR, decimals=2)
     VAR = str(VAR * 100) + " %"
 
-    AL = alpha_beta(returns, benchmark, risk_free=rf)
-    AL = AL[0]
-    AL = round(AL, 2)
-
-    BTA = alpha_beta(returns, benchmark, risk_free=rf)
-    BTA = BTA[1]
-    BTA = round(BTA, 2)
+    alpha, beta = alpha_beta(returns, benchmark, risk_free=rf)
+    AL = round(alpha, 2)
+    BTA = round(beta, 2)
 
     def condition(x):
         return x > 0
