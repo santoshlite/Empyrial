@@ -745,20 +745,13 @@ def valid_range(start_date, end_date, rebalance):
     days = (end_date - start_date).days
 
     # all of this is for checking the length
-
-    if rebalance == "6mo" and days <= (int(365 / 2)):
-        raise KeyError("Date Range does not encompass rebalancing interval")
-
-    if rebalance == "1y" and days <= int(365):
-        raise KeyError("Date Range does not encompass rebalancing interval")
-
-    if rebalance == "2y" and days <= int(365 * 2):
-        raise KeyError("Date Range does not encompass rebalancing interval")
-
-    if rebalance == "quarterly" and days <= int(365 / 4):
-        raise KeyError("Date Range does not encompass rebalancing interval")
-
-    if rebalance == "monthyl" and days <= int(30):
+    if (
+            rebalance is "6mo" and days <= (int(365 / 2))) \
+            or (rebalance is "1y" and days <= int(365)) \
+            or (rebalance is "2y" and days <= int(365 * 2)) \
+            or (rebalance is "quarterly" and days <= int(365 / 4)) \
+            or (rebalance is "monthly" and days <= int(30)
+    ):
         raise KeyError("Date Range does not encompass rebalancing interval")
 
     # we will needs these dates later on so we'll return them back
