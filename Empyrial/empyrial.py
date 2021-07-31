@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
-import math
+# import math
 import datetime as dt
-from empyrical import *
 import quantstats as qs
 from IPython.display import display
 import matplotlib.pyplot as plt
@@ -10,14 +9,23 @@ import copy
 import yfinance as yf
 from fpdf import FPDF
 import warnings
+from empyrical import (
+    cagr,
+    cum_returns,
+    stability_of_timeseries,
+    max_drawdown,
+    sortino_ratio,
+    alpha_beta,
+    tail_ratio,
+)
 from pypfopt import (
     EfficientFrontier,
     risk_models,
     expected_returns,
     HRPOpt,
     objective_functions,
-    black_litterman,
-    BlackLittermanModel,
+    # black_litterman,
+    # BlackLittermanModel,
 )
 
 warnings.filterwarnings("ignore")
