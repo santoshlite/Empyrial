@@ -6,3 +6,7 @@ quantstats
 yfinance
 pyportfolioopt
 ipython
+
+setuptools
+pandas
+fpdf
