@@ -726,24 +726,11 @@ def check_schedule(rebalance):
     # this is the list of acceptable rebalancing schedules
     acceptable_schedules = ["6mo", "1y", "2y", "quarterly", "monthly"]
 
-    # we want to loop through the acceptable schedules to see if the user inputted the right rebalance
-    for i in acceptable_schedules:
+    if rebalance in acceptable_schedules:
+        valid_schedule = True
+    else:
+        valid_schedule = False
 
-        # want to make this a try with an error if it is incorrect
-
-        # check if the inputted rebalance is an acceptable
-        if i == rebalance:
-
-            # if the inputted rebalancing is in the acceptable schedule set to true
-            valid_schedule = True
-            return valid_schedule
-            break
-
-        # if the inputted value isn't in our accepted rebalancing schedule
-        else:
-            valid_schedule = False
-
-    # return that back
     return valid_schedule
 
 
