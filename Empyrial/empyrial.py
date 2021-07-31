@@ -71,20 +71,23 @@ class Engine:
         self.data = data
 
         optimizers = {
-            "EF": efficient_frontier(self, perf=False),
-            "MEANVAR": mean_var(self, vol_max=max_vol, perf=False),
-            "HRP": hrp(self, perf=False),
-            "MINVAR": min_var(self, perf=False),
+            "EF": efficient_frontier,
+            "MEANVAR": mean_var,
+            "HRP": hrp,
+            "MINVAR": min_var,
         }
         if self.optimizer is None:
             self.weights = [1.0 / len(self.portfolio)] * len(self.portfolio)
         elif self.optimizer in optimizers.keys():
-            self.weights = optimizers.get(self.optimizer, [1.0 / len(self.portfolio)] * len(self.portfolio))
+            if self.optimizer is "MEANVAR":
+                self.weights = optimizers.get(self.optimizer)(self, vol_max=max_vol, perf=False)
+            else:
+                self.weights = optimizers.get(self.optimizer)(self, perf=False)
         else:
             opt = self.optimizer
             self.weights = opt()
 
-        if self.rebalance is None:
+        if self.rebalance is not None:
             self.rebalance = make_rebalance(
                 self.start_date,
                 self.end_date,
@@ -123,7 +126,7 @@ def get_returns_from_data(data, wts):
     return returns
 
 
-def information_ratio(returns, benchmark_returns, days=252):
+def calculate_information_ratio(returns, benchmark_returns, days=252):
     return_difference = returns - benchmark_returns
     volatility = return_difference.std() * np.sqrt(days)
     information_ratio_result = return_difference.mean() / volatility
@@ -349,7 +352,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     win_ratio = win_ratio * 100
     win_ratio = round(win_ratio, 2)
 
-    IR = information_ratio(returns, benchmark.iloc[:, 0])
+    IR = calculate_information_ratio(returns, benchmark.iloc[:, 0])
     IR = round(IR, 2)
 
     data = {
@@ -665,14 +668,17 @@ def optimizer(my_portfolio, vol_max=25, pie_size=5, font_size=14):
     wts = [1.0 / len(my_portfolio.portfolio)] * len(my_portfolio.portfolio)
 
     optimizers = {
-        "EF": efficient_frontier(my_portfolio),
-        "MEANVAR": mean_var(my_portfolio, my_portfolio.max_vol),
-        "HRP": hrp(my_portfolio),
-        "MINVAR": min_var(my_portfolio),
+        "EF": efficient_frontier,
+        "MEANVAR": mean_var,
+        "HRP": hrp,
+        "MINVAR": min_var,
     }
     
     if my_portfolio.optimizer in optimizers.keys():
-        wts = optimizers.get(my_portfolio.optimizer, [1.0 / len(my_portfolio.portfolio)] * len(my_portfolio.portfolio))
+        if my_portfolio.optimizer is "MEANVAR":
+            wts = optimizers.get(my_portfolio.optimizer)(my_portfolio, my_portfolio.max_vol)
+        else:
+            wts = optimizers.get(my_portfolio.optimizer)(my_portfolio)
     else:
         opt = my_portfolio.optimizer
         my_portfolio.weights = opt()
@@ -1195,7 +1201,7 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     win_ratio = win_ratio * 100
     win_ratio = round(win_ratio, 2)
 
-    IR = information_ratio(returns, benchmark.iloc[:, 0])
+    IR = calculate_information_ratio(returns, benchmark.iloc[:, 0])
     IR = round(IR, 2)
 
     data = {
