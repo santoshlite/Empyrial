@@ -1264,8 +1264,8 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
         y.append(x)
 
     arr = np.array(y)
-    arr
-    returns.index
+    # arr
+    # returns.index
     my_color = np.where(arr >= 0, "blue", "grey")
     ret = plt.figure(figsize=(30, 8))
     plt.vlines(x=returns.index, ymin=0, ymax=arr, color=my_color, alpha=0.4)
