@@ -537,7 +537,7 @@ def efficient_frontier(my_portfolio, perf=True):
         a, b = map(list, zip(*[val]))
         result.append(b)
 
-    if perf == True:
+    if perf is True:
         pred = ef.portfolio_performance(verbose=True)
 
     return flatten(result)
@@ -570,7 +570,7 @@ def hrp(my_portfolio, perf=True):
         a, b = map(list, zip(*[val]))
         result.append(b)
 
-    if perf == True:
+    if perf is True:
         hrp.portfolio_performance(verbose=True)
 
     return flatten(result)
@@ -596,9 +596,9 @@ def mean_var(my_portfolio, vol_max=0.15, perf=True):
 
     ef = EfficientFrontier(mu, S)
     ef.add_objective(objective_functions.L2_reg, gamma=my_portfolio.diversification)
-    if my_portfolio.min_weights != None:
+    if my_portfolio.min_weights is not None:
         ef.add_constraint(lambda x: x >= my_portfolio.min_weights)
-    if my_portfolio.max_weights != None:
+    if my_portfolio.max_weights is not None:
         ef.add_constraint(lambda x: x <= my_portfolio.max_weights)
     ef.efficient_risk(vol_max)
     weights = ef.clean_weights()
@@ -610,7 +610,7 @@ def mean_var(my_portfolio, vol_max=0.15, perf=True):
         a, b = map(list, zip(*[val]))
         result.append(b)
 
-    if perf == True:
+    if perf is True:
         ef.portfolio_performance(verbose=True)
 
     return flatten(result)
@@ -631,9 +631,9 @@ def min_var(my_portfolio, perf=True):
 
     ef = EfficientFrontier(mu, S)
     ef.add_objective(objective_functions.L2_reg, gamma=my_portfolio.diversification)
-    if my_portfolio.min_weights != None:
+    if my_portfolio.min_weights is not None:
         ef.add_constraint(lambda x: x >= my_portfolio.min_weights)
-    if my_portfolio.max_weights != None:
+    if my_portfolio.max_weights is not None:
         ef.add_constraint(lambda x: x <= my_portfolio.max_weights)
     ef.min_volatility()
     weights = ef.clean_weights()
@@ -645,7 +645,7 @@ def min_var(my_portfolio, perf=True):
         a, b = map(list, zip(*[val]))
         result.append(b)
 
-    if perf == True:
+    if perf is True:
         ef.portfolio_performance(verbose=True)
 
     return flatten(result)
@@ -864,7 +864,7 @@ def make_rebalance(
         # makes sure that the value passed through for rebalancing is a valid one
         valid_schedule = check_schedule(rebalance)
 
-        if valid_schedule == False:
+        if valid_schedule is False:
             raise KeyError("Not an accepted rebalancing schedule")
 
     # this checks to make sure that the date range given works for the rebalancing
