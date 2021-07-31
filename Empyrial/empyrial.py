@@ -740,7 +740,7 @@ def valid_range(start_date, end_date, rebalance):
             or (rebalance is "2y" and days <= int(365 * 2)) \
             or (rebalance is "quarterly" and days <= int(365 / 4)) \
             or (rebalance is "monthly" and days <= int(30)
-    ):
+                ):
         raise KeyError("Date Range does not encompass rebalancing interval")
 
     # we will needs these dates later on so we'll return them back
