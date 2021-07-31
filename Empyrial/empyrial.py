@@ -31,7 +31,7 @@ from pypfopt import (
 warnings.filterwarnings("ignore")
 
 TODAY = dt.date.today()
-
+BENCHMARK = ["SPY"]
 
 class Engine:
     def __init__(
@@ -40,7 +40,7 @@ class Engine:
         portfolio,
         weights=None,
         rebalance=None,
-        benchmark=["SPY"],
+        benchmark=None,
         end_date=TODAY,
         optimizer=None,
         max_vol=0.15,
@@ -52,6 +52,9 @@ class Engine:
         risk_manager=None,
         data=None,
     ):
+        if benchmark is None:
+            benchmark = BENCHMARK
+
         self.start_date = start_date
         self.end_date = end_date
         self.portfolio = portfolio
@@ -80,7 +83,7 @@ class Engine:
             opt = self.optimizer
             self.weights = opt()
 
-        if self.rebalance != None:
+        if self.rebalance is None:
             self.rebalance = make_rebalance(
                 self.start_date,
                 self.end_date,
