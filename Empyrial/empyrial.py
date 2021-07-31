@@ -104,17 +104,13 @@ class Engine:
 
 def get_returns(stocks, wts, start_date, end_date=TODAY):
     if len(stocks) > 1:
-        assets = yf.download(stocks, start=start_date, end=end_date, progress=False)[
-            "Adj Close"
-        ]
+        assets = yf.download(stocks, start=start_date, end=end_date, progress=False)["Adj Close"]
         assets = assets.filter(stocks)
         ret_data = assets.pct_change()[1:]
         returns = (ret_data * wts).sum(axis=1)
         return returns
     else:
-        df = yf.download(stocks, start=start_date, end=end_date, progress=False)[
-            "Adj Close"
-        ]
+        df = yf.download(stocks, start=start_date, end=end_date, progress=False)["Adj Close"]
         df = pd.DataFrame(df)
         returns = df.pct_change()
         return returns
@@ -654,7 +650,7 @@ def min_var(my_portfolio, perf=True):
     return flatten(result)
 
 
-def optimizer(my_portfolio, vol_max=25, pie_size=5, font_size=14):
+def optimize_portfolio(my_portfolio, vol_max=25, pie_size=5, font_size=14):
     returns1 = get_returns(
         my_portfolio.portfolio,
         equal_weighting(my_portfolio),
