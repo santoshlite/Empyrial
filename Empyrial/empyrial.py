@@ -33,6 +33,7 @@ warnings.filterwarnings("ignore")
 TODAY = dt.date.today()
 BENCHMARK = ["SPY"]
 
+
 class Engine:
     def __init__(
         self,
@@ -45,8 +46,8 @@ class Engine:
         optimizer=None,
         max_vol=0.15,
         diversification=1,
-        confidences=None,
-        view=None,
+        # confidences=None,
+        # view=None,
         min_weights=None,
         max_weights=None,
         risk_manager=None,
