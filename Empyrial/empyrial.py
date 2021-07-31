@@ -524,9 +524,9 @@ def efficient_frontier(my_portfolio, perf=True):
     # optimize for max sharpe ratio
     ef = EfficientFrontier(mu, S)
 
-    if my_portfolio.min_weights != None:
+    if my_portfolio.min_weights is not None:
         ef.add_constraint(lambda x: x >= my_portfolio.min_weights)
-    if my_portfolio.max_weights != None:
+    if my_portfolio.max_weights is not None:
         ef.add_constraint(lambda x: x <= my_portfolio.max_weights)
     weights = ef.max_sharpe()
     cleaned_weights = ef.clean_weights()
