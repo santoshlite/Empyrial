@@ -469,16 +469,14 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     )
 
 
-def flatten(seq):
-    l = []
-    for elt in seq:
-        t = type(elt)
-        if t is tuple or t is list:
-            for elt2 in flatten(elt):
-                l.append(elt2)
+def flatten(object) -> list:
+    muster = []
+    for item in object:
+        if isinstance(item, (list, tuple, set)):
+            muster.extend(flatten(item))
         else:
-            l.append(elt)
-    return l
+            muster.append(item)
+    return muster
 
 
 def graph_opt(my_portfolio, my_weights, pie_size, font_size):
