@@ -286,7 +286,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
         end_date=my_portfolio.end_date,
     )
 
-    CAGR = cagr(returns, period=DAILY, annualization=None)
+    CAGR = cagr(returns, period='daily', annualization=None)
     CAGR = round(CAGR, 2)
     CAGR = CAGR.tolist()
     CAGR = str(round(CAGR * 100, 2)) + "%"
@@ -324,7 +324,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     OR = str(OR)
     print(OR)"""
 
-    SOR = sortino_ratio(returns, required_return=0, period=DAILY)
+    SOR = sortino_ratio(returns, required_return=0, period='daily')
     SOR = round(SOR, 2)
     SOR = str(SOR)
 
@@ -1181,7 +1181,7 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
         end_date=my_portfolio.end_date,
     )
 
-    CAGR = cagr(returns, period=DAILY, annualization=None)
+    CAGR = cagr(returns, period='daily', annualization=None)
     CAGR = round(CAGR, 2)
     CAGR = CAGR.tolist()
     CAGR = str(round(CAGR * 100, 2)) + "%"
@@ -1219,7 +1219,7 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     OR = str(OR)
     print(OR)"""
 
-    SOR = sortino_ratio(returns, required_return=0, period=DAILY)
+    SOR = sortino_ratio(returns, required_return=0, period='daily')
     SOR = round(SOR, 2)
     SOR = str(SOR)
 
