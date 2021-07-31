@@ -469,9 +469,9 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     )
 
 
-def flatten(object) -> list:
+def flatten(subject) -> list:
     muster = []
-    for item in object:
+    for item in subject:
         if isinstance(item, (list, tuple, set)):
             muster.extend(flatten(item))
         else:
