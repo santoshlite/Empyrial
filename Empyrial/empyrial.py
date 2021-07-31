@@ -30,12 +30,9 @@ from pypfopt import (
 
 warnings.filterwarnings("ignore")
 
-# ------------------------------------------------------------------------------------------
-
-today = dt.date.today()
+TODAY = dt.date.today()
 
 
-# ------------------------------------------------------------------------------------------
 class Engine:
     def __init__(
         self,
@@ -44,7 +41,7 @@ class Engine:
         weights=None,
         rebalance=None,
         benchmark=["SPY"],
-        end_date=today,
+        end_date=TODAY,
         optimizer=None,
         max_vol=0.15,
         diversification=1,
@@ -98,8 +95,7 @@ class Engine:
             )
 
 
-# -------------------------------------------------------------------------------------------
-def get_returns(stocks, wts, start_date, end_date=today):
+def get_returns(stocks, wts, start_date, end_date=TODAY):
     if len(stocks) > 1:
         assets = yf.download(stocks, start=start_date, end=end_date, progress=False)[
             "Adj Close"
@@ -117,14 +113,10 @@ def get_returns(stocks, wts, start_date, end_date=today):
         return returns
 
 
-# ------------------------------------------------------------------------------------------
 def get_returns_from_data(data, wts):
     ret_data = data.pct_change()[1:]
     returns = (ret_data * wts).sum(axis=1)
     return returns
-
-
-# ------------------------------------------------------------------------------------------
 
 
 def information_ratio(returns, benchmark_returns, days=252):
@@ -147,7 +139,6 @@ def graph_allocation(my_portfolio):
     plt.show()
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------------------
 def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     try:
         # we want to get the dataframe with the dates and weights
@@ -478,7 +469,6 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     )
 
 
-# ---------------------------------------------------------------------------------------------------------------------------------------------------------------
 def flatten(seq):
     l = []
     for elt in seq:
@@ -491,7 +481,6 @@ def flatten(seq):
     return l
 
 
-# -------------------------------------------------------------------------------
 def graph_opt(my_portfolio, my_weights, pie_size, font_size):
     fig1, ax1 = plt.subplots()
     fig1.set_size_inches(pie_size, pie_size)
@@ -513,12 +502,10 @@ def graph_opt(my_portfolio, my_weights, pie_size, font_size):
     plt.show()
 
 
-# --------------------------------------------------------------------------
 def equal_weighting(my_portfolio):
     return [1.0 / len(my_portfolio.portfolio)] * len(my_portfolio.portfolio)
 
 
-# --------------------------------------------------------------------------------
 def efficient_frontier(my_portfolio, perf=True):
     # changed to take in desired timeline, the problem is that it would use all historical data
     ohlc = yf.download(
@@ -558,7 +545,6 @@ def efficient_frontier(my_portfolio, perf=True):
     return flatten(result)
 
 
-# -------------------------------------------------------------------------------
 def hrp(my_portfolio, perf=True):
     # changed to take in desired timeline, the problem is that it would use all historical data
 
@@ -592,7 +578,6 @@ def hrp(my_portfolio, perf=True):
     return flatten(result)
 
 
-# -----------------------------------------------------------------------------
 def mean_var(my_portfolio, vol_max=0.15, perf=True):
     # changed to take in desired timeline, the problem is that it would use all historical data
 
@@ -633,7 +618,6 @@ def mean_var(my_portfolio, vol_max=0.15, perf=True):
     return flatten(result)
 
 
-# --------------------------------------------------------------------------------
 def min_var(my_portfolio, perf=True):
     ohlc = yf.download(
         my_portfolio.portfolio,
@@ -669,7 +653,6 @@ def min_var(my_portfolio, perf=True):
     return flatten(result)
 
 
-# ------------------------------------------------------------------------------
 def optimizer(my_portfolio, vol_max=25, pie_size=5, font_size=14):
     returns1 = get_returns(
         my_portfolio.portfolio,
@@ -740,7 +723,6 @@ def optimizer(my_portfolio, vol_max=25, pie_size=5, font_size=14):
     plt.show()
 
 
-# -------------------------------------------------------------------------------------------------
 def check_schedule(rebalance):
     # this is the list of acceptable rebalancing schedules
     acceptable_schedules = ["6mo", "1y", "2y", "quarterly", "monthly"]
@@ -766,7 +748,6 @@ def check_schedule(rebalance):
     return valid_schedule
 
 
-# --------------------------------------------------------------------------------
 def valid_range(start_date, end_date, rebalance):
     # make the start date to a datetime
     start_date = dt.datetime.strptime(start_date, "%Y-%M-%d")
@@ -798,7 +779,6 @@ def valid_range(start_date, end_date, rebalance):
     return start_date, end_date
 
 
-# --------------------------------------------------------------------------------
 def get_date_range(start_date, end_date, rebalance):
     # this will keep track of the rebalancing dates and we want to start on the first date
     rebalance_dates = [start_date]
@@ -898,7 +878,6 @@ def get_date_range(start_date, end_date, rebalance):
     return rebalance_dates
 
 
-# --------------------------------------------------------------------------------
 def make_rebalance(
     start_date,
     end_date,
@@ -990,13 +969,12 @@ def make_rebalance(
             max_weights=max,
         )
 
-    output_df["{}".format(today)] = portfolio.weights
+    output_df["{}".format(TODAY)] = portfolio.weights
 
     make_rebalance.output = output_df
     return output_df
 
 
-# --------------------------------------------------------------------------------------------------------
 def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     try:
         # we want to get the dataframe with the dates and weights
