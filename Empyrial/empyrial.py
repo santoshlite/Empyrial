@@ -138,7 +138,7 @@ def get_returns_from_data(data, wts):
     return returns
 
 
-def calculate_information_ratio(returns, benchmark_returns, days=252):
+def calculate_information_ratio(returns, benchmark_returns, days=252) -> float:
     return_difference = returns - benchmark_returns
     volatility = return_difference.std() * np.sqrt(days)
     information_ratio_result = return_difference.mean() / volatility
@@ -515,11 +515,11 @@ def graph_opt(my_portfolio, my_weights, pie_size, font_size):
     plt.show()
 
 
-def equal_weighting(my_portfolio):
+def equal_weighting(my_portfolio) -> list:
     return [1.0 / len(my_portfolio.portfolio)] * len(my_portfolio.portfolio)
 
 
-def efficient_frontier(my_portfolio, perf=True):
+def efficient_frontier(my_portfolio, perf=True) -> list:
     # changed to take in desired timeline, the problem is that it would use all historical data
     ohlc = yf.download(
         my_portfolio.portfolio,
@@ -558,7 +558,7 @@ def efficient_frontier(my_portfolio, perf=True):
     return flatten(result)
 
 
-def hrp(my_portfolio, perf=True):
+def hrp(my_portfolio, perf=True) -> list:
     # changed to take in desired timeline, the problem is that it would use all historical data
 
     ohlc = yf.download(
@@ -591,7 +591,7 @@ def hrp(my_portfolio, perf=True):
     return flatten(result)
 
 
-def mean_var(my_portfolio, vol_max=0.15, perf=True):
+def mean_var(my_portfolio, vol_max=0.15, perf=True) -> list:
     # changed to take in desired timeline, the problem is that it would use all historical data
 
     ohlc = yf.download(
@@ -631,7 +631,7 @@ def mean_var(my_portfolio, vol_max=0.15, perf=True):
     return flatten(result)
 
 
-def min_var(my_portfolio, perf=True):
+def min_var(my_portfolio, perf=True) -> list:
     ohlc = yf.download(
         my_portfolio.portfolio,
         start=my_portfolio.start_date,
@@ -729,7 +729,7 @@ def optimize_portfolio(my_portfolio, vol_max=25, pie_size=5, font_size=14):
     plt.show()
 
 
-def check_schedule(rebalance):
+def check_schedule(rebalance) -> bool:
     valid_schedule = False
     if rebalance.lower() in rebalance_periods.keys():
         valid_schedule = True
@@ -786,7 +786,7 @@ def make_rebalance(
     div,
     min,
     max,
-):
+) -> pd.DataFrame:
     sdate = str(start_date)[:10]
     if rebalance[0] != sdate:
 
