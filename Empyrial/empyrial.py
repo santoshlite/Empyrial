@@ -945,7 +945,7 @@ def make_rebalance(
     return output_df
 
 
-def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
+def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, filename : str ="report.pdf"):
     try:
         # we want to get the dataframe with the dates and weights
         rebalance_schedule = my_portfolio.rebalance
@@ -1309,4 +1309,4 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     pdf.cell(20, 7, f"", ln=1)
     pdf.image("rbeta.png", x=None, y=None, w=190, h=80, type="", link="")
 
-    pdf.output("report.pdf", "F")
+    pdf.output(dest="F", name=filename)
