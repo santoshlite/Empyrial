@@ -32,6 +32,22 @@ warnings.filterwarnings("ignore")
 
 TODAY = dt.date.today()
 BENCHMARK = ["SPY"]
+DAYS_IN_YEAR = 365
+
+rebalance_periods = {
+    "monthly": DAYS_IN_YEAR / 12,
+    "month": DAYS_IN_YEAR / 12,
+    "m": DAYS_IN_YEAR / 12,
+    "quarterly": DAYS_IN_YEAR / 4,
+    "quarter": DAYS_IN_YEAR / 4,
+    "q": DAYS_IN_YEAR / 4,
+    "6m": DAYS_IN_YEAR / 2,
+    "2q": DAYS_IN_YEAR / 2,
+    "1y": DAYS_IN_YEAR,
+    "year": DAYS_IN_YEAR,
+    "y": DAYS_IN_YEAR,
+    "2y": DAYS_IN_YEAR * 2,
+}
 
 
 class Engine:
@@ -71,20 +87,23 @@ class Engine:
         self.data = data
 
         optimizers = {
-            "EF": efficient_frontier(self, perf=False),
-            "MEANVAR": mean_var(self, vol_max=max_vol, perf=False),
-            "HRP": hrp(self, perf=False),
-            "MINVAR": min_var(self, perf=False),
+            "EF": efficient_frontier,
+            "MEANVAR": mean_var,
+            "HRP": hrp,
+            "MINVAR": min_var,
         }
         if self.optimizer is None:
             self.weights = [1.0 / len(self.portfolio)] * len(self.portfolio)
         elif self.optimizer in optimizers.keys():
-            self.weights = optimizers.get(self.optimizer, [1.0 / len(self.portfolio)] * len(self.portfolio))
+            if self.optimizer is "MEANVAR":
+                self.weights = optimizers.get(self.optimizer)(self, vol_max=max_vol, perf=False)
+            else:
+                self.weights = optimizers.get(self.optimizer)(self, perf=False)
         else:
             opt = self.optimizer
             self.weights = opt()
 
-        if self.rebalance is None:
+        if self.rebalance is not None:
             self.rebalance = make_rebalance(
                 self.start_date,
                 self.end_date,
@@ -101,17 +120,13 @@ class Engine:
 
 def get_returns(stocks, wts, start_date, end_date=TODAY):
     if len(stocks) > 1:
-        assets = yf.download(stocks, start=start_date, end=end_date, progress=False)[
-            "Adj Close"
-        ]
+        assets = yf.download(stocks, start=start_date, end=end_date, progress=False)["Adj Close"]
         assets = assets.filter(stocks)
         ret_data = assets.pct_change()[1:]
         returns = (ret_data * wts).sum(axis=1)
         return returns
     else:
-        df = yf.download(stocks, start=start_date, end=end_date, progress=False)[
-            "Adj Close"
-        ]
+        df = yf.download(stocks, start=start_date, end=end_date, progress=False)["Adj Close"]
         df = pd.DataFrame(df)
         returns = df.pct_change()
         return returns
@@ -123,7 +138,7 @@ def get_returns_from_data(data, wts):
     return returns
 
 
-def information_ratio(returns, benchmark_returns, days=252):
+def calculate_information_ratio(returns, benchmark_returns, days=252) -> float:
     return_difference = returns - benchmark_returns
     volatility = return_difference.std() * np.sqrt(days)
     information_ratio_result = return_difference.mean() / volatility
@@ -349,7 +364,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     win_ratio = win_ratio * 100
     win_ratio = round(win_ratio, 2)
 
-    IR = information_ratio(returns, benchmark.iloc[:, 0])
+    IR = calculate_information_ratio(returns, benchmark.iloc[:, 0])
     IR = round(IR, 2)
 
     data = {
@@ -500,11 +515,11 @@ def graph_opt(my_portfolio, my_weights, pie_size, font_size):
     plt.show()
 
 
-def equal_weighting(my_portfolio):
+def equal_weighting(my_portfolio) -> list:
     return [1.0 / len(my_portfolio.portfolio)] * len(my_portfolio.portfolio)
 
 
-def efficient_frontier(my_portfolio, perf=True):
+def efficient_frontier(my_portfolio, perf=True) -> list:
     # changed to take in desired timeline, the problem is that it would use all historical data
     ohlc = yf.download(
         my_portfolio.portfolio,
@@ -543,7 +558,7 @@ def efficient_frontier(my_portfolio, perf=True):
     return flatten(result)
 
 
-def hrp(my_portfolio, perf=True):
+def hrp(my_portfolio, perf=True) -> list:
     # changed to take in desired timeline, the problem is that it would use all historical data
 
     ohlc = yf.download(
@@ -576,7 +591,7 @@ def hrp(my_portfolio, perf=True):
     return flatten(result)
 
 
-def mean_var(my_portfolio, vol_max=0.15, perf=True):
+def mean_var(my_portfolio, vol_max=0.15, perf=True) -> list:
     # changed to take in desired timeline, the problem is that it would use all historical data
 
     ohlc = yf.download(
@@ -616,7 +631,7 @@ def mean_var(my_portfolio, vol_max=0.15, perf=True):
     return flatten(result)
 
 
-def min_var(my_portfolio, perf=True):
+def min_var(my_portfolio, perf=True) -> list:
     ohlc = yf.download(
         my_portfolio.portfolio,
         start=my_portfolio.start_date,
@@ -651,7 +666,7 @@ def min_var(my_portfolio, perf=True):
     return flatten(result)
 
 
-def optimizer(my_portfolio, vol_max=25, pie_size=5, font_size=14):
+def optimize_portfolio(my_portfolio, vol_max=25, pie_size=5, font_size=14):
     returns1 = get_returns(
         my_portfolio.portfolio,
         equal_weighting(my_portfolio),
@@ -665,14 +680,17 @@ def optimizer(my_portfolio, vol_max=25, pie_size=5, font_size=14):
     wts = [1.0 / len(my_portfolio.portfolio)] * len(my_portfolio.portfolio)
 
     optimizers = {
-        "EF": efficient_frontier(my_portfolio),
-        "MEANVAR": mean_var(my_portfolio, my_portfolio.max_vol),
-        "HRP": hrp(my_portfolio),
-        "MINVAR": min_var(my_portfolio),
+        "EF": efficient_frontier,
+        "MEANVAR": mean_var,
+        "HRP": hrp,
+        "MINVAR": min_var,
     }
     
     if my_portfolio.optimizer in optimizers.keys():
-        wts = optimizers.get(my_portfolio.optimizer, [1.0 / len(my_portfolio.portfolio)] * len(my_portfolio.portfolio))
+        if my_portfolio.optimizer is "MEANVAR":
+            wts = optimizers.get(my_portfolio.optimizer)(my_portfolio, my_portfolio.max_vol)
+        else:
+            wts = optimizers.get(my_portfolio.optimizer)(my_portfolio)
     else:
         opt = my_portfolio.optimizer
         my_portfolio.weights = opt()
@@ -711,19 +729,14 @@ def optimizer(my_portfolio, vol_max=25, pie_size=5, font_size=14):
     plt.show()
 
 
-def check_schedule(rebalance):
-    # this is the list of acceptable rebalancing schedules
-    acceptable_schedules = ["6mo", "1y", "2y", "quarterly", "monthly"]
-
-    if rebalance in acceptable_schedules:
+def check_schedule(rebalance) -> bool:
+    valid_schedule = False
+    if rebalance.lower() in rebalance_periods.keys():
         valid_schedule = True
-    else:
-        valid_schedule = False
-
     return valid_schedule
 
 
-def valid_range(start_date, end_date, rebalance):
+def valid_range(start_date, end_date, rebalance) -> tuple:
     # make the start date to a datetime
     start_date = dt.datetime.strptime(start_date, "%Y-%M-%d")
 
@@ -733,113 +746,29 @@ def valid_range(start_date, end_date, rebalance):
     # gets the number of days
     days = (end_date - start_date).days
 
-    # all of this is for checking the length
-    if (
-            rebalance is "6mo" and days <= (int(365 / 2))) \
-            or (rebalance is "1y" and days <= int(365)) \
-            or (rebalance is "2y" and days <= int(365 * 2)) \
-            or (rebalance is "quarterly" and days <= int(365 / 4)) \
-            or (rebalance is "monthly" and days <= int(30)
-                ):
+    # checking that date range covers rebalance period
+    if rebalance in rebalance_periods.keys() and days <= (int(rebalance_periods[rebalance])):
         raise KeyError("Date Range does not encompass rebalancing interval")
 
     # we will needs these dates later on so we'll return them back
     return start_date, end_date
 
 
-def get_date_range(start_date, end_date, rebalance):
+def get_date_range(start_date, end_date, rebalance) -> list:
     # this will keep track of the rebalancing dates and we want to start on the first date
     rebalance_dates = [start_date]
     input_date = start_date
 
-    if rebalance == "6mo":
-
+    if rebalance in rebalance_periods.keys():
         # run for an arbitrarily large number we'll resolve this by breaking when we break the equality
         for i in range(1000):
-
-            # this gives us the future date
-            input_date = input_date + dt.timedelta(days=365 / 2)
-
-            # then we want to compare dates
-            if input_date < end_date:
-
-                # if the dates are less than the final date we put that into our date list
+            # increment the date based on the selected period
+            input_date = input_date + dt.timedelta(days=rebalance_periods.get(rebalance))
+            if input_date <= end_date:
+                # append the new date if it is earlier or equal to the final date
                 rebalance_dates.append(input_date)
-
-            # when the rebalance date is greater than our final date
             else:
-                break
-
-    if rebalance == "1y":
-
-        # run for an arbitrarily large number we'll resolve this by breaking when we break the equality
-        for i in range(1000):
-
-            # this gives us the future date
-            input_date = input_date + dt.timedelta(days=365)
-
-            # then we want to compare dates
-            if input_date < end_date:
-
-                # if the dates are less than the final date we put that into our date list
-                rebalance_dates.append(input_date)
-
-            # when the rebalance date is greater than our final date
-            else:
-                break
-
-    if rebalance == "2y":
-
-        # run for an arbitrarily large number we'll resolve this by breaking when we break the equality
-        for i in range(1000):
-
-            # this gives us the future date
-            input_date = input_date + dt.timedelta(days=365 * 2)
-
-            # then we want to compare dates
-            if input_date < end_date:
-
-                # if the dates are less than the final date we put that into our date list
-                rebalance_dates.append(input_date)
-
-            # when the rebalance date is greater than our final date
-            else:
-                break
-
-    if rebalance == "quarterly":
-
-        # run for an arbitrarily large number we'll resolve this by breaking when we break the equality
-        for i in range(1000):
-
-            # this gives us the future date
-            input_date = input_date + dt.timedelta(days=365 / 4)
-
-            # then we want to compare dates
-            if input_date < end_date:
-
-                # if the dates are less than the final date we put that into our date list
-                rebalance_dates.append(input_date)
-
-            # when the rebalance date is greater than our final date
-            else:
-                break
-
-    if rebalance == "monthly":
-
-        # run for an arbitrarily large number we'll resolve this by breaking when we break the equality
-        for i in range(1000):
-
-            # this gives us the future date
-            input_date = input_date + dt.timedelta(days=30)
-
-            # then we want to compare dates
-            if input_date < end_date:
-
-                # if the dates are less than the final date we put that into our date list
-                rebalance_dates.append(input_date)
-
-            # when the rebalance date is greater than our final date
-            else:
+                # break when the next rebalance date is later than our end date
                 break
 
     # then we want to return those dates
@@ -857,7 +786,7 @@ def make_rebalance(
     div,
     min,
     max,
-):
+) -> pd.DataFrame:
     sdate = str(start_date)[:10]
     if rebalance[0] != sdate:
 
@@ -943,7 +872,7 @@ def make_rebalance(
     return output_df
 
 
-def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
+def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, filename : str ="report.pdf"):
     try:
         # we want to get the dataframe with the dates and weights
         rebalance_schedule = my_portfolio.rebalance
@@ -1197,7 +1126,7 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     win_ratio = win_ratio * 100
     win_ratio = round(win_ratio, 2)
 
-    IR = information_ratio(returns, benchmark.iloc[:, 0])
+    IR = calculate_information_ratio(returns, benchmark.iloc[:, 0])
     IR = round(IR, 2)
 
     data = {
@@ -1309,4 +1238,4 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     pdf.cell(20, 7, f"", ln=1)
     pdf.image("rbeta.png", x=None, y=None, w=190, h=80, type="", link="")
 
-    pdf.output("report.pdf", "F")
+    pdf.output(dest="F", name=filename)
