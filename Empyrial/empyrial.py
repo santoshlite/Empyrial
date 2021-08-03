@@ -480,6 +480,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
         qs.plots.rolling_volatility(returns),
         qs.plots.rolling_sharpe(returns),
         qs.plots.rolling_beta(returns, benchmark),
+        qs.plots.yearly_returns(returns, benchmark),
         graph_opt(my_portfolio.portfolio, wts, pie_size=7, font_size=14),
     )
 
