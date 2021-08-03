@@ -474,13 +474,13 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
 
     return (
         qs.plots.returns(returns, benchmark, cumulative=True),
+        qs.plots.yearly_returns(returns, benchmark),
         qs.plots.monthly_heatmap(returns),
         qs.plots.drawdown(returns),
         qs.plots.drawdowns_periods(returns),
         qs.plots.rolling_volatility(returns),
         qs.plots.rolling_sharpe(returns),
         qs.plots.rolling_beta(returns, benchmark),
-        qs.plots.yearly_returns(returns, benchmark),
         graph_opt(my_portfolio.portfolio, wts, pie_size=7, font_size=14),
     )
 
@@ -1216,6 +1216,7 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, filen
     qs.plots.returns(
         returns, benchmark, cumulative=True, savefig="retbench.png", show=False
     )
+    qs.plots.yearly_returns(returns, benchmark, savefig="y_returns.png", show=False),
     qs.plots.monthly_heatmap(returns, savefig="heatmap.png", show=False)
     qs.plots.drawdown(returns, savefig="drawdown.png", show=False)
     qs.plots.drawdowns_periods(returns, savefig="d_periods.png", show=False)
