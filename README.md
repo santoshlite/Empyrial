@@ -7,7 +7,7 @@
   
 ![](https://img.shields.io/badge/Downloads-19k/month-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
-![](https://img.shields.io/badge/version-1.9.5-blueviolet)
+![](https://img.shields.io/badge/version-1.9.8-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
 ![](https://img.shields.io/badge/activity-9.7/10-ff69b4)
 ![](https://img.shields.io/badge/Open%20source-💜-white)	
