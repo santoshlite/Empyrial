@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import math
+# import math
 import datetime as dt
 import quantstats as qs
 from IPython.display import display
@@ -92,16 +92,13 @@ class Engine:
             "HRP": hrp,
             "MINVAR": min_var,
         }
-        if self.optimizer is None:
+        if self.optimizer is None and self.weights is None:
             self.weights = [1.0 / len(self.portfolio)] * len(self.portfolio)
         elif self.optimizer in optimizers.keys():
             if self.optimizer is "MEANVAR":
                 self.weights = optimizers.get(self.optimizer)(self, vol_max=max_vol, perf=False)
             else:
                 self.weights = optimizers.get(self.optimizer)(self, perf=False)
-        else:
-            opt = self.optimizer
-            self.weights = opt()
 
         if self.rebalance is not None:
             self.rebalance = make_rebalance(
@@ -1226,7 +1223,9 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, filen
 
     pdf.image("ret.png", x=-20, y=None, w=250, h=80, type="", link="")
     pdf.cell(20, 7, f"", ln=1)
-    pdf.image("retbench.png", x=-20, y=None, w=200, h=100, type="", link="")
+    pdf.image("y_returns.png", x=-20, y=None, w=200, h=100, type="", link="")
+    pdf.cell(20, 7, f"", ln=1)
+    pdf.image("retbench.png", x=None, y=None, w=200, h=100, type="", link="")
     pdf.cell(20, 7, f"", ln=1)
     pdf.image("heatmap.png", x=None, y=None, w=200, h=80, type="", link="")
     pdf.cell(20, 7, f"", ln=1)
