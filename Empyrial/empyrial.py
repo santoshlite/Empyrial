@@ -7,8 +7,6 @@ from IPython.display import display
 import matplotlib.pyplot as plt
 import copy
 import yfinance as yf
-#import sys
-#print(sys.path)
 from fpdf import FPDF
 import warnings
 from empyrical import (
