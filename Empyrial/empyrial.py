@@ -291,7 +291,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     CUM = CUM.tolist()
     CUM = str(round(CUM, 2)) + "%"
 
-    VOL = qs.stats.volatility(returns, annualize=True, trading_year_days=252)
+    VOL = qs.stats.volatility(returns, annualize=True)
     VOL = VOL.tolist()
     VOL = str(round(VOL * 100, 2)) + " %"
 
@@ -1054,7 +1054,7 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, filen
     CUM = CUM.tolist()
     CUM = str(round(CUM, 2)) + "%"
 
-    VOL = qs.stats.volatility(returns, annualize=True, trading_year_days=252)
+    VOL = qs.stats.volatility(returns, annualize=True)
     VOL = VOL.tolist()
     VOL = str(round(VOL * 100, 2)) + " %"
 
