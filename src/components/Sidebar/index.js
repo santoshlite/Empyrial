@@ -17,28 +17,28 @@ const Sidebar = ({ isOpen, toggle }) => {
       </Icon>
       <SidebarWrapper>
         <SidebarMenu>
-          <SidebarLink to='about' onClick={toggle}>
+          <SidebarLink to='engine' onClick={toggle}>
             Engine
           </SidebarLink>
-          <SidebarLink to='discover' onClick={toggle}>
+          <SidebarLink to='fundamental' onClick={toggle}>
             Fundlens
           </SidebarLink>
           <SidebarLink to='services' onClick={toggle}>
             About
           </SidebarLink>
-          <SidebarLink to='signup' onClick={toggle}>
+          <SidebarLink to='optimizer' onClick={toggle}>
             Optimizer
           </SidebarLink>
-          <SidebarLink to='signup' onClick={toggle}>
+          <SidebarLink to='oracle' onClick={toggle}>
             Oracle
           </SidebarLink>
-          <SidebarLink to='signup' onClick={toggle}>
+          <SidebarLink to='risk' onClick={toggle}>
             Riskslens
           </SidebarLink>
-        </SidebarMenu>
-          <SidebarLink to='signup' onClick={toggle}>
+          <SidebarLink to='sentiment' onClick={toggle}>
             Sentiment
           </SidebarLink>
+        </SidebarMenu>
         <SideBtnWrap>
           <SidebarRoute to='/contact'>Github</SidebarRoute>
         </SideBtnWrap>
