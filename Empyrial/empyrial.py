@@ -35,6 +35,8 @@ BENCHMARK = ["SPY"]
 DAYS_IN_YEAR = 365
 
 rebalance_periods = {
+    "daily": DAYS_IN_YEAR / 365,
+    "weekly": DAYS_IN_YEAR / 52,
     "monthly": DAYS_IN_YEAR / 12,
     "month": DAYS_IN_YEAR / 12,
     "m": DAYS_IN_YEAR / 12,
