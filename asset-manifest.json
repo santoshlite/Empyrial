@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/Empyrial/static/css/main.a0ce62b7.chunk.css",
-    "main.js": "/Empyrial/static/js/main.b38beb3e.chunk.js",
-    "main.js.map": "/Empyrial/static/js/main.b38beb3e.chunk.js.map",
+    "main.js": "/Empyrial/static/js/main.5a90ad0f.chunk.js",
+    "main.js.map": "/Empyrial/static/js/main.5a90ad0f.chunk.js.map",
     "runtime-main.js": "/Empyrial/static/js/runtime-main.aed2b569.js",
     "runtime-main.js.map": "/Empyrial/static/js/runtime-main.aed2b569.js.map",
-    "static/js/2.a38f6360.chunk.js": "/Empyrial/static/js/2.a38f6360.chunk.js",
-    "static/js/2.a38f6360.chunk.js.map": "/Empyrial/static/js/2.a38f6360.chunk.js.map",
+    "static/js/2.5c6208c5.chunk.js": "/Empyrial/static/js/2.5c6208c5.chunk.js",
+    "static/js/2.5c6208c5.chunk.js.map": "/Empyrial/static/js/2.5c6208c5.chunk.js.map",
     "index.html": "/Empyrial/index.html",
     "static/css/main.a0ce62b7.chunk.css.map": "/Empyrial/static/css/main.a0ce62b7.chunk.css.map",
-    "static/js/2.a38f6360.chunk.js.LICENSE.txt": "/Empyrial/static/js/2.a38f6360.chunk.js.LICENSE.txt",
+    "static/js/2.5c6208c5.chunk.js.LICENSE.txt": "/Empyrial/static/js/2.5c6208c5.chunk.js.LICENSE.txt",
     "static/media/svg-1.svg": "/Empyrial/static/media/svg-1.d1cbe9e5.svg",
     "static/media/svg-10.svg": "/Empyrial/static/media/svg-10.c3b84791.svg",
     "static/media/svg-2.svg": "/Empyrial/static/media/svg-2.0e0991fa.svg",
@@ -24,8 +24,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.aed2b569.js",
-    "static/js/2.a38f6360.chunk.js",
+    "static/js/2.5c6208c5.chunk.js",
     "static/css/main.a0ce62b7.chunk.css",
-    "static/js/main.b38beb3e.chunk.js"
+    "static/js/main.5a90ad0f.chunk.js"
   ]
 }
