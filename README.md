@@ -23,7 +23,7 @@ Empyrial is a Python-based **open-source quantitative investment** library dedic
 
 Empyrial **empowers portfolio management** by bringing the best of **performance and risk analysis** in an **easy-to-understand**, **flexible** and **powerful framework**.
 
-With Empyrial, you can easily analyze security or a portfolio in order to **get the best insights from it**.
+With Empyrial, you can easily analyze security or a portfolio in order to **get the best insights from it**. This is mainly a **wrapper** of financial analysis libraries such as **Quantstats** and **PyPortfolioOpt**.
 
 <br>
 
@@ -292,6 +292,11 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. **Contributions of any kind are welcome!**
 
+## Credit
+
+This library has also been made possible because of the work of these incredible people:
+- [**Ran Aroussi**](https://github.com/ranaroussi) for the [**Quantstats library**](https://github.com/ranaroussi/quantstats) 
+- [**Robert Martin**](https://github.com/robertmartin8) for the [**PyPortfolioOpt**](https://github.com/robertmartin8/PyPortfolioOpt) 
 
 ## Contact
 
