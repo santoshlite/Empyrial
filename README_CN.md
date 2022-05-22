@@ -5,9 +5,9 @@
 <img src="https://user-images.githubusercontent.com/61618641/120909011-98f8a180-c670-11eb-8844-2d423ba3fa9c.png"/>
 <br><br><br><br><br><br><br><br>
   
-![](https://img.shields.io/badge/Downloads-19k/month-brightgreen)
+![](https://img.shields.io/badge/Downloads-101k-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
-![](https://img.shields.io/badge/version-1.9.8-blueviolet)
+![](https://img.shields.io/badge/version-2.0.1-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
 ![](https://img.shields.io/badge/activity-9.7/10-ff69b4)
 ![](https://img.shields.io/badge/Open%20source-💜-white)
@@ -281,7 +281,7 @@ get_report(portfolio)
 
 感谢这些优秀的人（[表情符号键](https://allcontributors.org/docs/en/emoji-key)）。
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors-)
 
 <table>
   <tr>
@@ -295,7 +295,8 @@ get_report(portfolio)
     <td align="center"><a href="https://github.com/eltociear"><img src="https://avatars.githubusercontent.com/u/22633385?v=4" width="100px;" alt=""/><br /><sub><b>Ikko Ashimine</b></sub></a><br /><a title="Code">✒️</a></td>
     <td align="center"><a href="https://www.youtube.com/watch?v=-4qx3tbtTgs"><img src="https://avatars.githubusercontent.com/u/50767660?v=4" width="100px;" alt=""/><br /><sub><b>QuantNomad</b></sub></a><br /><a title="Code">📹</a></td>
     <td align="center"><a href="https://github.com/buckleyc"><img src="https://avatars.githubusercontent.com/u/4175900?v=4" width="100px;" alt=""/><br /><sub><b>Buckley</b></sub></a><br /><a title="Code">✒️💻</a></td>
-    <td align="center"><a href="https://github.com/agn35"><img src="https://lh3.googleusercontent.com/a-/AOh14GhXGFHHpVQTL2r23oEXFssH0f7RyoGDihrS_HmT=s48" width="100px;" alt=""/><br /><sub><b>Adam Nelsson</b></sub></a><br /><a title="Code">📓</a></td>
+    <td align="center"><a href="https://github.com/agn35"><img src="https://lh3.googleusercontent.com/a-/AOh14GhXGFHHpVQTL2r23oEXFssH0f7RyoGDihrS_HmT=s48" width="100px;" alt=""/><br /><sub><b>Adam Nelsson</b></sub></a><br /><a title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/rgleavenworth"><img src="https://avatars.githubusercontent.com/u/87843950?v=4" width="100px;" alt=""/><br /><sub><b>Ranjan Grover</b></sub></a><br /><a title="Code">🐛💻</a></td>
   </tr>
 </table>
 
