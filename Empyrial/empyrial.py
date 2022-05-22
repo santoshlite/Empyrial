@@ -97,7 +97,7 @@ class Engine:
         if self.optimizer is None and self.weights is None:
             self.weights = [1.0 / len(self.portfolio)] * len(self.portfolio)
         elif self.optimizer in optimizers.keys():
-            if self.optimizer is "MEANVAR":
+            if self.optimizer == "MEANVAR":
                 self.weights = optimizers.get(self.optimizer)(self, vol_max=max_vol, perf=False)
             else:
                 self.weights = optimizers.get(self.optimizer)(self, perf=False)
@@ -188,7 +188,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
             weights = rebalance_schedule[str(dates[i + 1])]
 
             # then we want to get the returns
-
+            
             add_returns = get_returns(
                 my_portfolio.portfolio,
                 weights,
@@ -282,7 +282,8 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
         start_date=my_portfolio.start_date,
         end_date=my_portfolio.end_date,
     )
-
+    benchmark = benchmark.dropna()
+    
     CAGR = cagr(returns, period='daily', annualization=None)
     # CAGR = round(CAGR, 2)
     # CAGR = CAGR.tolist()
@@ -687,7 +688,7 @@ def optimize_portfolio(my_portfolio, vol_max=25, pie_size=5, font_size=14):
     }
     
     if my_portfolio.optimizer in optimizers.keys():
-        if my_portfolio.optimizer is "MEANVAR":
+        if my_portfolio.optimizer == "MEANVAR":
             wts = optimizers.get(my_portfolio.optimizer)(my_portfolio, my_portfolio.max_vol)
         else:
             wts = optimizers.get(my_portfolio.optimizer)(my_portfolio)
@@ -738,7 +739,7 @@ def check_schedule(rebalance) -> bool:
 
 def valid_range(start_date, end_date, rebalance) -> tuple:
     # make the start date to a datetime
-    start_date = dt.datetime.strptime(start_date, "%Y-%M-%d")
+    start_date = dt.datetime.strptime(start_date, "%Y-%m-%d")
 
     # have to make end date a datetime because strptime is not supported for date
     end_date = dt.datetime(end_date.year, end_date.month, end_date.day)
