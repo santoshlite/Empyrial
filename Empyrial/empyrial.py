@@ -737,9 +737,14 @@ def check_schedule(rebalance) -> bool:
 
 
 def valid_range(start_date, end_date, rebalance) -> tuple:
+
     # make the start date to a datetime
     start_date = dt.datetime.strptime(start_date, "%Y-%m-%d")
 
+    # custom dates don't need further chekings
+    if type(rebalance) is list:
+        return start_date, rebalance[-1]
+    
     # have to make end date a datetime because strptime is not supported for date
     end_date = dt.datetime(end_date.year, end_date.month, end_date.day)
 
@@ -789,6 +794,10 @@ def make_rebalance(
 ) -> pd.DataFrame:
     sdate = str(start_date)[:10]
     if rebalance[0] != sdate:
+
+        # makes sure the start date matches the first element of the list of custom rebalance dates
+        if type(rebalance) is list:
+            raise KeyError("the rebalance dates and start date doesn't match")
 
         # makes sure that the value passed through for rebalancing is a valid one
         valid_schedule = check_schedule(rebalance)
