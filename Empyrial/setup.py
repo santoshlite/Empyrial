@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf8") as fh:
 
 setup(
     name='empyrial',
-    version='1.9.9',
+    version='2.0.2',
     description='An Open Source Portfolio Management Framework for Everyone 投资组合管理',
     py_modules=['empyrial'],
     package_dir={'': 'src'},
