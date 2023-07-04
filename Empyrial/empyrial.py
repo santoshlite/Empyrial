@@ -747,7 +747,7 @@ def valid_range(start_date, end_date, rebalance) -> tuple:
     if type(rebalance) is list:
         return start_date, rebalance[-1]
     
-    # have to make end date a datetime because strptime is not supported for date
+    # make the end date to a datetime
     end_date = dt.datetime.strptime(end_date, "%Y-%m-%d")
 
 
