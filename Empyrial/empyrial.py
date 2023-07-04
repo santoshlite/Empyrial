@@ -8,6 +8,7 @@ import copy
 import yfinance as yf
 from fpdf import FPDF
 import warnings
+import logging
 from empyrical import (
     cagr,
     cum_returns,
@@ -28,7 +29,8 @@ from pypfopt import (
 )
 
 warnings.filterwarnings("ignore")
-
+logging.getLogger('matplotlib.font_manager').disabled = True
+logging.getLogger('matplotlib.legend').disabled = True
 TODAY = dt.date.today()
 BENCHMARK = ["SPY"]
 DAYS_IN_YEAR = 365
@@ -474,7 +476,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
     return (
         qs.plots.returns(returns, benchmark, cumulative=True),
         qs.plots.yearly_returns(returns, benchmark),
-        qs.plots.monthly_heatmap(returns),
+        qs.plots.monthly_heatmap(returns, benchmark),
         qs.plots.drawdown(returns),
         qs.plots.drawdowns_periods(returns),
         qs.plots.rolling_volatility(returns),
@@ -746,7 +748,8 @@ def valid_range(start_date, end_date, rebalance) -> tuple:
         return start_date, rebalance[-1]
     
     # have to make end date a datetime because strptime is not supported for date
-    end_date = dt.datetime(end_date.year, end_date.month, end_date.day)
+    end_date = dt.datetime.strptime(end_date, "%Y-%m-%d")
+
 
     # gets the number of days
     days = (end_date - start_date).days
@@ -1225,7 +1228,7 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, filen
         returns, benchmark, cumulative=True, savefig="retbench.png", show=False
     )
     qs.plots.yearly_returns(returns, benchmark, savefig="y_returns.png", show=False),
-    qs.plots.monthly_heatmap(returns, savefig="heatmap.png", show=False)
+    qs.plots.monthly_heatmap(returns, benchmark, savefig="heatmap.png", show=False)
     qs.plots.drawdown(returns, savefig="drawdown.png", show=False)
     qs.plots.drawdowns_periods(returns, savefig="d_periods.png", show=False)
     qs.plots.rolling_volatility(returns, savefig="rvol.png", show=False)
