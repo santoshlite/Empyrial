@@ -8,7 +8,6 @@ setup(
     version='2.0.2',
     description='An Open Source Portfolio Management Framework for Everyone 投资组合管理',
     py_modules=['empyrial'],
-    package_dir={'': 'src'},
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/ssantoshp/Empyrial',
