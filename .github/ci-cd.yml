@@ -1,0 +1,2 @@
+- name: pypi-publish
+  uses: pypa/gh-action-pypi-publish@v1.8.7
