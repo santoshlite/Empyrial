@@ -1,1 +1,1 @@
-from .empyrial import *
+from empyrial import *
