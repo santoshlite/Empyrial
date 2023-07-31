@@ -887,6 +887,8 @@ def make_rebalance(
     output_df["{}".format(TODAY)] = portfolio.weights
 
     make_rebalance.output = output_df
+    print("Rebalance schedule: ")
+    print(output_df)
     return output_df
 
 
