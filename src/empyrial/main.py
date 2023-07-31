@@ -123,6 +123,8 @@ class Engine:
                 self.diversification,
                 self.min_weights,
                 self.max_weights,
+                self.expected_returns,
+                self.risk_model
             )
 
 
@@ -808,6 +810,8 @@ def make_rebalance(
     div,
     min,
     max,
+    expected_returns,
+    risk_model,
 ) -> pd.DataFrame:
     sdate = str(start_date)[:10]
     if rebalance[0] != sdate:
@@ -850,6 +854,8 @@ def make_rebalance(
                 diversification=div,
                 min_weights=min,
                 max_weights=max,
+                expected_returns=expected_returns,
+                risk_model=risk_model,
             )
 
         except TypeError:
@@ -863,6 +869,8 @@ def make_rebalance(
                 diversification=div,
                 min_weights=min,
                 max_weights=max,
+                expected_returns=expected_returns,
+                risk_model=risk_model,
             )
 
         output_df["{}".format(dates[i + 1])] = portfolio.weights
@@ -878,6 +886,8 @@ def make_rebalance(
             diversification=div,
             min_weights=min,
             max_weights=max,
+            expected_returns=expected_returns,
+            risk_model=risk_model,
         )
 
     except TypeError:
@@ -890,6 +900,8 @@ def make_rebalance(
             diversification=div,
             min_weights=min,
             max_weights=max,
+            expected_returns=expected_returns,
+            risk_model=risk_model,
         )
 
     output_df["{}".format(TODAY)] = portfolio.weights
