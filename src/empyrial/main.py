@@ -65,6 +65,8 @@ class Engine:
         optimizer=None,
         max_vol=0.15,
         diversification=1,
+        expected_returns=None,
+        risk_model=None,
         # confidences=None,
         # view=None,
         min_weights=None,
@@ -84,6 +86,12 @@ class Engine:
         self.rebalance = rebalance
         self.max_vol = max_vol
         self.diversification = diversification
+        self.expected_returns = expected_returns
+        if expected_returns is not None:
+            assert expected_returns in ["mean_historical_return", "ema_historical_return", "capm_return"], f"Expected return method: {expected_returns} not supported yet!"
+        self.risk_model = risk_model
+        if risk_model is not None:
+            assert risk_model in ["sample_cov", "semicovariance", "exp_cov", "ledoit_wolf", "ledoit_wolf_constant_variance", "ledoit_wolf_single_factor", "ledoit_wolf_constant_correlation", "oracle_approximating"], f"Risk model: {risk_model} not supported yet!"
         self.max_weights = max_weights
         self.min_weights = min_weights
         self.risk_manager = risk_manager
@@ -541,12 +549,12 @@ def efficient_frontier(my_portfolio, perf=True) -> list:
     # sometimes we will pick a date range where company isn't public we can't set price to 0 so it has to go to 1
     df = df.fillna(1)
 
-    mu = expected_returns.mean_historical_return(df)
-    S = risk_models.sample_cov(df)
+    mu = expected_returns.return_model(df, method=my_portfolio.expected_returns)
+    S = risk_models.risk_matrix(df, method=my_portfolio.risk_model)
 
     # optimize for max sharpe ratio
     ef = EfficientFrontier(mu, S)
-
+    ef.add_objective(objective_functions.L2_reg, gamma=my_portfolio.diversification)
     if my_portfolio.min_weights is not None:
         ef.add_constraint(lambda x: x >= my_portfolio.min_weights)
     if my_portfolio.max_weights is not None:
@@ -614,8 +622,8 @@ def mean_var(my_portfolio, vol_max=0.15, perf=True) -> list:
     # sometimes we will pick a date range where company isn't public we can't set price to 0 so it has to go to 1
     prices = prices.fillna(1)
 
-    mu = expected_returns.capm_return(prices)
-    S = risk_models.CovarianceShrinkage(prices).ledoit_wolf()
+    mu = expected_returns.return_model(prices, method=my_portfolio.expected_returns)
+    S = risk_models.risk_matrix(prices, method=my_portfolio.risk_model)
 
     ef = EfficientFrontier(mu, S)
     ef.add_objective(objective_functions.L2_reg, gamma=my_portfolio.diversification)
@@ -649,8 +657,8 @@ def min_var(my_portfolio, perf=True) -> list:
     prices = ohlc["Adj Close"].dropna(how="all")
     prices = prices.filter(my_portfolio.portfolio)
 
-    mu = expected_returns.capm_return(prices)
-    S = risk_models.CovarianceShrinkage(prices).ledoit_wolf()
+    mu = expected_returns.return_model(prices, method=my_portfolio.expected_returns)
+    S = risk_models.risk_matrix(prices, method=my_portfolio.risk_model)
 
     ef = EfficientFrontier(mu, S)
     ef.add_objective(objective_functions.L2_reg, gamma=my_portfolio.diversification)
