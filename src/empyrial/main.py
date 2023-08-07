@@ -764,7 +764,10 @@ def valid_range(start_date, end_date, rebalance) -> tuple:
         return start_date, rebalance[-1]
     
     # make the end date to a datetime
-    end_date = dt.datetime.strptime(end_date, "%Y-%m-%d")
+    try:
+        end_date = dt.datetime.strptime(end_date, "%Y-%m-%d")
+    except TypeError:
+        pass
 
 
     # gets the number of days
