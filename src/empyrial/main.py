@@ -188,7 +188,7 @@ def graph_allocation(my_portfolio):
     plt.show()
 
 
-def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=True, filename="empyrial_report.pdf"):
+def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=False, filename="empyrial_report.pdf"):
     if my_portfolio.rebalance != None:
         # we want to get the dataframe with the dates and weights
         rebalance_schedule = my_portfolio.rebalance
