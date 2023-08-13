@@ -71,7 +71,7 @@ _注意：如果你是在windows上，你首先需要安装C++。([下载](https
 | 重新平衡 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.5.0) 于2021年6月27日 | | 风险管理人
 | 风险管理人 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.7.3)于2021年7月5日 | |沙盒
 | 沙盒 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.9.1) 于2021年7月17日|||||| [发布](https://github.com/ssantoshp/Empyrial/releases/tag/v1.9.1)
-
+| 支持自定义数据 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v2.1.3) 于2023年8月12日|||||| [发布](https://github.com/ssantoshp/Empyrial/releases/tag/v2.1.3)
 </div>
 
 <br />
@@ -118,6 +118,9 @@ empyrial(portfolio)
 可用于重新平衡的时间段是```2y```,```1y```,```6mo```,```quarterly```,```monthly```。
 
 <br />
+
+### 使用自定义数据
+请参见文档 [此处](https://empyrial.gitbook.io/empyrial/using-custom-data)，了解如何做到这一点。
 
 **自定义再平衡**
 
