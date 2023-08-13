@@ -89,7 +89,7 @@ _Note: Windows users will need to install C++. ([download](https://visualstudio.
 from empyrial import empyrial, Engine
 
 portfolio = Engine(
-    start_date = "2018-06-09", 
+    start_date = "2018-08-01", 
     portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"], 
     weights = [0.2, 0.2, 0.2, 0.2, 0.2],  # equal weighting is set by default
     benchmark = ["SPY"]  # SPY is set by default
@@ -109,7 +109,7 @@ Time periods available for rebalancing are
 from empyrial import empyrial, Engine
 
 portfolio = Engine(
-    start_date = "2018-06-09", 
+    start_date = "2018-08-01", 
     portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"], 
     weights = [0.2, 0.2, 0.2, 0.2, 0.2],  # equal weighting is set by default
     benchmark = ["SPY"],  # SPY is set by default
@@ -127,7 +127,7 @@ You can rebalance a portfolio by specifying a list of custom dates.
 from empyrial import empyrial, Engine
 
 portfolio = Engine(
-    start_date = "2018-06-09", 
+    start_date = "2018-08-01", 
     portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"], 
     weights = [0.2, 0.2, 0.2, 0.2, 0.2],  # equal weighting is set by default
     benchmark = ["SPY"],  # SPY is set by default
@@ -144,7 +144,7 @@ The default optimizer is **equal weighting**. You can specify custom weights, if
 from empyrial import empyrial, Engine
 
 portfolio = Engine(
-    start_date = "2018-01-01",
+    start_date = "2018-08-01",
     portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"], 
     weights = [0.1, 0.3, 0.15, 0.25, 0.2],   # custom weights
     rebalance = "1y"  # rebalance every year
@@ -165,7 +165,7 @@ You can also use the **built-in optimizers**. There are 4 optimizers available:
 from empyrial import empyrial, Engine
 
 portfolio = Engine(
-    start_date = "2018-01-01",
+    start_date = "2018-08-01",
     portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"],
     optimizer = "EF",
     rebalance = "1y"  # rebalance every year
@@ -192,7 +192,7 @@ We can see that the allocation has been optimized.
 from empyrial import empyrial, Engine
 
 portfolio = Engine(
-    start_date = "2018-01-01",
+    start_date = "2018-08-01",
     portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
     optimizer = "EF",
     rebalance = "1y",  # rebalance every year
@@ -227,7 +227,7 @@ You can use the ```get_report()``` function of Empyrial to generate a tearsheet,
 from empyrial import get_report, Engine
 
 portfolio = Engine(
-      start_date = "2018-01-01",
+      start_date = "2018-08-01",
       portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"],
       optimizer = "EF",
       rebalance = "1y", #rebalance every year
