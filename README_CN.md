@@ -80,8 +80,6 @@ _注意：如果你是在windows上，你首先需要安装C++。([下载](https
 
 [完整文档](https://empyrial.gitbook.io/empyrial/) (网站)
 
-[完整文档](https://github.com/ssantoshp/Empyrial/blob/main/empyrial_documentation.pdf) (PDF)
-
 ## 使用方法
 
 **Empyrial**
