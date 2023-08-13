@@ -79,9 +79,6 @@ _Note: Windows users will need to install C++. ([download](https://visualstudio.
 
 [Full documentation](https://empyrial.gitbook.io/empyrial/) (website)
 
-[Full documentation](https://github.com/ssantoshp/Empyrial/blob/main/empyrial_documentation.pdf) (PDF)
-
-
 ## Usage
 
 ### Empyrial Engine
