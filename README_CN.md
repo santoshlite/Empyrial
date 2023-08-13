@@ -7,7 +7,7 @@
   
 ![](https://img.shields.io/badge/Downloads-101k-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
-![](https://img.shields.io/badge/version-2.0.9-blueviolet)
+![](https://img.shields.io/badge/version-2.1.3-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
 ![](https://img.shields.io/badge/activity-9.7/10-ff69b4)
 ![](https://img.shields.io/badge/Open%20source-💜-white)
@@ -90,8 +90,8 @@ _注意：如果你是在windows上，你首先需要安装C++。([下载](https
 from empyrial import empyrial, Engine
 
 portfolio = Engine(    
-                  start_date= "2018-06-09", 
-                  portfolio= ["BABA", "RELIANCE.NS", "KO", "^DJI","^IXIC"], 
+                  start_date= "2018-08-01", 
+                  portfolio= ["BABA", "PDD", "KO", "^DJI","^IXIC"], 
                   weights = [0.2, 0.2, 0.2, 0.2, 0.2], #默认情况下是等权重
                   benchmark = ["SPY"] #SPY是默认设置的
 )
@@ -105,7 +105,7 @@ empyrial(portfolio)
 from empyrial import empyrial, Engine
 
 portfolio = Engine(    
-                  start_date= "2018-06-09", 
+                  start_date= "2018-08-01", 
                   portfolio = ["BABA", "PDD", "KO", "AMD", "^IXIC"], 
 		  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #默认设置为等额加权
                   benchmark = ["SPY"], #SPY是默认设置的
@@ -127,7 +127,7 @@ empyrial(portfolio)
 from empyrial import empyrial, Engine
 
 portfolio = Engine(    
-                  start_date= "2018-06-09", 
+                  start_date= "2018-08-01", 
                   portfolio = ["BABA", "PDD", "KO", "AMD", "^IXIC"], 
 		  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #默认情况下是等权重的
                   benchmark = ["SPY"], #默认为SPY
@@ -148,7 +148,7 @@ empyrial(portfolio)
 from empyrial import empyrial, Engine
 
 portfolio = Engine(
-      start_date = "2018-01-01",
+      start_date = "2018-08-01",
       portfolio = ["BABA", "PDD", "KO", "AMD", "^IXIC"], 
       weights = [0.1, 0.3, 0.15, 0.25, 0.2], #自定义权重
       rebalance = "1y" #每年重新平衡一次
@@ -176,7 +176,7 @@ _注意：默认的优化器是**平等权重**_。
 from empyrial import empyrial, Engine
 
 portfolio = Engine(
-      start_date = "2018-01-01",
+      start_date = "2018-08-01",
       portfolio = "BABA", "PDD", "KO", "AMD", "^IXIC"】。]
       optimizer ="EF"。
       rebalance = "1y" #每年重新平衡一次
@@ -207,7 +207,7 @@ portfolio.weights
 from empyrial import empyrial, Engine
 
 portfolio = Engine(
-      start_date = "2018-01-01",
+      start_date = "2018-08-01",
       portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
       optimizer = "EF",
       rebalance = "1y", #每年重新平衡一次
@@ -243,7 +243,7 @@ empyrial(portfolio)
 from empyrial import get_report, Engine
 
 portfolio = Engine(
-      start_date = "2018-01-01",
+      start_date = "2018-08-01",
       portfolio = ["BABA", "PDD", "KO", "AMD", "^IXIC"],
       optimizer = "EF",
       rebalance = "1y", #每年重新平衡一次
