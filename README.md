@@ -71,6 +71,7 @@ _Note: Windows users will need to install C++. ([download](https://visualstudio.
 | Rebalancing | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.5.0) on Jun 27, 2021 |
 | Risk manager | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.7.3) on Jul 5, 2021 |
 | Sandbox | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.9.1) on Jul 17, 2021 |
+| Support for custom data | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v2.1.3) on Aug 12, 2023 |
   
 </div>
 
@@ -97,6 +98,9 @@ portfolio = Engine(
 
 empyrial(portfolio)
 ```
+
+### Use custom data
+See doc [here](https://empyrial.gitbook.io/empyrial/using-custom-data) to learn how to do this. 
 
 ### Calendar Rebalancing
 A portfolio can be rebalanced for either a specific time period or for specific dates using the ```rebalance``` option.
