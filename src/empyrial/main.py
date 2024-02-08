@@ -189,7 +189,7 @@ def graph_allocation(my_portfolio):
 
 
 def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=False, filename="empyrial_report.pdf"):
-    if my_portfolio.rebalance != None:
+    if isinstance(my_portfolio.rebalance, pd.DataFrame):
         # we want to get the dataframe with the dates and weights
         rebalance_schedule = my_portfolio.rebalance
 
