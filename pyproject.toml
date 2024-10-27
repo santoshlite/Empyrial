@@ -1,16 +1,27 @@
+[tool.poetry]
+name = "EigenLedger"
+authors = ["Santosh <santoshpassoubadyp@gmail.com>"]
+version = "2.1.5"
+description = "An Open Source Portfolio Management Framework for Everyone 投资组合管理"
+readme = "README.md"
+license = "LICENSE"
+homepage = "https://github.com/ssantoshp/EigenLedger"
+
+[tool.poetry.dependencies]
+python = ">=3.0"
+numpy = "^1.21.0"
+matplotlib = "^3.4.0"
+quantstats = "^0.0.62"
+yfinance = "^0.1.0"
+ipython = "^7.16.0"
+fpdf = "^1.7.2"
+pyportfolioopt = "^1.4.0"
+
+[[tool.poetry.packages]]
+include = "EigenLedger"
+from = "src"
+
 [build-system]
-requires = [
-        'numpy',
-        'matplotlib',
-        'datetime',
-        'empyrical',
-        'quantstats',
-        'yfinance',
-        'ipython',
-        'fpdf',
-        'pyportfolioopt'
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
-    ]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools_scm]

@@ -9,7 +9,7 @@ import yfinance as yf
 from fpdf import FPDF
 import warnings
 import logging
-from empyrical import (
+from .modules.empyrical import (
     cagr,
     cum_returns,
     stability_of_timeseries,
@@ -141,6 +141,9 @@ class Engine:
             )
 
 
+class PortfolioAnalysisResult:
+    pass
+
 def get_returns(stocks, wts, start_date, end_date=TODAY):
     if len(stocks) > 1:
         assets = yf.download(stocks, start=start_date, end=end_date, progress=False)["Adj Close"]
@@ -188,7 +191,9 @@ def graph_allocation(my_portfolio):
     plt.show()
 
 
-def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=False, filename="empyrial_report.pdf"):
+def portfolio_analysis(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=False, filename="report.pdf"):
+    result = PortfolioAnalysisResult()
+    
     if isinstance(my_portfolio.rebalance, pd.DataFrame):
         # we want to get the dataframe with the dates and weights
         rebalance_schedule = my_portfolio.rebalance
@@ -220,7 +225,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=
             weights = rebalance_schedule[str(dates[i + 1])]
 
             # then we want to get the returns
-            
+
             add_returns = get_returns(
                 my_portfolio.portfolio,
                 weights,
@@ -303,7 +308,6 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=
 
     except Exception as e:
         pass
-
     print("Start date: " + str(my_portfolio.start_date))
     print("End date: " + str(my_portfolio.end_date))
 
@@ -314,7 +318,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=
         end_date=my_portfolio.end_date,
     )
     benchmark = benchmark.dropna()
-    
+
     CAGR = cagr(returns, period='daily', annualization=None)
     # CAGR = round(CAGR, 2)
     # CAGR = CAGR.tolist()
@@ -333,13 +337,13 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=
     SR = np.round(SR, decimals=2)
     SR = str(SR)
 
-    empyrial.SR = SR
+    result.SR = SR
 
     CR = qs.stats.calmar(returns)
     CR = CR.tolist()
     CR = str(round(CR, 2))
 
-    empyrial.CR = CR
+    result.CR = CR
 
     STABILITY = stability_of_timeseries(returns)
     STABILITY = round(STABILITY, 2)
@@ -381,6 +385,9 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=
     )
     VAR = np.round(VAR, decimals=2)
     VAR = str(VAR * 100) + " %"
+
+    returns = returns.tz_localize(None)  # Making tz-naive
+    benchmark = benchmark.tz_localize(None) # Making tz-naive
 
     alpha, beta = alpha_beta(returns, benchmark, risk_free=rf)
     AL = round(alpha, 2)
@@ -447,7 +454,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=
     )
     display(df)
 
-    empyrial.df = data
+    result.df = data
 
     y = []
     for x in returns:
@@ -461,29 +468,29 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=
     plt.vlines(x=returns.index, ymin=0, ymax=arr, color=my_color, alpha=0.4)
     plt.title("Returns")
 
-    empyrial.returns = returns
-    empyrial.creturns = creturns
-    empyrial.benchmark = benchmark
-    empyrial.CAGR = CAGR
-    empyrial.CUM = CUM
-    empyrial.VOL = VOL
-    empyrial.SR = SR
-    empyrial.win_ratio = win_ratio
-    empyrial.CR = CR
-    empyrial.IR = IR
-    empyrial.STABILITY = STABILITY
-    empyrial.MD = MD
-    empyrial.SOR = SOR
-    empyrial.SK = SK
-    empyrial.KU = KU
-    empyrial.TA = TA
-    empyrial.CSR = CSR
-    empyrial.VAR = VAR
-    empyrial.AL = AL
-    empyrial.BTA = BTA
+    result.returns = returns
+    result.creturns = creturns
+    result.benchmark = benchmark
+    result.CAGR = CAGR
+    result.CUM = CUM
+    result.VOL = VOL
+    result.SR = SR
+    result.win_ratio = win_ratio
+    result.CR = CR
+    result.IR = IR
+    result.STABILITY = STABILITY
+    result.MD = MD
+    result.SOR = SOR
+    result.SK = SK
+    result.KU = KU
+    result.TA = TA
+    result.CSR = CSR
+    result.VAR = VAR
+    result.AL = AL
+    result.BTA = BTA
 
     try:
-        empyrial.orderbook = make_rebalance.output
+        result.orderbook = make_rebalance.output
     except Exception as e:
         OrderBook = pd.DataFrame(
             {
@@ -492,7 +499,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=
             }
         )
 
-        empyrial.orderbook = OrderBook.T
+        result.orderbook = OrderBook.T
 
     wts = copy.deepcopy(my_portfolio.weights)
     indices = [i for i, x in enumerate(wts) if x == 0.0]
@@ -534,7 +541,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=
           w=45,
           h=5,
           type="",
-          link="https://github.com/ssantoshp/Empyrial",
+          link="https://github.com/ssantoshp/E",
       )
       pdf.cell(20, 15, f"Report", ln=1)
       pdf.set_font("arial", size=11)
@@ -582,6 +589,8 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=
 
       pdf.output(dest="F", name=filename)
       print("The PDF was generated successfully!")
+
+    return result
 
 
 def flatten(subject) -> list:
@@ -789,7 +798,7 @@ def optimize_portfolio(my_portfolio, vol_max=25, pie_size=5, font_size=14):
         "HRP": hrp,
         "MINVAR": min_var,
     }
-    
+
     if my_portfolio.optimizer in optimizers.keys():
         if my_portfolio.optimizer == "MEANVAR":
             wts = optimizers.get(my_portfolio.optimizer)(my_portfolio, my_portfolio.max_vol)
@@ -847,7 +856,7 @@ def valid_range(start_date, end_date, rebalance) -> tuple:
     # custom dates don't need further chekings
     if type(rebalance) is list:
         return start_date, rebalance[-1]
-    
+
     # make the end date to a datetime
     end_date = dt.datetime.strptime(str(end_date), "%Y-%m-%d")
 
@@ -993,3 +1002,4 @@ def make_rebalance(
     print("Rebalance schedule: ")
     print(output_df)
     return output_df
+
