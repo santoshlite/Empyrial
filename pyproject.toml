@@ -19,7 +19,6 @@ pyportfolioopt = "^1.4.0"
 
 [[tool.poetry.packages]]
 include = "EigenLedger"
-from = "src"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
