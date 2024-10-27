@@ -1,16 +1,16 @@
 
 # By Investors, For Investors.
-<br><br><br><br>
+<br>
 <div align="center">
-<img src="https://user-images.githubusercontent.com/61618641/120909011-98f8a180-c670-11eb-8844-2d423ba3fa9c.png"/>
-<br><br><br><br><br><br><br><br>
-  
-![](https://img.shields.io/badge/Downloads-101k-brightgreen)
+<img src="https://github.com/user-attachments/assets/470f1d59-09c6-4b95-af7e-f142764d8195"/>
+<br><br><br><br>
+
+![](https://img.shields.io/badge/Downloads-210k-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
-![](https://img.shields.io/badge/version-2.1.3-blueviolet)
+![](https://img.shields.io/badge/version-2.1.5-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
 ![](https://img.shields.io/badge/activity-9.7/10-ff69b4)
-![](https://img.shields.io/badge/Open%20source-💜-white)
+![](https://img.shields.io/badge/Open%20source-💜-white)	
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1NqTkkP2u1p1g8W8erU-Y-rSSVbPUDvq2?usp=sharing)
   
  </div>
