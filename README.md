@@ -1,10 +1,10 @@
 
 # By Investors, For Investors.
-<br><br><br><br>
+<br><br>
 <div align="center">
-<img src="https://user-images.githubusercontent.com/61618641/120909011-98f8a180-c670-11eb-8844-2d423ba3fa9c.png"/>
-<br><br><br><br><br><br>
-  
+<img src="https://github.com/user-attachments/assets/470f1d59-09c6-4b95-af7e-f142764d8195"/>
+<br><br><br><br>
+
 ![](https://img.shields.io/badge/Downloads-101k-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
 ![](https://img.shields.io/badge/version-2.1.3-blueviolet)
@@ -14,16 +14,16 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1NqTkkP2u1p1g8W8erU-Y-rSSVbPUDvq2?usp=sharing)
   
  </div>
- 
+
 <br>
 
 Want to read this in **Mandarin 🇨🇳**? Click [**here**](README_CN.md)
 
-Empyrial is a Python-based **open-source quantitative investment** library dedicated to **financial institutions** and **retail investors**, officially released in March 2021. Already used by **thousands of people working in the finance industry**, Empyrial aims to become an all-in-one platform for **portfolio management**, **analysis**, and **optimization**.
+EigenLedger (prev. "Empyrial") is a Python-based **open-source quantitative investment** library dedicated to **financial institutions** and **retail investors**, officially released in March 2021. Already used by **thousands of people working in the finance industry**, EigenLedger aims to become an all-in-one platform for **portfolio management**, **analysis**, and **optimization**.
 
-Empyrial **empowers portfolio management** by bringing the best of **performance and risk analysis** in an **easy-to-understand**, **flexible** and **powerful framework**.
+EigenLedger **empowers portfolio management** by bringing the best of **performance and risk analysis** in an **easy-to-understand**, **flexible** and **powerful framework**.
 
-With Empyrial, you can easily analyze security or a portfolio in order to **get the best insights from it**. This is mainly a **wrapper** of financial analysis libraries such as **Quantstats** and **PyPortfolioOpt**.
+With EigenLedger, you can easily analyze security or a portfolio in order to **get the best insights from it**. This is mainly a **wrapper** of financial analysis libraries such as **Quantstats** and **PyPortfolioOpt**.
 
 <br>
 
@@ -48,13 +48,13 @@ With Empyrial, you can easily analyze security or a portfolio in order to **get 
 
 ## Installation
 
-You can install Empyrial using pip:
+You can install EigenLedger using pip:
 
 ```
 pip install empyrial
 ```
 
-For a better experience, **we advise you to use Empyrial on a notebook** (e.g., Jupyter, Google Colab)
+For a better experience, **we advise you to use EigenLedger on a notebook** (e.g., Jupyter, Google Colab)
 
 _Note: macOS users will need to install [Xcode Command Line Tools](https://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/)._
 
@@ -66,12 +66,12 @@ _Note: Windows users will need to install C++. ([download](https://visualstudio.
   
 | Feature 📰 | Status |
 | --                      | ------    |
-| Engine (backtesting + performance analysis) | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.2.4) on May 30, 2021 |
-| Optimizer | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.3.6) on Jun 7, 2021 |
-| Rebalancing | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.5.0) on Jun 27, 2021 |
-| Risk manager | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.7.3) on Jul 5, 2021 |
-| Sandbox | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.9.1) on Jul 17, 2021 |
-| Support for custom data | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v2.1.3) on Aug 12, 2023 |
+| Engine (backtesting + performance analysis) | :star: [Released](https://github.com/ssantoshp/EigenLedger/releases/tag/1.2.4) on May 30, 2021 |
+| Optimizer | :star: [Released](https://github.com/ssantoshp/EigenLedger/releases/tag/1.3.6) on Jun 7, 2021 |
+| Rebalancing | :star: [Released](https://github.com/ssantoshp/EigenLedger/releases/tag/1.5.0) on Jun 27, 2021 |
+| Risk manager | :star: [Released](https://github.com/ssantoshp/EigenLedger/releases/tag/v1.7.3) on Jul 5, 2021 |
+| Sandbox | :star: [Released](https://github.com/ssantoshp/EigenLedger/releases/tag/v1.9.1) on Jul 17, 2021 |
+| Support for custom data | :star: [Released](https://github.com/ssantoshp/EigenLedger/releases/tag/v2.1.3) on Aug 12, 2023 |
   
 </div>
 
@@ -81,7 +81,7 @@ _Note: Windows users will need to install C++. ([download](https://visualstudio.
 
 ## Usage
 
-### Empyrial Engine
+### EigenLedger Engine
 
 ```py
 from empyrial import empyrial, Engine
@@ -203,7 +203,7 @@ portfolio = Engine(
 empyrial(portfolio)
 ``` 
 
-### Empyrial Outputs
+### EigenLedger Outputs
 
 <div align="center">
 
@@ -222,7 +222,7 @@ empyrial(portfolio)
 </div>
 
 ## Download the Tearsheet
-You can use the ```get_report()``` function of Empyrial to generate a tearsheet, and then download this as a PDF document.
+You can use the ```get_report()``` function of EigenLedger to generate a tearsheet, and then download this as a PDF document.
 
 ```py
 from empyrial import get_report, Engine
@@ -252,22 +252,22 @@ get_report(portfolio)
 </div>
 
 ## Contribution and Issues
-Empyrial uses GitHub to host its source code.  *Learn more about the [Github flow](https://docs.github.com/en/get-started/quickstart/github-flow).*  
+EigenLedger uses GitHub to host its source code.  *Learn more about the [Github flow](https://docs.github.com/en/get-started/quickstart/github-flow).*  
 
 For larger changes (e.g., new feature request, large refactoring), please open an issue to discuss first.  
 
-* If you wish to create a new Issue, then [click here to create a new issue](https://github.com/ssantoshp/Empyrial/issues/new/choose).  
+* If you wish to create a new Issue, then [click here to create a new issue](https://github.com/ssantoshp/EigenLedger/issues/new/choose).  
 
-Smaller improvements (e.g., document improvements, bugfixes) can be handled by the Pull Request process of GitHub: [pull requests](https://github.com/ssantoshp/Empyrial/pulls).  
+Smaller improvements (e.g., document improvements, bugfixes) can be handled by the Pull Request process of GitHub: [pull requests](https://github.com/ssantoshp/EigenLedger/pulls).  
 
 * To contribute to the code, you will need to do the following:  
 
- * [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo#forking-a-repository) [Empyrial](https://github.com/ssantoshp/Empyrial) - Click the **Fork** button at the upper right corner of this page. 
- * [Clone your own fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository).  E.g., ```git clone https://github.com/ssantoshp/Empyrial.git```  
+ * [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo#forking-a-repository) [EigenLedger](https://github.com/ssantoshp/EigenLedger) - Click the **Fork** button at the upper right corner of this page. 
+ * [Clone your own fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository).  E.g., ```git clone https://github.com/ssantoshp/EigenLedger.git```  
   *If your fork is out of date, then will you need to manually sync your fork: [Synchronization method](https://help.github.com/articles/syncing-a-fork/)*
- * [Create a Pull Request](https://github.com/ssantoshp/Empyrial/pulls) using **your fork** as the `compare head repository`. 
+ * [Create a Pull Request](https://github.com/ssantoshp/EigenLedger/pulls) using **your fork** as the `compare head repository`. 
 
-You contributions will be reviewed, potentially modified, and hopefully merged into Empyrial.  
+You contributions will be reviewed, potentially modified, and hopefully merged into EigenLedger.  
 
 ## Contributors
 
@@ -302,7 +302,7 @@ This library has also been made possible because of the work of these incredible
 
 ## Contact
 
-You are welcome to contact us by email at **santoshpassoubady@gmail.com** or in Empyrial's [discussion space](https://github.com/ssantoshp/Empyrial/discussions)
+You are welcome to contact us by email at **santoshpassoubady@gmail.com** or in EigenLedger's [discussion space](https://github.com/ssantoshp/EigenLedger/discussions)
 
 ## License
 
