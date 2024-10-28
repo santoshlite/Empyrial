@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "EigenLedger"
 authors = ["Santosh <santoshpassoubadyp@gmail.com>"]
-version = "2.1.5"
+version = "2.1.6"
 description = "An Open Source Portfolio Management Framework for Everyone 投资组合管理"
 readme = "README.md"
 license = "LICENSE"
