@@ -33,7 +33,7 @@ With EigenLedger, you can easily analyze security or a portfolio in order to **g
 
 <br>
 
----
+
 
 <div align="center">
   
@@ -50,7 +50,7 @@ With EigenLedger, you can easily analyze security or a portfolio in order to **g
 </div>
 
 
----
+
 
 ## Installation
 
@@ -66,13 +66,13 @@ _Note: macOS users will need to install [Xcode Command Line Tools](https://osxda
 
 _Note: Windows users will need to install C++. ([download](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16), [install instructions](https://drive.google.com/file/d/0B4GsMXCRaSSIOWpYQkstajlYZ0tPVkNQSElmTWh1dXFaYkJr/view))_
 
----
+
 
 ## Documentation
 
 Here is our full [documentation](https://eigenledger.gitbook.io/documentation)! Check it out our full documentation for detailed guides, all features, and tips on getting the most out of this library.
 
----
+
 
 ## Quickstart
 

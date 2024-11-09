@@ -34,7 +34,7 @@ EigenLedger 通过在一个**易于理解**、**灵活**和**强大**的框架�
 
 <br>
 
----
+
 
 <div align="center">
   
@@ -51,7 +51,7 @@ EigenLedger 通过在一个**易于理解**、**灵活**和**强大**的框架�
 </div>
 
 
----
+
 
 ## 安装
 
@@ -67,13 +67,13 @@ _注意：macOS 用户需要安装 [Xcode 命令行工具](https://osxdaily.com/
 
 _注意：Windows 用户需要安装 C++。([下载](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16)，[安装说明](https://drive.google.com/file/d/0B4GsMXCRaSSIOWpYQkstajlYZ0tPVkNQSElmTWh1dXFaYkJr/view))_
 
----
+
 
 ## 文档
 
 这是我们的完整[文档](https://eigenledger.gitbook.io/documentation)！查看我们的完整文档，获取详细指南、所有功能，以及充分利用此库的技巧。
 
----
+
 
 ## 快速开始
 
@@ -173,4 +173,3 @@ EigenLedger 使用 GitHub 来托管其源代码。*了解更多关于 [GitHub �
 ## 许可证
 
 Apache 许可证 2.0
----
