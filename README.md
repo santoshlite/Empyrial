@@ -1,5 +1,5 @@
 #### 📢 Announcement 
-Good news! You can now use a maintained version of the library [empyrical](https://github.com/quantopian/empyrical) through EigenLedger! 🎉
+Good news! You can now use a patched version of the library [empyrical](https://github.com/quantopian/empyrical) through EigenLedger! 🎉
 <br>
 👉 Learn [how to use it here](https://eigenledger.gitbook.io/eigenledger/using-empyrical/using-empyrical) and read more in [this announcement post](https://github.com/santoshlite/EigenLedger/discussions/128).
 <br>
