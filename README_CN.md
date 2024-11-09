@@ -2,7 +2,7 @@
 
 好消息！你现在可以通过 EigenLedger 使用维护的 [empyrical](https://github.com/quantopian/empyrical) 库版本了！🎉
 <br>
-👉 在[这里](https://eigenledger.gitbook.io/eigenledger/using-empyrical/using-empyrical)了解如何使用它，并阅读[此公告帖子]()了解更多信息。
+👉 在[这里](https://eigenledger.gitbook.io/eigenledger/using-empyrical/using-empyrical)了解如何使用它，并阅读[此公告帖子](https://github.com/santoshlite/EigenLedger/discussions/128)了解更多信息。
 <br>
 
 # 投资者为投资者打造
