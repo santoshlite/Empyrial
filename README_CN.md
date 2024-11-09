@@ -1,230 +1,102 @@
+#### 📢 公告
 
-# By Investors, For Investors.
+好消息！你现在可以通过 EigenLedger 使用维护的 [empyrical](https://github.com/quantopian/empyrical) 库版本了！🎉
+<br>
+👉 在[这里](https://eigenledger.gitbook.io/eigenledger/using-empyrical/using-empyrical)了解如何使用它，并阅读[此公告帖子]()了解更多信息。
+<br>
+
+# 投资者为投资者打造
 <br>
 <div align="center">
 <img src="https://github.com/user-attachments/assets/470f1d59-09c6-4b95-af7e-f142764d8195"/>
 <br><br><br><br>
 
-![](https://img.shields.io/badge/Downloads-210k-brightgreen)
+![](https://img.shields.io/badge/Downloads-245k-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
-![](https://img.shields.io/badge/version-2.1.5-blueviolet)
+![](https://img.shields.io/badge/version-2.1.6-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
-![](https://img.shields.io/badge/activity-9.7/10-ff69b4)
 ![](https://img.shields.io/badge/Open%20source-💜-white)	
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1NqTkkP2u1p1g8W8erU-Y-rSSVbPUDvq2?usp=sharing)
+[![在 Colab 中打开](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1TyNgudyFcsgob7o49PwfDJHLaHvluxaU?usp=sharing)
   
- </div>
- 
-<br><br>
+</div>
 
-Want to read this in [**English**?](README.md)
+<br>
 
-Empyrial是一个基于Python的**开源量化投资**库，致力于为**金融机构**和**零售投资者**，于2021年正式发布。Empyrial已经被数以千计的金融业从业人员使用，它的目标是成为一个集**投资组合管理、**分析和**优化于一体的平台。
+想要阅读**英文版 🇺🇸**？请点击[**这里**](README.md)
 
-Empyrial通过将**业绩和风险分析的精华纳入一个**易于理解的**、**灵活的**和**强大的框架**，使投资组合管理**更加强大**。
+EigenLedger（原名 "Empyrial"）是一个基于 Python 的**开源量化投资**库，专为**金融机构**和**散户投资者**打造，正式发布于 2021 年。EigenLedger 已被**数千名金融行业人士**使用，旨在成为集**投资组合管理**、**分析**和**优化**于一体的平台。
 
-通过Empyrial，您可以轻松地分析证券或投资组合，以便**从中获得最佳的洞察力**。
+EigenLedger 通过在一个**易于理解**、**灵活**和**强大**的框架中提供最佳的**绩效和风险分析**，**赋能投资组合管理**。
+
+使用 EigenLedger，您可以轻松分析证券或投资组合，以**获得最佳洞察**。它主要是**Quantstats** 和 **PyPortfolioOpt** 等金融分析库的**封装器**。
 
 <br>
 
 <br>
+
+---
 
 <div align="center">
   
-|目录 📖 | 
+| 目录 📖 | 
 | --                     
-| 1. [安装](#安装) |  
-| 2. [功能](#功能) |  
-| 3. [文档](#文档) | 
-| 4. [使用实例](#使用方法) | 
-| 5. [下载拆页](#下载泪水表) | 
-| 6. [贡献和问题](#贡献和问题) | 
-| 7. [贡献者和鸣谢](#贡献者) |
-| 8. [联系](#联系) | 
-| 9. [许可证](#许可证) | 
-	
+| 1. [安装](#安装) | 
+| 2. [文档](#文档) | 
+| 3. [快速开始](#快速开始) |
+| 4. [贡献和问题](#贡献和问题) | 
+| 5. [贡献者](#贡献者) |
+| 6. [联系方式](#联系方式) |
+| 7. [许可证](#许可证) |
+  
 </div>
 
+
+---
 
 ## 安装
 
-你可以使用pip安装Empyrial。
+您可以使用 pip 安装 EigenLedger：
 
 ```
-pip install empyrial
+pip install EigenLedger
 ```
 
-为了获得更好的体验，**我们建议你在笔记本上使用Empyrial**（Jupyter、Google Colab...）。
+为了获得更好的体验，**我们建议您在笔记本环境中使用 EigenLedger**（例如，Jupyter，Google Colab）
 
-_注意：macOS用户需要安装[命令行工具](https://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/)._
+_注意：macOS 用户需要安装 [Xcode 命令行工具](https://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/)。_
 
-_注意：如果你是在windows上，你首先需要安装C++。([下载](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16), [安装说明](https://drive.google.com/file/d/0B4GsMXCRaSSIOWpYQkstajlYZ0tPVkNQSElmTWh1dXFaYkJr/view))_
-	
-## 功能
+_注意：Windows 用户需要安装 C++。([下载](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16)，[安装说明](https://drive.google.com/file/d/0B4GsMXCRaSSIOWpYQkstajlYZ0tPVkNQSElmTWh1dXFaYkJr/view))_
 
-<div align="center">
-
-| 特征 📰 | 状态 |
-| -- | ------ |
-| 引擎（回溯测试+性能分析） | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.2.4) 于2021年5月30日 | |
-| 优化器 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.3.6) 于2021年6月7日 | |
-| 重新平衡 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/1.5.0) 于2021年6月27日 | | 风险管理人
-| 风险管理人 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.7.3)于2021年7月5日 | |沙盒
-| 沙盒 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v1.9.1) 于2021年7月17日|||||| [发布](https://github.com/ssantoshp/Empyrial/releases/tag/v1.9.1)
-| 支持自定义数据 | :star: [Released](https://github.com/ssantoshp/Empyrial/releases/tag/v2.1.3) 于2023年8月12日|||||| [发布](https://github.com/ssantoshp/Empyrial/releases/tag/v2.1.3)
-</div>
-
-<br />
+---
 
 ## 文档
 
-[完整文档](https://empyrial.gitbook.io/empyrial/) (网站)
+这是我们的完整[文档](https://eigenledger.gitbook.io/documentation)！查看我们的完整文档，获取详细指南、所有功能，以及充分利用此库的技巧。
 
-## 使用方法
+---
 
-**Empyrial**
-
-```py
-from empyrial import empyrial, Engine
-
-portfolio = Engine(    
-                  start_date= "2018-08-01", 
-                  portfolio= ["BABA", "PDD", "KO", "^DJI","^IXIC"], 
-                  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #默认情况下是等权重
-                  benchmark = ["SPY"] #SPY是默认设置的
-)
-
-empyrial(portfolio)
-```
-
-**日历的重新平衡**
+## 快速开始
 
 ```py
-from empyrial import empyrial, Engine
-
-portfolio = Engine(    
-                  start_date= "2018-08-01", 
-                  portfolio = ["BABA", "PDD", "KO", "AMD", "^IXIC"], 
-		  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #默认设置为等额加权
-                  benchmark = ["SPY"], #SPY是默认设置的
-		  rebalance = "1y"
-)
-
-empyrial(portfolio)
-```
-
-可用于重新平衡的时间段是```2y```,```1y```,```6mo```,```quarterly```,```monthly```。
-
-<br />
-
-### 使用自定义数据
-请参见文档 [此处](https://empyrial.gitbook.io/empyrial/using-custom-data)，了解如何做到这一点。
-
-**自定义再平衡**
-
-你可以通过这样做来决定自定义的再平衡日期。
-
-```py
-from empyrial import empyrial, Engine
-
-portfolio = Engine(    
-                  start_date= "2018-08-01", 
-                  portfolio = ["BABA", "PDD", "KO", "AMD", "^IXIC"], 
-		  weights = [0.2, 0.2, 0.2, 0.2, 0.2], #默认情况下是等权重的
-                  benchmark = ["SPY"], #默认为SPY
-		  rebalance = ["2018-06-09", "2019-01-01", "2020-01-01", "2021-01-01"]
-)
-
-empyrial(portfolio)
-```
-⚠️在这种情况下，确保列表的第一个元素对应于```start_date```，最后一个元素对应于```end_date```，默认是**今天的日期。
-
-<br/>
-
-**优化器**
-
-你可以使用自定义权重。
-
-```py
-from empyrial import empyrial, Engine
+from EigenLedger import portfolio_analysis, Engine
 
 portfolio = Engine(
-      start_date = "2018-08-01",
-      portfolio = ["BABA", "PDD", "KO", "AMD", "^IXIC"], 
-      weights = [0.1, 0.3, 0.15, 0.25, 0.2], #自定义权重
-      rebalance = "1y" #每年重新平衡一次
+    start_date = "2018-08-01", 
+    portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"], 
+    weights = [0.2, 0.2, 0.2, 0.2, 0.2],  # 默认设置为等权重
+    benchmark = ["SPY"]  # 默认设置为 SPY
 )
 
-empyrial(portfolio)
+portfolio_analysis(portfolio)
 ```
 
-<br/>
 
-你也可以使用我们**的内置优化器**。有4个优化器可用。
-
-- ```"EF"```: **全球有效边际** [Example](https://empyrial.gitbook.io/empyrial/optimization/global-efficient-frontier)
-
-- ```"MEANVAR"```: **平均波动率** [Example](https://empyrial.gitbook.io/empyrial/optimization/mean-variance)
-
-- ```"HRP"```: **分层风险平价**。[Example](https://empyrial.gitbook.io/empyrial/optimization/hierarchical-risk-parity)
-
-- ```"MINVAR"```: **最小方差** [Example](https://empyrial.gitbook.io/empyrial/optimization/minimum-variance)
-
-_注意：默认的优化器是**平等权重**_。
-
-
-```py
-from empyrial import empyrial, Engine
-
-portfolio = Engine(
-      start_date = "2018-08-01",
-      portfolio = "BABA", "PDD", "KO", "AMD", "^IXIC"】。]
-      optimizer ="EF"。
-      rebalance = "1y" #每年重新平衡一次
-)
-
-portfolio.weights
-```
-
-输出。
-
-```
-[0.31409, 0.0, 0.03472, 0.00046, 0.0, 0.0, 0.069, 0.08831, 0.00854, 0.48489]
-```
-
-我们可以看到，分配已经被优化。
-
-<br />
-
-**风险经理**
-
-有3个风险经理可供选择。
-
-- **最大缩水**: ```{"Max Drawdown" : -0.3}``` [Example](https://empyrial.gitbook.io/empyrial/risk-management/max-drawdown)
-- **获取利润t**: ```{"Take Profit" : 0.4}``` [Example](https://empyrial.gitbook.io/empyrial/risk-management/take-profit)
-- **止损**: ```{"Stop Loss" : -0.2}``` [Example](https://empyrial.gitbook.io/empyrial/risk-management/stop-loss)
-
-```py
-from empyrial import empyrial, Engine
-
-portfolio = Engine(
-      start_date = "2018-08-01",
-      portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
-      optimizer = "EF",
-      rebalance = "1y", #每年重新平衡一次
-      risk_manager = {"Max Drawdown" : -0.2} #当跌幅超过-20%时停止投资
-)
-
-empyrial(portfolio)
-``` 
-
-**工业输出**
 
 <div align="center">
 
 ![image](https://user-images.githubusercontent.com/61618641/126879140-ea03ff17-a7c6-481a-bb3e-61c055b31267.png)
 ![image](https://user-images.githubusercontent.com/61618641/126879203-4390813c-a4f2-41b9-916b-e03dd8bafffb.png)
-![image](https://user-images.githubusercontent.com/61618641/128025185-d6a1a5eb-9893-4e43-8750-8def2a6a4d97.png)
+![image](https://user-images.githubusercontent.com/61618641/128025087-04afed7e-96ab-4730-9bd8-98f5491b2b5d.png)
 ![image](https://user-images.githubusercontent.com/61618641/126879204-01fe1eca-00b8-438e-b489-0213535dd31b.png)
 ![image](https://user-images.githubusercontent.com/61618641/126879210-9fd61e2b-01ab-4bfd-b679-3b1867d9302d.png)
 ![image](https://user-images.githubusercontent.com/61618641/126879215-e24c929a-55be-4912-8e2c-043e31ff2a95.png)
@@ -236,51 +108,36 @@ empyrial(portfolio)
 
 </div>
 
-## 下载泪水表
 
-你也可以下载由Empyrial生成的PDF格式的泪水表。
-
-```py
-from empyrial import get_report, Engine
-
-portfolio = Engine(
-      start_date = "2018-08-01",
-      portfolio = ["BABA", "PDD", "KO", "AMD", "^IXIC"],
-      optimizer = "EF",
-      rebalance = "1y", #每年重新平衡一次
-      risk_manager = {"Stop Loss" : -0.2}
-)
-
-get_report(portfolio)
-``` 
-
-输出。
-
-![image](https://user-images.githubusercontent.com/61618641/126879406-3ff8eb14-e08b-4103-b46d-02597634d469.png)
-
-## 观星者随时间推移
+## 星标数随时间变化
 
 <div align="center">
 	
-![追星族的时间](https://starchart.cc/ssantoshp/empyrial.svg)
+![星标数随时间变化](https://starchart.cc/ssantoshp/empyrial.svg)
 	
 </div>
 
 ## 贡献和问题
+EigenLedger 使用 GitHub 来托管其源代码。*了解更多关于 [GitHub 流程](https://docs.github.com/en/get-started/quickstart/github-flow)的信息。*  
 
-- [Create Issue](https://github.com/ssantoshp/Empyrial/issues/new/choose) - 对于较大的改动（如新功能、大型重构等），最好先开一个问题来讨论，而较小的改进（如文档改进、bug修复等）可以直接发送到PR。
+对于较大的更改（例如，新功能请求、大型重构），请先打开一个 issue 进行讨论。  
 
-- Fork [Empyrial](https://github.com/ssantoshp/Empyrial) - 点击右上角的**Fork**按钮
+* 如果您想创建一个新的 Issue，请[点击这里创建新 Issue](https://github.com/ssantoshp/EigenLedger/issues/new/choose)。  
 
-- 克隆你自己的分叉: ```git clone https://github.com/ssantoshp/Empyrial.git```。
+较小的改进（例如，文档改进、错误修复）可以通过 GitHub 的 Pull Request 流程处理：[拉取请求](https://github.com/ssantoshp/EigenLedger/pulls)。  
 
-	*如果你的分叉已经过期，你需要手动同步。[同步方法](https://help.github.com/articles/syncing-a-fork/)
+* 要贡献代码，您需要执行以下操作：  
 
-- Empyrial使用Github来托管其源代码，如果您想贡献代码，请使用github的PR（拉动请求）程序。[pull requests](https://github.com/ssantoshp/Empyrial/pulls)。它将等待审查、检查/修改和合并!
+ * [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo#forking-a-repository) [EigenLedger](https://github.com/ssantoshp/EigenLedger) - 点击本页面右上角的 **Fork** 按钮。 
+ * [克隆您自己的 fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository)。例如，```git clone https://github.com/ssantoshp/EigenLedger.git```  
+  *如果您的 fork 过期了，您需要手动同步您的 fork：[同步方法](https://help.github.com/articles/syncing-a-fork/)*  
+ * 使用您的 **fork** 作为 `compare head repository`，[创建一个 Pull Request](https://github.com/ssantoshp/EigenLedger/pulls)。  
+
+您的贡献将被审核，可能会被修改，并希望合并到 EigenLedger 中。  
 
 ## 贡献者
 
-感谢这些优秀的人（[表情符号键](https://allcontributors.org/docs/en/emoji-key)）。
+感谢这些了不起的人（[emoji 说明](https://allcontributors.org/docs/en/emoji-key)）：
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors-)
 
@@ -301,12 +158,19 @@ get_report(portfolio)
   </tr>
 </table>
 
-本项目遵循[all-contributors](https://github.com/all-contributors/all-contributors)规范。**欢迎任何形式的贡献！**。
+本项目遵循 [all-contributors](https://github.com/all-contributors/all-contributors) 规范。**欢迎任何形式的贡献！**
 
-## 联系
+## 致谢
 
-欢迎通过电子邮件（santoshpassoubady@gmail.com）或在Empyrial的[讨论空间](https://github.com/ssantoshp/Empyrial/discussions)联系我们。
+由于这些令人难以置信的人的工作，这个库才成为可能：
+- [**Ran Aroussi**](https://github.com/ranaroussi) 的 [**Quantstats 库**](https://github.com/ranaroussi/quantstats) 
+- [**Robert Martin**](https://github.com/robertmartin8) 的 [**PyPortfolioOpt**](https://github.com/robertmartin8/PyPortfolioOpt) 
+
+## 联系方式
+
+欢迎通过电子邮件 **santoshpassoubady@gmail.com** 或在 EigenLedger 的[讨论空间](https://github.com/ssantoshp/EigenLedger/discussions)与我们联系
 
 ## 许可证
 
-MIT
+Apache 许可证 2.0
+---

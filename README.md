@@ -1,3 +1,8 @@
+#### 📢 Announcement 
+Good news! You can now use a maintained version of the library [empyrical](https://github.com/quantopian/empyrical) through EigenLedger! 🎉
+<br>
+👉 Learn [how to use it here](https://eigenledger.gitbook.io/eigenledger/using-empyrical/using-empyrical) and read more in [this announcement post]().
+<br>
 
 # By Investors, For Investors.
 <br>
@@ -5,13 +10,12 @@
 <img src="https://github.com/user-attachments/assets/470f1d59-09c6-4b95-af7e-f142764d8195"/>
 <br><br><br><br>
 
-![](https://img.shields.io/badge/Downloads-210k-brightgreen)
+![](https://img.shields.io/badge/Downloads-245k-brightgreen)
 ![](https://img.shields.io/badge/license-MIT-orange)
-![](https://img.shields.io/badge/version-2.1.5-blueviolet)
+![](https://img.shields.io/badge/version-2.1.6-blueviolet)
 ![](https://img.shields.io/badge/language-python🐍-blue)
-![](https://img.shields.io/badge/activity-9.7/10-ff69b4)
 ![](https://img.shields.io/badge/Open%20source-💜-white)	
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1NqTkkP2u1p1g8W8erU-Y-rSSVbPUDvq2?usp=sharing)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1TyNgudyFcsgob7o49PwfDJHLaHvluxaU?usp=sharing)
   
  </div>
 
@@ -19,7 +23,7 @@
 
 Want to read this in **Mandarin 🇨🇳**? Click [**here**](README_CN.md)
 
-EigenLedger (prev. "Empyrial") is a Python-based **open-source quantitative investment** library dedicated to **financial institutions** and **retail investors**, officially released in March 2021. Already used by **thousands of people working in the finance industry**, EigenLedger aims to become an all-in-one platform for **portfolio management**, **analysis**, and **optimization**.
+EigenLedger (prev. "Empyrial") is a Python-based **open-source quantitative investment** library dedicated to **financial institutions** and **retail investors**, officially released in 2021. Already used by **thousands of people working in the finance industry**, EigenLedger aims to become an all-in-one platform for **portfolio management**, **analysis**, and **optimization**.
 
 EigenLedger **empowers portfolio management** by bringing the best of **performance and risk analysis** in an **easy-to-understand**, **flexible** and **powerful framework**.
 
@@ -29,29 +33,31 @@ With EigenLedger, you can easily analyze security or a portfolio in order to **g
 
 <br>
 
+---
+
 <div align="center">
   
 | Table of Contents 📖 | 
 | --                     
 | 1. [Installation](#installation) | 
-| 2. [Features](#features) | 
-| 3. [Documentation](#documentation) | 
-| 4. [Usage example](#usage) |
-| 5. [Download the tearsheet](#download-the-tearsheet) |
-| 6. [Contribution and Issues](#contribution-and-issues) | 
-| 7. [Contributors](#contributors) |
-| 8. [Contact](#contact) |
-| 9. [License](#license) |
+| 2. [Documentation](#documentation) | 
+| 3. [Quickstart](#quickstart) |
+| 4. [Contribution and Issues](#contribution-and-issues) | 
+| 5. [Contributors](#contributors) |
+| 6. [Contact](#contact) |
+| 7. [License](#license) |
 	
 </div>
 
+
+---
 
 ## Installation
 
 You can install EigenLedger using pip:
 
 ```
-pip install empyrial
+pip install EigenLedger
 ```
 
 For a better experience, **we advise you to use EigenLedger on a notebook** (e.g., Jupyter, Google Colab)
@@ -60,31 +66,18 @@ _Note: macOS users will need to install [Xcode Command Line Tools](https://osxda
 
 _Note: Windows users will need to install C++. ([download](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16), [install instructions](https://drive.google.com/file/d/0B4GsMXCRaSSIOWpYQkstajlYZ0tPVkNQSElmTWh1dXFaYkJr/view))_
 
-## Features
-
-<div align="center">
-  
-| Feature 📰 | Status |
-| --                      | ------    |
-| Engine (backtesting + performance analysis) | :star: [Released](https://github.com/ssantoshp/EigenLedger/releases/tag/1.2.4) on May 30, 2021 |
-| Optimizer | :star: [Released](https://github.com/ssantoshp/EigenLedger/releases/tag/1.3.6) on Jun 7, 2021 |
-| Rebalancing | :star: [Released](https://github.com/ssantoshp/EigenLedger/releases/tag/1.5.0) on Jun 27, 2021 |
-| Risk manager | :star: [Released](https://github.com/ssantoshp/EigenLedger/releases/tag/v1.7.3) on Jul 5, 2021 |
-| Sandbox | :star: [Released](https://github.com/ssantoshp/EigenLedger/releases/tag/v1.9.1) on Jul 17, 2021 |
-| Support for custom data | :star: [Released](https://github.com/ssantoshp/EigenLedger/releases/tag/v2.1.3) on Aug 12, 2023 |
-  
-</div>
+---
 
 ## Documentation
 
-[Full documentation](https://empyrial.gitbook.io/empyrial/) (website)
+Here is our full [documentation](https://eigenledger.gitbook.io/documentation)! Check it out our full documentation for detailed guides, all features, and tips on getting the most out of this library.
 
-## Usage
+---
 
-### EigenLedger Engine
+## Quickstart
 
 ```py
-from empyrial import empyrial, Engine
+from EigenLedger import portfolio_analysis, Engine
 
 portfolio = Engine(
     start_date = "2018-08-01", 
@@ -93,117 +86,10 @@ portfolio = Engine(
     benchmark = ["SPY"]  # SPY is set by default
 )
 
-empyrial(portfolio)
+portfolio_analysis(portfolio)
 ```
 
-### Use custom data
-See doc [here](https://empyrial.gitbook.io/empyrial/using-custom-data) to learn how to do this. 
 
-### Calendar Rebalancing
-A portfolio can be rebalanced for either a specific time period or for specific dates using the ```rebalance``` option.
-
-#### Rebalance for Time Period
-Time periods available for rebalancing are 
- ```2y```, ```1y```, ```6mo```, ```quarterly```, ```monthly```  
-
-```py
-from empyrial import empyrial, Engine
-
-portfolio = Engine(
-    start_date = "2018-08-01", 
-    portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"], 
-    weights = [0.2, 0.2, 0.2, 0.2, 0.2],  # equal weighting is set by default
-    benchmark = ["SPY"],  # SPY is set by default
-    rebalance = "1y"
-)
-
-empyrial(portfolio)
-```
-
-#### Rebalance for Custom Dates
-You can rebalance a portfolio by specifying a list of custom dates.  
-⚠️ When using custom dates, the first date of the list must correspond with the ```start_date``` and the last element should correspond to the ```end_date``` which is **today's date** by default.
-
-```py
-from empyrial import empyrial, Engine
-
-portfolio = Engine(
-    start_date = "2018-08-01", 
-    portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"], 
-    weights = [0.2, 0.2, 0.2, 0.2, 0.2],  # equal weighting is set by default
-    benchmark = ["SPY"],  # SPY is set by default
-    rebalance = ["2018-06-09", "2019-01-01", "2020-01-01", "2021-01-01"]
-)
-
-empyrial(portfolio)
-```
-
-### Optimizer
-The default optimizer is **equal weighting**. You can specify custom weights, if desired.
-
-```py
-from empyrial import empyrial, Engine
-
-portfolio = Engine(
-    start_date = "2018-08-01",
-    portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"], 
-    weights = [0.1, 0.3, 0.15, 0.25, 0.2],   # custom weights
-    rebalance = "1y"  # rebalance every year
-)
-
-empyrial(portfolio)
-```
-
-You can also use the **built-in optimizers**. There are 4 optimizers available:  
-
-- ```"EF"```: **Global Efficient Frontier**  [Example](https://empyrial.gitbook.io/empyrial/optimization/global-efficient-frontier)
-- ```"MEANVAR"```: **Mean-Variance**  [Example](https://empyrial.gitbook.io/empyrial/optimization/mean-variance)
-- ```"HRP"```: **Hierarchical Risk Parity**  [Example](https://empyrial.gitbook.io/empyrial/optimization/hierarchical-risk-parity)
-- ```"MINVAR"```: **Minimum-Variance**  [Example](https://empyrial.gitbook.io/empyrial/optimization/minimum-variance)
-
-
-```py
-from empyrial import empyrial, Engine
-
-portfolio = Engine(
-    start_date = "2018-08-01",
-    portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"],
-    optimizer = "EF",
-    rebalance = "1y"  # rebalance every year
-)
-
-portfolio.weights
-```
-
-> Output:
-
-```
-[0.0, 0.0, 0.0348, 0.9652, 0.0]
-```  
-We can see that the allocation has been optimized.
-
-### Risk Manager
-3 Risk Managers are available:
-
-- **Max Drawdown**: ```{"Max Drawdown" : -0.3}```  [Example](https://empyrial.gitbook.io/empyrial/risk-management/max-drawdown)
-- **Take Profit**: ```{"Take Profit" : 0.4}```  [Example](https://empyrial.gitbook.io/empyrial/risk-management/take-profit)
-- **Stop Loss**: ```{"Stop Loss" : -0.2}```  [Example](https://empyrial.gitbook.io/empyrial/risk-management/stop-loss)
-
-```py
-from empyrial import empyrial, Engine
-
-portfolio = Engine(
-    start_date = "2018-08-01",
-    portfolio= ["BABA", "PDD", "KO", "AMD","^IXIC"], 
-    optimizer = "EF",
-    rebalance = "1y",  # rebalance every year
-    risk_manager = {"Max Drawdown" : -0.2}  # Stop the investment when the drawdown becomes superior to -20%
-)
-
-empyrial(portfolio)
-``` 
-
-### EigenLedger Outputs
 
 <div align="center">
 
@@ -220,27 +106,6 @@ empyrial(portfolio)
 ![image](https://user-images.githubusercontent.com/61618641/126879297-cb78743a-6d43-465b-8021-d4b62a659828.png)
 
 </div>
-
-## Download the Tearsheet
-You can use the ```get_report()``` function of EigenLedger to generate a tearsheet, and then download this as a PDF document.
-
-```py
-from empyrial import get_report, Engine
-
-portfolio = Engine(
-      start_date = "2018-08-01",
-      portfolio = ["BABA", "PDD", "KO", "AMD","^IXIC"],
-      optimizer = "EF",
-      rebalance = "1y", #rebalance every year
-      risk_manager = {"Stop Loss" : -0.2}
-)
-
-get_report(portfolio)
-``` 
-
-> Output:
-
-![image](https://user-images.githubusercontent.com/61618641/126879406-3ff8eb14-e08b-4103-b46d-02597634d469.png)
 
 
 ## Stargazers over time
@@ -306,4 +171,4 @@ You are welcome to contact us by email at **santoshpassoubady@gmail.com** or in 
 
 ## License
 
-MIT
+Apache License 2.0
