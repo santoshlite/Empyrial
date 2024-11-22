@@ -96,7 +96,6 @@ class Engine:
         self.portfolio = portfolio
         self.weights = weights
         self.benchmark = benchmark
-        self.benchmark_data = benchmark_data # To hold benchmark data
         self.optimizer = optimizer
         self.rebalance = rebalance
         self.max_vol = max_vol
@@ -111,6 +110,7 @@ class Engine:
         self.min_weights = min_weights
         self.risk_manager = risk_manager
         self.data = data
+        self.benchmark_data = benchmark_data # To hold benchmark data
 
         optimizers = {
             "EF": efficient_frontier,
