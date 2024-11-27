@@ -238,6 +238,14 @@ def get_returns_from_data(data, wts, stocks):
     returns = portfolio_value.pct_change()[1:]
     return returns
 
+def get_returns_from_benchmark_data(data, wts, stocks):
+    assets = data.filter(stocks)
+    initial_alloc = wts/assets.iloc[0]
+    if initial_alloc.isna().any():
+        raise ValueError("Some stock is not available at initial state!")
+    benchmark_value = (assets * initial_alloc).sum(axis=1)
+    returns = benchmark_value.pct_change()[1:]
+    return returns
 
 def calculate_information_ratio(returns, benchmark_returns, days=252) -> float:
     return_difference = returns - benchmark_returns
@@ -258,19 +266,6 @@ def graph_allocation(my_portfolio):
     plt.title("Portfolio's allocation")
     plt.show()
 
-
-def updated_portfolio_analysis(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=False, filename="report.pdf"):
-    # First, fetch benchmark data
-    my_portfolio.fetch_benchmark_data()
-    
-    # If benchmark data is empty, fall back to default behavior
-    if my_portfolio.benchmark_data.empty:
-        print("Warning: Benchmark data could not be fetched. Using default method.")
-    
-    # Rest of the existing portfolio_analysis function remains the same
-    result = portfolio_analysis(my_portfolio, rf, sigma_value, confidence_value, report, filename)
-    
-    return result
 
 def portfolio_analysis(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=False, filename="report.pdf"):
     # Fetch benchmark data
@@ -395,22 +390,39 @@ def portfolio_analysis(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.9
         pass
     print("Start date: " + str(my_portfolio.start_date))
     print("End date: " + str(my_portfolio.end_date))
-
-    # Modification for benchmark returns
+        
     if not my_portfolio.benchmark_data.empty:
-        # If benchmark data was successfully fetched, use it
-        benchmark = my_portfolio.benchmark_data.pct_change().dropna()
+        print("Portfolio Data (my_portfolio.data):")
+        print(my_portfolio.data.head())
+        print("Portfolio Columns:", my_portfolio.portfolio)
+        print("Weights:", my_portfolio.weights)
+        print("\nBenchmark Data (my_portfolio.benchmark_data):")
+        print(my_portfolio.benchmark_data.head())  # Raw benchmark data (prices)
+        
+        # Print benchmark columns in the same format as portfolio columns
+        print("Benchmark Columns:", my_portfolio.benchmark_data.columns.tolist())  # Benchmark columns (e.g., ['TGT'])
+        
+        # Get benchmark returns from portfolio data
+        benchmark = get_returns_from_benchmark_data(my_portfolio.data, my_portfolio.weights, my_portfolio.portfolio)
+        
+        print("Benchmark Returns from Portfolio Data:")
+        print(benchmark.head())  # Inspect the first few rows of returns
     else:
-        # Fallback to original method if benchmark data is empty
-        print("Warning: Benchmark data could not be fetched. Using default method.")
+        print("Benchmark Tickers (my_portfolio.benchmark):", my_portfolio.benchmark)
+        print("Start Date:", my_portfolio.start_date)
+        print("End Date:", my_portfolio.end_date)
+        
         benchmark = get_returns(
             my_portfolio.benchmark,
             wts=[1],
             start_date=my_portfolio.start_date,
             end_date=my_portfolio.end_date,
-        )
-        benchmark = benchmark.dropna()
+        ).dropna()
         
+        print("Benchmark Returns from Yahoo Finance (or fallback):")
+        print(benchmark.head())
+        
+    
     # # Fetch benchmark returns
     # benchmark = get_returns(
     #     my_portfolio.benchmark,
@@ -431,6 +443,7 @@ def portfolio_analysis(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.9
     CUM = str(round(CUM, 2)) + "%"
 
     VOL = qs.stats.volatility(returns, annualize=True)
+    
     VOL = VOL.tolist()
     VOL = str(round(VOL * 100, 2)) + " %"
 
@@ -509,7 +522,13 @@ def portfolio_analysis(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.9
     win_ratio = win_ratio * 100
     win_ratio = round(win_ratio, 2)
 
-    IR = calculate_information_ratio(returns, benchmark.iloc[:, 0])
+    # IR = calculate_information_ratio(returns, benchmark.iloc[:, 0])
+    
+    if isinstance(benchmark, pd.Series):
+        IR = calculate_information_ratio(returns, benchmark)
+    else:
+        IR = calculate_information_ratio(returns, benchmark.iloc[:, 0])
+
     IR = round(IR, 2)
 
     data = {
@@ -987,13 +1006,17 @@ def get_date_range(start_date, end_date, rebalance) -> list:
     if rebalance in rebalance_periods.keys():
         # run for an arbitrarily large number we'll resolve this by breaking when we break the equality
         for i in range(1000):
-            # increment the date based on the selected period
-            input_date = input_date + dt.timedelta(days=rebalance_periods.get(rebalance))
+            days = rebalance_periods.get(rebalance, 0.0)
+            if days is None:
+                raise ValueError("Rebalance period cannot be None")
+            
+            # Increment the date based on the selected period
+            input_date = input_date + timedelta(days=days)
             if input_date <= end_date:
-                # append the new date if it is earlier or equal to the final date
+                # Append the new date if it is earlier or equal to the final date
                 rebalance_dates.append(input_date)
             else:
-                # break when the next rebalance date is later than our end date
+                # Break when the next rebalance date is later than our end date
                 break
 
     # then we want to return those dates
