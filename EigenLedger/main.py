@@ -239,6 +239,9 @@ def get_returns_from_data(data, wts, stocks):
     return returns
 
 def get_returns_from_benchmark_data(data, wts, stocks):
+    if wts is None:
+        wts = [1]
+        
     assets = data.filter(stocks)
     initial_alloc = wts/assets.iloc[0]
     if initial_alloc.isna().any():
@@ -399,8 +402,13 @@ def portfolio_analysis(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.9
         print("\nBenchmark Data (my_portfolio.benchmark_data):")
         print(my_portfolio.benchmark_data.head())  # Raw benchmark data (prices)
         
-        # Print benchmark columns in the same format as portfolio columns
-        print("Benchmark Columns:", my_portfolio.benchmark_data.columns.tolist())  # Benchmark columns (e.g., ['TGT'])
+        # Check if benchmark_data is a Series or DataFrame and print accordingly
+        if isinstance(my_portfolio.benchmark_data, pd.Series):
+            print("benchmark Columns:", my_portfolio.benchmark_data.tolist())
+        elif isinstance(my_portfolio.benchmark_data, pd.DataFrame):
+            print("Benchmark Columns:", my_portfolio.benchmark_data.columns.tolist())  
+        
+        wts = [1]
         
         # Get benchmark returns from portfolio data
         benchmark = get_returns_from_benchmark_data(my_portfolio.data, my_portfolio.weights, my_portfolio.portfolio)

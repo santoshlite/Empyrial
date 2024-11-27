@@ -9,7 +9,7 @@ portfolio_data = pd.DataFrame({
 }, index=pd.to_datetime(["2023-01-01", "2023-01-02", "2023-01-03"]))
 
 benchmark_data = pd.DataFrame({
-    "TGT": [420.0, 425.0, 430.0]
+    "TGT": [420.0, 425.0, 430.0],
 }, index=pd.to_datetime(["2023-01-01", "2023-01-02", "2023-01-03"]))
 
 
