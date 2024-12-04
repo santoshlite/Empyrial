@@ -9,7 +9,7 @@ import yfinance as yf
 from fpdf import FPDF
 import warnings
 import logging
-from .modules.empyrical import (
+from modules.empyrical import (
     cagr,
     cum_returns,
     stability_of_timeseries,
@@ -86,6 +86,7 @@ class Engine:
         max_weights=None,
         risk_manager=None,
         data=pd.DataFrame(),
+        benchmark_data=pd.DataFrame(),
     ):
         if benchmark is None:
             benchmark = BENCHMARK
@@ -109,6 +110,7 @@ class Engine:
         self.min_weights = min_weights
         self.risk_manager = risk_manager
         self.data = data
+        self.benchmark_data = benchmark_data # To hold benchmark data
 
         optimizers = {
             "EF": efficient_frontier,
@@ -139,26 +141,92 @@ class Engine:
                 self.expected_returns,
                 self.risk_model
             )
+            
+    def fetch_benchmark_data(self):
+        """Fetch benchmark data using Yahoo Finance or validate custom benchmark data."""
+        if isinstance(self.benchmark, str):
+            self.benchmark = [self.benchmark]  # Convert to list for consistency
 
-
+        # If `self.data` has benchmark columns, use them
+        if not self.data.empty and all(b in self.data.columns for b in self.benchmark):
+            self.benchmark_data = self.data[self.benchmark]
+        else:
+            # Fetch data from Yahoo Finance
+            try:
+                self.benchmark_data = yf.download(self.benchmark, start=self.start_date)["Adj Close"]
+            except Exception as e:
+                print(f"Error fetching benchmark data: {e}")
+                self.benchmark_data = pd.DataFrame()
+                
 class PortfolioAnalysisResult:
     pass
 
 def get_returns(stocks, wts, start_date, end_date=TODAY):
-    if len(stocks) > 1:
-        assets = yf.download(stocks, start=start_date, end=end_date, progress=False)["Adj Close"]
-        assets = assets.filter(stocks)
-        initial_alloc = wts/assets.iloc[0]
+    logging.info("Entering get_returns function with stocks: %s", stocks)
+    
+    # Ensure `stocks` is a list
+    if isinstance(stocks, str):
+        stocks = [stocks]
+    
+    # Validate weights length
+    if len(wts) != len(stocks):
+        logging.error("Length mismatch: stocks=%s, weights=%s", len(stocks), len(wts))
+        raise ValueError("Weights and stocks lists must have the same length.")
+    
+    # Initialize lists for tracking available and missing stocks
+    available_stocks = []
+    missing_stocks = []
+    
+    # Check each stock ticker and attempt to download its data
+    for stock in stocks:
+        try:
+            asset = yf.download(stock, start=start_date, end=end_date, progress=False)["Adj Close"]
+            if not asset.empty:
+                available_stocks.append(stock)
+            else:
+                missing_stocks.append(stock)
+        except Exception as e:
+            logging.error("Error downloading data for %s: %s", stock, e)
+            missing_stocks.append(stock)
+    
+    # Raise an error if any stocks are missing
+    if missing_stocks:
+        logging.error("Missing stock(s): %s", missing_stocks)
+        raise ValueError(f"Some stock(s) are missing in the downloaded data: {missing_stocks}")
+    
+    # Proceed with downloading and processing data for available stocks
+    logging.info("Available stocks for processing: %s", available_stocks)
+    if len(available_stocks) > 1:
+        assets = yf.download(available_stocks, start=start_date, end=end_date, progress=False)["Adj Close"]
+        assets = assets.filter(available_stocks)
+        
+        # Calculate initial allocation
+        initial_alloc = wts / assets.iloc[0]
+        logging.debug("Initial allocation calculated: %s", initial_alloc)
+        
         if initial_alloc.isna().any():
+            logging.error("Some stock is not available at initial state for: %s", available_stocks)
             raise ValueError("Some stock is not available at initial state!")
+        
+        # Calculate portfolio value and returns
         portfolio_value = (assets * initial_alloc).sum(axis=1)
-        returns = portfolio_value.pct_change()[1:]
+        logging.debug("Portfolio value: %s", portfolio_value)
+        
+        returns = portfolio_value.pct_change().dropna()
+        logging.info("Returning returns with multiple stocks.")
         return returns
-    else:
-        df = yf.download(stocks, start=start_date, end=end_date, progress=False)["Adj Close"]
+    
+    elif len(available_stocks) == 1:
+        df = yf.download(available_stocks[0], start=start_date, end=end_date, progress=False)["Adj Close"]
         df = pd.DataFrame(df)
-        returns = df.pct_change()[1:]
+        returns = df.pct_change().dropna()
+        logging.info("Returning returns for single stock.")
         return returns
+    
+    else:
+        logging.error("No valid stocks found for download.")
+        raise ValueError("No valid stocks were found in the provided list.")
+
 
 
 def get_returns_from_data(data, wts, stocks):
@@ -170,6 +238,17 @@ def get_returns_from_data(data, wts, stocks):
     returns = portfolio_value.pct_change()[1:]
     return returns
 
+def get_returns_from_benchmark_data(data, wts, stocks):
+    if wts is None:
+        wts = [1]
+        
+    assets = data.filter(stocks)
+    initial_alloc = wts/assets.iloc[0]
+    if initial_alloc.isna().any():
+        raise ValueError("Some stock is not available at initial state!")
+    benchmark_value = (assets * initial_alloc).sum(axis=1)
+    returns = benchmark_value.pct_change()[1:]
+    return returns
 
 def calculate_information_ratio(returns, benchmark_returns, days=252) -> float:
     return_difference = returns - benchmark_returns
@@ -192,8 +271,12 @@ def graph_allocation(my_portfolio):
 
 
 def portfolio_analysis(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, report=False, filename="report.pdf"):
+    # Fetch benchmark data
+    my_portfolio.fetch_benchmark_data()
+    
     result = PortfolioAnalysisResult()
     
+    # Handling rebalance data and getting returns
     if isinstance(my_portfolio.rebalance, pd.DataFrame):
         # we want to get the dataframe with the dates and weights
         rebalance_schedule = my_portfolio.rebalance
@@ -234,17 +317,17 @@ def portfolio_analysis(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.9
             )
 
             # then append those returns
-            returns = returns.append(add_returns)
+            returns = returns._append(add_returns)
     else:
-      if not my_portfolio.data.empty:
-              returns = get_returns_from_data(my_portfolio.data, my_portfolio.weights, my_portfolio.portfolio)
-      else:
-              returns = get_returns(
-                  my_portfolio.portfolio,
-                  my_portfolio.weights,
-                  start_date=my_portfolio.start_date,
-                  end_date=my_portfolio.end_date,
-              )
+        if not my_portfolio.data.empty:
+            returns = get_returns_from_data(my_portfolio.data, my_portfolio.weights, my_portfolio.portfolio)
+        else:
+            returns = get_returns(
+                my_portfolio.portfolio,
+                my_portfolio.weights,
+                start_date=my_portfolio.start_date,
+                end_date=my_portfolio.end_date,
+            )
 
     creturns = (returns + 1).cumprod()
 
@@ -310,14 +393,52 @@ def portfolio_analysis(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.9
         pass
     print("Start date: " + str(my_portfolio.start_date))
     print("End date: " + str(my_portfolio.end_date))
-
-    benchmark = get_returns(
-        my_portfolio.benchmark,
-        wts=[1],
-        start_date=my_portfolio.start_date,
-        end_date=my_portfolio.end_date,
-    )
-    benchmark = benchmark.dropna()
+        
+    if not my_portfolio.benchmark_data.empty:
+        print("Portfolio Data (my_portfolio.data):")
+        print(my_portfolio.data.head())
+        print("Portfolio Columns:", my_portfolio.portfolio)
+        print("Weights:", my_portfolio.weights)
+        print("\nBenchmark Data (my_portfolio.benchmark_data):")
+        print(my_portfolio.benchmark_data.head())  # Raw benchmark data (prices)
+        
+        # Check if benchmark_data is a Series or DataFrame and print accordingly
+        if isinstance(my_portfolio.benchmark_data, pd.Series):
+            print("benchmark Columns:", my_portfolio.benchmark_data.tolist())
+        elif isinstance(my_portfolio.benchmark_data, pd.DataFrame):
+            print("Benchmark Columns:", my_portfolio.benchmark_data.columns.tolist())  
+        
+        wts = [1]
+        
+        # Get benchmark returns from portfolio data
+        benchmark = get_returns_from_benchmark_data(my_portfolio.data, my_portfolio.weights, my_portfolio.portfolio)
+        
+        print("Benchmark Returns from Portfolio Data:")
+        print(benchmark.head())  # Inspect the first few rows of returns
+    else:
+        print("Benchmark Tickers (my_portfolio.benchmark):", my_portfolio.benchmark)
+        print("Start Date:", my_portfolio.start_date)
+        print("End Date:", my_portfolio.end_date)
+        
+        benchmark = get_returns(
+            my_portfolio.benchmark,
+            wts=[1],
+            start_date=my_portfolio.start_date,
+            end_date=my_portfolio.end_date,
+        ).dropna()
+        
+        print("Benchmark Returns from Yahoo Finance (or fallback):")
+        print(benchmark.head())
+        
+    
+    # # Fetch benchmark returns
+    # benchmark = get_returns(
+    #     my_portfolio.benchmark,
+    #     wts=[1],
+    #     start_date=my_portfolio.start_date,
+    #     end_date=my_portfolio.end_date,
+    # )
+    # benchmark = benchmark.dropna()
 
     CAGR = cagr(returns, period='daily', annualization=None)
     # CAGR = round(CAGR, 2)
@@ -330,6 +451,7 @@ def portfolio_analysis(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.9
     CUM = str(round(CUM, 2)) + "%"
 
     VOL = qs.stats.volatility(returns, annualize=True)
+    
     VOL = VOL.tolist()
     VOL = str(round(VOL * 100, 2)) + " %"
 
@@ -363,12 +485,18 @@ def portfolio_analysis(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.9
 
     SK = qs.stats.skew(returns)
     SK = round(SK, 2)
-    SK = SK.tolist()
+    if isinstance(SK, float):
+        SK = [SK]  
+    elif isinstance(SK, (list, np.ndarray)):
+        SK = SK.tolist() 
     SK = str(SK)
 
     KU = qs.stats.kurtosis(returns)
     KU = round(KU, 2)
-    KU = KU.tolist()
+    if isinstance(KU, float):
+        KU = [KU]  
+    elif isinstance(KU, (list, np.ndarray)):
+        KU = KU.tolist() 
     KU = str(KU)
 
     TA = tail_ratio(returns)
@@ -402,7 +530,13 @@ def portfolio_analysis(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.9
     win_ratio = win_ratio * 100
     win_ratio = round(win_ratio, 2)
 
-    IR = calculate_information_ratio(returns, benchmark.iloc[:, 0])
+    # IR = calculate_information_ratio(returns, benchmark.iloc[:, 0])
+    
+    if isinstance(benchmark, pd.Series):
+        IR = calculate_information_ratio(returns, benchmark)
+    else:
+        IR = calculate_information_ratio(returns, benchmark.iloc[:, 0])
+
     IR = round(IR, 2)
 
     data = {
@@ -509,86 +643,87 @@ def portfolio_analysis(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.9
 
     for i in sorted(indices, reverse=True):
         del my_portfolio.portfolio[i]
+        
+    if not returns.empty:
+        if not report:
+            qs.plots.returns(returns, benchmark, cumulative=True)
+            qs.plots.yearly_returns(returns, benchmark),
+            qs.plots.monthly_heatmap(returns, benchmark)
+            qs.plots.drawdown(returns)
+            qs.plots.drawdowns_periods(returns)
+            # qs.plots.rolling_volatility(returns)
+            # qs.plots.rolling_sharpe(returns)
+            qs.plots.rolling_beta(returns, benchmark)
+            graph_opt(my_portfolio.portfolio, wts, pie_size=7, font_size=14)
 
-    if not report:
-      qs.plots.returns(returns, benchmark, cumulative=True)
-      qs.plots.yearly_returns(returns, benchmark),
-      qs.plots.monthly_heatmap(returns, benchmark)
-      qs.plots.drawdown(returns)
-      qs.plots.drawdowns_periods(returns)
-      qs.plots.rolling_volatility(returns)
-      qs.plots.rolling_sharpe(returns)
-      qs.plots.rolling_beta(returns, benchmark)
-      graph_opt(my_portfolio.portfolio, wts, pie_size=7, font_size=14)
+        else:
+            qs.plots.returns(returns, benchmark, cumulative=True, savefig="retbench.png")
+            qs.plots.yearly_returns(returns, benchmark, savefig="y_returns.png"),
+            qs.plots.monthly_heatmap(returns, benchmark, savefig="heatmap.png")
+            qs.plots.drawdown(returns, savefig="drawdown.png")
+            qs.plots.drawdowns_periods(returns, savefig="d_periods.png")
+            # qs.plots.rolling_volatility(returns, savefig="rvol.png")
+            qs.plots.rolling_sharpe(returns, savefig="rsharpe.png")
+            qs.plots.rolling_beta(returns, benchmark, savefig="rbeta.png")
+            graph_opt(my_portfolio.portfolio, wts, pie_size=7, font_size=14, save=True)
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("arial", "B", 14)
+            pdf.image(
+                "https://user-images.githubusercontent.com/61618641/120909011-98f8a180-c670-11eb-8844-2d423ba3fa9c.png",
+                x=None,
+                y=None,
+                w=45,
+                h=5,
+                type="",
+                link="https://github.com/ssantoshp/E",
+            )
+            pdf.cell(20, 15, f"Report", ln=1)
+            pdf.set_font("arial", size=11)
+            pdf.image("allocation.png", x=135, y=0, w=70, h=70, type="", link="")
+            pdf.cell(20, 7, f"Start date: " + str(my_portfolio.start_date), ln=1)
+            pdf.cell(20, 7, f"End date: " + str(my_portfolio.end_date), ln=1)
+            ret.savefig("ret.png")
 
-    else:
-      qs.plots.returns(returns, benchmark, cumulative=True, savefig="retbench.png")
-      qs.plots.yearly_returns(returns, benchmark, savefig="y_returns.png"),
-      qs.plots.monthly_heatmap(returns, benchmark, savefig="heatmap.png")
-      qs.plots.drawdown(returns, savefig="drawdown.png")
-      qs.plots.drawdowns_periods(returns, savefig="d_periods.png")
-      qs.plots.rolling_volatility(returns, savefig="rvol.png")
-      qs.plots.rolling_sharpe(returns, savefig="rsharpe.png")
-      qs.plots.rolling_beta(returns, benchmark, savefig="rbeta.png")
-      graph_opt(my_portfolio.portfolio, wts, pie_size=7, font_size=14, save=True)
-      pdf = FPDF()
-      pdf.add_page()
-      pdf.set_font("arial", "B", 14)
-      pdf.image(
-          "https://user-images.githubusercontent.com/61618641/120909011-98f8a180-c670-11eb-8844-2d423ba3fa9c.png",
-          x=None,
-          y=None,
-          w=45,
-          h=5,
-          type="",
-          link="https://github.com/ssantoshp/E",
-      )
-      pdf.cell(20, 15, f"Report", ln=1)
-      pdf.set_font("arial", size=11)
-      pdf.image("allocation.png", x=135, y=0, w=70, h=70, type="", link="")
-      pdf.cell(20, 7, f"Start date: " + str(my_portfolio.start_date), ln=1)
-      pdf.cell(20, 7, f"End date: " + str(my_portfolio.end_date), ln=1)
-      ret.savefig("ret.png")
+            pdf.cell(20, 7, f"", ln=1)
+            pdf.cell(20, 7, f"Annual return: " + str(CAGR), ln=1)
+            pdf.cell(20, 7, f"Cumulative return: " + str(CUM), ln=1)
+            pdf.cell(20, 7, f"Annual volatility: " + str(VOL), ln=1)
+            pdf.cell(20, 7, f"Winning day ratio: " + str(win_ratio), ln=1)
+            pdf.cell(20, 7, f"Sharpe ratio: " + str(SR), ln=1)
+            pdf.cell(20, 7, f"Calmar ratio: " + str(CR), ln=1)
+            pdf.cell(20, 7, f"Information ratio: " + str(IR), ln=1)
+            pdf.cell(20, 7, f"Stability: " + str(STABILITY), ln=1)
+            pdf.cell(20, 7, f"Max drawdown: " + str(MD), ln=1)
+            pdf.cell(20, 7, f"Sortino ratio: " + str(SOR), ln=1)
+            pdf.cell(20, 7, f"Skew: " + str(SK), ln=1)
+            pdf.cell(20, 7, f"Kurtosis: " + str(KU), ln=1)
+            pdf.cell(20, 7, f"Tail ratio: " + str(TA), ln=1)
+            pdf.cell(20, 7, f"Common sense ratio: " + str(CSR), ln=1)
+            pdf.cell(20, 7, f"Daily value at risk: " + str(VAR), ln=1)
+            pdf.cell(20, 7, f"Alpha: " + str(AL), ln=1)
+            pdf.cell(20, 7, f"Beta: " + str(BTA), ln=1)
 
-      pdf.cell(20, 7, f"", ln=1)
-      pdf.cell(20, 7, f"Annual return: " + str(CAGR), ln=1)
-      pdf.cell(20, 7, f"Cumulative return: " + str(CUM), ln=1)
-      pdf.cell(20, 7, f"Annual volatility: " + str(VOL), ln=1)
-      pdf.cell(20, 7, f"Winning day ratio: " + str(win_ratio), ln=1)
-      pdf.cell(20, 7, f"Sharpe ratio: " + str(SR), ln=1)
-      pdf.cell(20, 7, f"Calmar ratio: " + str(CR), ln=1)
-      pdf.cell(20, 7, f"Information ratio: " + str(IR), ln=1)
-      pdf.cell(20, 7, f"Stability: " + str(STABILITY), ln=1)
-      pdf.cell(20, 7, f"Max drawdown: " + str(MD), ln=1)
-      pdf.cell(20, 7, f"Sortino ratio: " + str(SOR), ln=1)
-      pdf.cell(20, 7, f"Skew: " + str(SK), ln=1)
-      pdf.cell(20, 7, f"Kurtosis: " + str(KU), ln=1)
-      pdf.cell(20, 7, f"Tail ratio: " + str(TA), ln=1)
-      pdf.cell(20, 7, f"Common sense ratio: " + str(CSR), ln=1)
-      pdf.cell(20, 7, f"Daily value at risk: " + str(VAR), ln=1)
-      pdf.cell(20, 7, f"Alpha: " + str(AL), ln=1)
-      pdf.cell(20, 7, f"Beta: " + str(BTA), ln=1)
+            pdf.image("ret.png", x=-20, y=None, w=250, h=80, type="", link="")
+            pdf.cell(20, 7, f"", ln=1)
+            pdf.image("y_returns.png", x=-20, y=None, w=200, h=100, type="", link="")
+            pdf.cell(20, 7, f"", ln=1)
+            pdf.image("retbench.png", x=None, y=None, w=200, h=100, type="", link="")
+            pdf.cell(20, 7, f"", ln=1)
+            pdf.image("heatmap.png", x=None, y=None, w=200, h=80, type="", link="")
+            pdf.cell(20, 7, f"", ln=1)
+            pdf.image("drawdown.png", x=None, y=None, w=200, h=80, type="", link="")
+            pdf.cell(20, 7, f"", ln=1)
+            pdf.image("d_periods.png", x=None, y=None, w=200, h=80, type="", link="")
+            pdf.cell(20, 7, f"", ln=1)
+            pdf.image("rvol.png", x=None, y=None, w=190, h=80, type="", link="")
+            pdf.cell(20, 7, f"", ln=1)
+            pdf.image("rsharpe.png", x=None, y=None, w=190, h=80, type="", link="")
+            pdf.cell(20, 7, f"", ln=1)
+            pdf.image("rbeta.png", x=None, y=None, w=190, h=80, type="", link="")
 
-      pdf.image("ret.png", x=-20, y=None, w=250, h=80, type="", link="")
-      pdf.cell(20, 7, f"", ln=1)
-      pdf.image("y_returns.png", x=-20, y=None, w=200, h=100, type="", link="")
-      pdf.cell(20, 7, f"", ln=1)
-      pdf.image("retbench.png", x=None, y=None, w=200, h=100, type="", link="")
-      pdf.cell(20, 7, f"", ln=1)
-      pdf.image("heatmap.png", x=None, y=None, w=200, h=80, type="", link="")
-      pdf.cell(20, 7, f"", ln=1)
-      pdf.image("drawdown.png", x=None, y=None, w=200, h=80, type="", link="")
-      pdf.cell(20, 7, f"", ln=1)
-      pdf.image("d_periods.png", x=None, y=None, w=200, h=80, type="", link="")
-      pdf.cell(20, 7, f"", ln=1)
-      pdf.image("rvol.png", x=None, y=None, w=190, h=80, type="", link="")
-      pdf.cell(20, 7, f"", ln=1)
-      pdf.image("rsharpe.png", x=None, y=None, w=190, h=80, type="", link="")
-      pdf.cell(20, 7, f"", ln=1)
-      pdf.image("rbeta.png", x=None, y=None, w=190, h=80, type="", link="")
-
-      pdf.output(dest="F", name=filename)
-      print("The PDF was generated successfully!")
+            pdf.output(dest="F", name=filename)
+            print("The PDF was generated successfully!")
 
     return result
 
@@ -879,13 +1014,17 @@ def get_date_range(start_date, end_date, rebalance) -> list:
     if rebalance in rebalance_periods.keys():
         # run for an arbitrarily large number we'll resolve this by breaking when we break the equality
         for i in range(1000):
-            # increment the date based on the selected period
-            input_date = input_date + dt.timedelta(days=rebalance_periods.get(rebalance))
+            days = rebalance_periods.get(rebalance, 0.0)
+            if days is None:
+                raise ValueError("Rebalance period cannot be None")
+            
+            # Increment the date based on the selected period
+            input_date = input_date + timedelta(days=days)
             if input_date <= end_date:
-                # append the new date if it is earlier or equal to the final date
+                # Append the new date if it is earlier or equal to the final date
                 rebalance_dates.append(input_date)
             else:
-                # break when the next rebalance date is later than our end date
+                # Break when the next rebalance date is later than our end date
                 break
 
     # then we want to return those dates
